@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/clear.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/collapse.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/commons-logging-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/dom4j.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/gis2.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/handy.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/human.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/ignition.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jaxen-1.1.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jcommon-1.0.16.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jfreechart-1.0.13.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jscience-4.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jsi-1.0b2p1.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/jts-1.11.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/junit-4.5.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/kernel.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/log4j-1.2.15.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/maps.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/misc.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/rcrscs-v1.231.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/rescuecore.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/rescuecore2.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/resq-fire.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/sample.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/standard.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/traffic3.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/trove-0.1.8.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/uncommons-maths-1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/xml-0.0.6.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/libs/xml-0.0.6.jar!/document/api" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$MODULE_DIR$/libs/jscience-4.3.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/xml-0.0.6.jar!/src" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+</module>
