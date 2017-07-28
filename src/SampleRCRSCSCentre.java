@@ -26,6 +26,7 @@ public class SampleRCRSCSCentre extends AbstractCSAgent<Building>{
 	
 	@Override
 	public void postConnect(){
+		super.postConnect();
 		boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY)
 				.equals(ChannelCommunicationModel.class.getName());
 		
