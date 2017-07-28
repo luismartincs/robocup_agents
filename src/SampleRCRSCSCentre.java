@@ -1,5 +1,7 @@
 import java.util.Collection;
 import java.util.EnumSet;
+
+import commlib.information.PositionInformation;
 import commlib.message.RCRSCSMessage;
 import commlib.components.AbstractCSAgent;
 import rescuecore2.Constants;
@@ -46,12 +48,15 @@ public class SampleRCRSCSCentre extends AbstractCSAgent<Building>{
 			if(this.channelComm){
 				// Assign the agent to channel 1
 				setMessageChannel(1);
+                sendSubscribe(time,getMessageChannel());
 			}
 		}
 		
 		for(RCRSCSMessage msg : this.receivedMessageList){
 			Logger.info(msg.toString());
 		}
+
+        addMessage(new PositionInformation(time,getID(),me().getLocation(this.model)));
 		sendRest(time);
 	}
 	

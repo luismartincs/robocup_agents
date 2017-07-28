@@ -69,6 +69,7 @@ public class SampleRCRSCSPoliceForce extends
 			if(this.channelComm){
 				// Assign the agent to channel 1
 				setMessageChannel(1);
+				sendSubscribe(time,getMessageChannel());
 			}
 		}
 		
@@ -113,6 +114,9 @@ public class SampleRCRSCSPoliceForce extends
 		// Print the received messages from the common channel
 		for(RCRSCSMessage msg : this.receivedMessageList){
 			Logger.info(msg.toString());
+			if(msg instanceof PositionInformation){
+				System.out.println("Mensaje entrante" + ((PositionInformation)msg).getCoordinate());
+			}
 		}
 		
 		// Am I near a blockade?
