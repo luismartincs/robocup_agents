@@ -37,6 +37,9 @@ public final class LaunchSampleRCRSCSAgents{
 	 *          The following arguments are understood: -p <port>, -h <hostname>,
 	 *          -fb <fire brigades>, -pf <police forces>, -at <ambulance teams>
 	 */
+
+	//ALT + SHIFT + F10 -> Edit configurations -> Program arguments
+
 	public static void main(String[] args){
 		Logger.setLogContext("sample");
 		try{
@@ -112,6 +115,19 @@ public final class LaunchSampleRCRSCSAgents{
 		}catch(ComponentConnectionException e){
 			Logger.info("failed: " + e.getMessage());
 		}
+
+		int pc = 1;
+
+		try{
+			while(pc-- != 0){
+				Logger.info("Connecting police office " + (i++) + "...");
+				launcher.connect(new SampleRCRSCSCentre());
+				Logger.info("success");
+			}
+		}catch(ComponentConnectionException e){
+			Logger.info("failed: " + e.getMessage());
+		}
+
 		/**
 		 * try{
 		 * while(true){
@@ -123,8 +139,11 @@ public final class LaunchSampleRCRSCSAgents{
 		 * Logger.info("failed: " + e.getMessage());
 		 * }
 		 */
+
+		int r = 1;
+
 		try{
-			while(true){
+			while(r-- != 0){
 				Logger.info("Connecting dummy agent " + (i++) + "...");
 				launcher.connect(new DummyRCRSCSAgent());
 				Logger.info("success");

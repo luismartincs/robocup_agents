@@ -115,7 +115,7 @@ public class SampleRCRSCSPoliceForce extends
 		for(RCRSCSMessage msg : this.receivedMessageList){
 			Logger.info(msg.toString());
 			if(msg instanceof PositionInformation){
-				System.out.println("Mensaje entrante" + ((PositionInformation)msg).getCoordinate());
+				System.out.println("Mensaje entrante " + ((PositionInformation)msg).getCoordinate());
 			}
 		}
 		

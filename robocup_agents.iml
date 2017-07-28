@@ -29,7 +29,6 @@
           <root url="jar://$MODULE_DIR$/libs/log4j-1.2.15.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/maps.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/misc.jar!/" />
-          <root url="jar://$MODULE_DIR$/libs/rcrscs-v1.231.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/rescuecore.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/rescuecore2.jar!/" />
           <root url="jar://$MODULE_DIR$/libs/resq-fire.jar!/" />
