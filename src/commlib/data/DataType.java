@@ -10,6 +10,14 @@ import rescuecore2.worldmodel.EntityID;
  */
 public enum DataType {
 	// value type
+
+	/**
+	 * @CinvesRudos
+	 * Para los mensajes ACL
+	 */
+
+	PERFORMATIVE,
+
 	/**
 	 * time that simulation is started.
 	 */
@@ -139,6 +147,7 @@ public enum DataType {
 	public static RCRSCSData<?> createData(DataType type, int value) {
 		RCRSCSData<?> res = null;
 		switch (type) {
+		case PERFORMATIVE:
 		case TIME:
 		case X_COORDINATE:
 		case Y_COORDINATE:

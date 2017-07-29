@@ -55,7 +55,7 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
         for(RCRSCSMessage msg : this.receivedMessageList){
             Logger.info(msg.toString());
             if(msg instanceof ACLMessage){
-                System.out.println("Mensaje entrante acl " + ((ACLMessage)msg).getEntityID());
+                System.out.println("Mensaje entrante acl " + ((ACLMessage)msg).getPerformative());
             }
         }
 

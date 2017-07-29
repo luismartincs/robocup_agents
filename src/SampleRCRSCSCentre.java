@@ -2,6 +2,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 
 import commlib.bdi.messages.ACLMessage;
+import commlib.bdi.messages.ACLPerformative;
 import commlib.message.RCRSCSMessage;
 import commlib.components.AbstractCSAgent;
 import rescuecore2.Constants;
@@ -57,7 +58,7 @@ public class SampleRCRSCSCentre extends AbstractCSAgent<PoliceOffice>{
 		//PositionInformation pi = new PositionInformation(time,getID(),pair);
 
 
-		addMessage(new ACLMessage(time,getID(),pair));
+		addMessage(new ACLMessage(time,getID(), ACLPerformative.CFP));
 
 
 		for(RCRSCSMessage msg : this.receivedMessageList){

@@ -368,7 +368,18 @@ public class RCRSCSMessageConverter {
 	 * @param map
 	 */
 	private void initBitSizeMap(EnumMap<DataType, Integer> map) {
+
+
 		this.dataBitSizeMap = new EnumMap<DataType, Integer>(DataType.class);
+
+		/**
+		 * @CinvesRudos
+		 *
+		 */
+		//performative
+
+		this.dataBitSizeMap.put(DataType.PERFORMATIVE,32);
+
 		// time
 		this.dataBitSizeMap.put(DataType.TIME, calculateBitSize(1000));
 		// coordinate
@@ -821,6 +832,11 @@ public class RCRSCSMessageConverter {
 				// case SUPPLY_QUANTITY:
 			case REPAIR_COST:
 			case WATER:
+
+			/**
+			 * @CinvesRudos
+			 */
+			case PERFORMATIVE:
 				break;
 			default:
 				System.err.println("undefined data type:"
@@ -1082,6 +1098,11 @@ public class RCRSCSMessageConverter {
 				// case SUPPLY_QUANTITY:
 			case REPAIR_COST:
 			case WATER:
+			/**
+			 * @CinvesRudos
+			 */
+			case PERFORMATIVE:
+
 				res = (Integer) data.getData();
 				break;
 			default:

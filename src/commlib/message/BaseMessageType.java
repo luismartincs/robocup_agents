@@ -31,7 +31,7 @@ import commlib.data.DataType;
 public enum BaseMessageType {
 
 
-	ACL_MESSAGE(new DataType[]{DataType.CENTER_AGENT,DataType.FIERYNESS}),
+	ACL_MESSAGE(new DataType[]{DataType.CENTER_AGENT,DataType.PERFORMATIVE}),
 
 	UNPASSABLE(new DataType[] { DataType.PLATOON_AGENT, DataType.AREA,
 			DataType.AREA, DataType.BLOCKADE }),
