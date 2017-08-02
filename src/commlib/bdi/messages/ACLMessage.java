@@ -13,10 +13,13 @@ import java.util.List;
 
 public class ACLMessage extends WorldInformation{
 
-    public ACLMessage(int time, EntityID platoonID, ACLPerformative performative) {
+    public ACLMessage(int time, EntityID platoonID, ACLPerformative performative,EntityID targetAgent) {
         super(BaseMessageType.ACL_MESSAGE, time);
-        super.setData(new EntityIDData(DataType.CENTER_AGENT, platoonID));
+        this.setData(new EntityIDData(DataType.CENTER_AGENT, platoonID));
         this.setData(new ValueData(DataType.PERFORMATIVE,performative.getValue()));
+        this.setData(new EntityIDData(DataType.AREA, targetAgent));
+
+
     }
 
     public ACLMessage(List<Integer> bitList, int offset, EnumMap<DataType, Integer> bitSizeMap) {
@@ -30,6 +33,10 @@ public class ACLMessage extends WorldInformation{
 
     public EntityID getEntityID() {
         return this.getAgentID();
+    }
+
+    public EntityID getTargetAgentID(){
+        return super.getID(DataType.CENTER_AGENT,1);
     }
 
     public ACLPerformative getPerformative(){

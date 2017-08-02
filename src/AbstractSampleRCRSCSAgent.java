@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Collections;
 import java.util.Map;
 import commlib.components.AbstractCSAgent;
+import rescuecore2.log.Logger;
 import rescuecore2.worldmodel.EntityID;
 import rescuecore2.standard.entities.StandardEntity;
 import rescuecore2.standard.entities.Building;
@@ -21,7 +22,7 @@ import rescuecore2.standard.entities.Human;
 public abstract class AbstractSampleRCRSCSAgent<E extends StandardEntity>
 		extends AbstractCSAgent<E>{
 	
-	private static final int							RANDOM_WALK_LENGTH	= 50;
+	private static final int							RANDOM_WALK_LENGTH	= 100;
 	
 	/**
 	 * The search algorithm.
@@ -112,5 +113,15 @@ public abstract class AbstractSampleRCRSCSAgent<E extends StandardEntity>
 			}
 		}
 		return result;
+	}
+
+	protected List<EntityID> randomDestination(){
+
+		List<EntityID> targets = new ArrayList<>();
+		targets.add(buildingIDs.get((int)Math.random()*buildingIDs.size()));
+		EntityID current = ((Human) me()).getPosition();
+		List<EntityID> path = search.breadthFirstSearch(current,targets);
+
+		return path;
 	}
 }

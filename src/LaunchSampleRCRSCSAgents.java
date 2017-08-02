@@ -140,12 +140,24 @@ public final class LaunchSampleRCRSCSAgents{
 		 * }
 		 */
 
-		int r = 1;
+		int r = 2;
 
 		try{
 			while(r-- != 0){
 				Logger.info("Connecting dummy agent " + (i++) + "...");
 				launcher.connect(new DummyRCRSCSAgent());
+				Logger.info("success");
+			}
+		}catch(ComponentConnectionException e){
+			Logger.info("failed: " + e.getMessage());
+		}
+
+		int civ = 1;
+
+		try{
+			while(r-- != 0){
+				Logger.info("Connecting dummy agent " + (i++) + "...");
+				launcher.connect(new CivilianAgent());
 				Logger.info("success");
 			}
 		}catch(ComponentConnectionException e){

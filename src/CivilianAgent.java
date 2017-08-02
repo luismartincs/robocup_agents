@@ -1,28 +1,22 @@
+
+import commlib.message.RCRSCSMessage;
+import commlib.task.pf.ClearRouteTaskMessage;
+import rescuecore2.Constants;
+import rescuecore2.log.Logger;
+import rescuecore2.messages.Command;
+import rescuecore2.standard.entities.Civilian;
+import rescuecore2.standard.entities.PoliceForce;
+import rescuecore2.standard.entities.StandardEntityURN;
+import rescuecore2.standard.kernel.comms.ChannelCommunicationModel;
+import rescuecore2.worldmodel.ChangeSet;
+import rescuecore2.worldmodel.EntityID;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
-import commlib.bdi.messages.ACLMessage;
-import commlib.information.BuildingInformation;
-import commlib.message.RCRSCSMessage;
-import commlib.task.RestTaskMessage;
-import commlib.task.pf.ClearRouteTaskMessage;
-import rescuecore2.Constants;
-import rescuecore2.log.Logger;
-import rescuecore2.standard.entities.Blockade;
-import rescuecore2.standard.entities.PoliceForce;
-import rescuecore2.standard.entities.Road;
-import rescuecore2.standard.kernel.comms.ChannelCommunicationModel;
-import rescuecore2.worldmodel.ChangeSet;
-import rescuecore2.messages.Command;
-import rescuecore2.standard.entities.StandardEntityURN;
-import rescuecore2.worldmodel.EntityID;
-
-/**
- * A no-op agent.
- */
-public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
+public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
 
     private boolean channelComm;
 
@@ -37,8 +31,7 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
     protected void postConnect() {
         super.postConnect();
         model.indexClass(StandardEntityURN.ROAD);
-        boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY)
-                .equals(ChannelCommunicationModel.class.getName());
+        boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY).equals(ChannelCommunicationModel.class.getName());
 
         int numChannels = this.config.getIntValue("comms.channels.count");
         if ((speakComm) && (numChannels > 1)) {
@@ -47,6 +40,7 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
             this.channelComm = false;
         }
     }
+
 
     @Override
     protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
@@ -59,18 +53,7 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
             }
         }
 
-        for(RCRSCSMessage msg : this.receivedMessageList){
-            Logger.info(msg.toString());
-            if(msg instanceof ClearRouteTaskMessage){
-
-                ClearRouteTaskMessage aclMessage = (ClearRouteTaskMessage)msg;
-
-                System.out.println("Mensaje entrante acl "+ me().getID()+" , " + aclMessage);
-                //move(time,aclMessage.getTargetAgentID());
-            }
-        }
-
-        sendMove(time, randomWalk());
+       sendMove(time, randomDestination());
     }
 
     private void move(int time,EntityID agentID){
@@ -95,14 +78,6 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
 
     @Override
     protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum(){
-        return EnumSet.of(StandardEntityURN.POLICE_FORCE);
+        return EnumSet.of(StandardEntityURN.CIVILIAN);
     }
-    /*
-    @Override
-    protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum() {
-        return EnumSet.of(StandardEntityURN.FIRE_BRIGADE,
-                StandardEntityURN.FIRE_STATION, StandardEntityURN.AMBULANCE_TEAM,
-                StandardEntityURN.AMBULANCE_CENTRE, StandardEntityURN.POLICE_FORCE,
-                StandardEntityURN.POLICE_OFFICE);
-    }*/
 }

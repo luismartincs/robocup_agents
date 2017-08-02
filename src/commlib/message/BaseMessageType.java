@@ -2,6 +2,8 @@ package commlib.message;
 
 import commlib.data.DataType;
 
+import javax.xml.crypto.Data;
+
 /**
  * The BaseMessageType represents the basic message types that are provided.
  * <p>
@@ -31,7 +33,7 @@ import commlib.data.DataType;
 public enum BaseMessageType {
 
 
-	ACL_MESSAGE(new DataType[]{DataType.CENTER_AGENT,DataType.PERFORMATIVE}),
+	ACL_MESSAGE(new DataType[]{DataType.CENTER_AGENT,DataType.PERFORMATIVE,DataType.AREA}),
 
 	UNPASSABLE(new DataType[] { DataType.PLATOON_AGENT, DataType.AREA,
 			DataType.AREA, DataType.BLOCKADE }),
