@@ -55,6 +55,7 @@ public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
         }
         StandardEntity entity;
         ACLMessage msg;
+        /*
         for(EntityID id :changed.getChangedEntities()){
             entity = this.model.getEntity(id);
             if(entity instanceof FireBrigade) {
@@ -67,7 +68,7 @@ public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
                 msg=new ACLMessage(time, this.getID(), ACLPerformative.INFORM,id);
                 addMessage(msg);
             }
-        }
+        }*/
 
        sendMove(time, randomDestination());
     }

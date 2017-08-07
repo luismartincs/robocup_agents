@@ -98,7 +98,8 @@ public final class LaunchSampleRCRSCSAgents{
 			Logger.info("failed: " + e.getMessage());
 		}
 		try{
-			while(pf-- != 0){
+			int a=0;
+			while(a-- != 0){
 				Logger.info("Connecting police force " + (i++) + "...");
 				System.out.println("conectado pf");
 				launcher.connect(new SampleRCRSCSPoliceForce());
@@ -141,7 +142,7 @@ public final class LaunchSampleRCRSCSAgents{
 		 * }
 		 */
 
-		int r = 2;
+		int r = 3;
 
 		try{
 			while(r-- != 0){

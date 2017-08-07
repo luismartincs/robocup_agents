@@ -14,21 +14,25 @@ public class ContractNet {
     ArrayList<EntityID> ack;
     ArrayList<EntityID> Response;
     Entity entity;
+    int serviceID;
 
 
     //error in the communication probability
-    double error=0.1;
+    double error=0;
 
     /**
      * Constructor
      * @param entity
      */
-    public ContractNet(Entity entity){
+    public ContractNet(Entity entity, int serviceID){
         this.entity=entity;
+        this.serviceID=serviceID;
         Request=new ArrayList<>();
         ack=new ArrayList<>();
         Response=new ArrayList<>();
     }
+
+    /**--------------------CLIENT SIDE-----------------------------------------------------*/
 
     /**
      * First, a message when the inform performative is generated
@@ -37,19 +41,15 @@ public class ContractNet {
      * @return
      */
     public ACLMessage msgRequest(int time, EntityID entity){
-        ACLMessage message=new ACLMessage(time,this.entity.getID(), ACLPerformative.REQUEST,entity);
-        if(noError()) {
+        ACLMessage message=new ACLMessage(time,this.entity.getID(), ACLPerformative.REQUEST,entity);//falta el service id
             if (existRequest(entity)) {
                 return null;
             } else {
                 Request.add(entity);
                 return message;
             }
-        }
-        else{
-            return null;
-        }
     }
+
 
     /**
      * second, the acks are received
@@ -57,10 +57,10 @@ public class ContractNet {
      * @return
      */
     public boolean addACK(ACLMessage msg){
-        if(existRequest(msg.getAgentID())) {
+        if(existRequest(msg.getEntityID())) {
             if (msg.getPerformative().equals(ACLPerformative.CONFIRM)) {
-                removeRequest(msg.getAgentID());
-                ack.add(msg.getAgentID());
+                removeRequest(msg.getEntityID());
+                ack.add(msg.getEntityID());
                 return true;
             }
         }
@@ -75,7 +75,6 @@ public class ContractNet {
      */
     public ACLMessage msgInform(int time, EntityID entity){
         ACLMessage message=new ACLMessage(time,this.entity.getID(), ACLPerformative.INFORM,entity);
-        if(noError()){
             if(existACK(entity)){
                 removeACK(entity);
                 Request.add(entity);
@@ -84,10 +83,6 @@ public class ContractNet {
             else{
                 return null;
             }
-        }
-        else{
-            return null;
-        }
     }
 
     public boolean existRequest(EntityID ids){
@@ -117,6 +112,46 @@ public class ContractNet {
         }
         else{
             return false;
+        }
+    }
+
+    /**---------------------------------------SERVER SIDE-------------------------------------*/
+
+    /**
+     * the server receive the request
+     * @param msg
+     */
+    public void addRequest(ACLMessage msg){
+        if(msg.getTargetAgentID().equals(entity.getID())&&msg.getPerformative().equals(ACLPerformative.REQUEST)){
+            if(!existRequest(msg.getEntityID())){
+                Request.add(msg.getEntityID());
+                ack.add(msg.getEntityID());
+            }
+        }
+    }
+
+    /**
+     * generate ack one by one
+     * @param time
+     * @return
+     */
+    public ACLMessage generateACK(int time){
+        if(ack.size()!=0){
+            EntityID id=ack.get(0);
+            removeRequest(id);
+            removeACK(id);
+            return new ACLMessage(time, this.entity.getID(), ACLPerformative.INFORM,id);
+        }
+        return null;
+    }
+
+    /**
+     * add the response to the list
+     * @param msg
+     */
+    public void addResponse(ACLMessage msg){
+        if(msg.getTargetAgentID().equals(entity.getID())&&msg.getPerformative().equals(ACLPerformative.INFORM)){
+            Response.add(msg.getEntityID());
         }
     }
 }
