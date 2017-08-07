@@ -100,6 +100,7 @@ public final class LaunchSampleRCRSCSAgents{
 		try{
 			while(pf-- != 0){
 				Logger.info("Connecting police force " + (i++) + "...");
+				System.out.println("conectado pf");
 				launcher.connect(new SampleRCRSCSPoliceForce());
 				Logger.info("success");
 			}
@@ -145,6 +146,7 @@ public final class LaunchSampleRCRSCSAgents{
 		try{
 			while(r-- != 0){
 				Logger.info("Connecting dummy agent " + (i++) + "...");
+				System.out.println("conectado dummy");
 				launcher.connect(new DummyRCRSCSAgent());
 				Logger.info("success");
 			}
@@ -152,15 +154,17 @@ public final class LaunchSampleRCRSCSAgents{
 			Logger.info("failed: " + e.getMessage());
 		}
 
-		int civ = 1;
+		int civ = 3;
 
 		try{
-			while(r-- != 0){
+			while(civ-- != 0){
 				Logger.info("Connecting dummy agent " + (i++) + "...");
+				System.out.println("conectado civil"+civ);
 				launcher.connect(new CivilianAgent());
 				Logger.info("success");
 			}
 		}catch(ComponentConnectionException e){
+			System.out.println(e.getMessage());
 			Logger.info("failed: " + e.getMessage());
 		}
 	}

@@ -1,12 +1,12 @@
 
+import commlib.bdi.messages.ACLMessage;
+import commlib.bdi.messages.ACLPerformative;
 import commlib.message.RCRSCSMessage;
 import commlib.task.pf.ClearRouteTaskMessage;
 import rescuecore2.Constants;
 import rescuecore2.log.Logger;
 import rescuecore2.messages.Command;
-import rescuecore2.standard.entities.Civilian;
-import rescuecore2.standard.entities.PoliceForce;
-import rescuecore2.standard.entities.StandardEntityURN;
+import rescuecore2.standard.entities.*;
 import rescuecore2.standard.kernel.comms.ChannelCommunicationModel;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
@@ -30,6 +30,7 @@ public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
     @Override
     protected void postConnect() {
         super.postConnect();
+        System.out.println("post civil");
         model.indexClass(StandardEntityURN.ROAD);
         boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY).equals(ChannelCommunicationModel.class.getName());
 
@@ -50,6 +51,21 @@ public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
                 setMessageChannel(1);
                 sendSubscribe(time, getMessageChannel());
 
+            }
+        }
+        StandardEntity entity;
+        ACLMessage msg;
+        for(EntityID id :changed.getChangedEntities()){
+            entity = this.model.getEntity(id);
+            if(entity instanceof FireBrigade) {
+                msg=new ACLMessage(time, this.getID(), ACLPerformative.INFORM,id);
+                addMessage(msg);
+                System.out.println("veo un BOMBERO");
+            }
+            if(entity instanceof PoliceForce) {
+                System.out.println("veo un POLICIA");
+                msg=new ACLMessage(time, this.getID(), ACLPerformative.INFORM,id);
+                addMessage(msg);
             }
         }
 

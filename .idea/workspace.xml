@@ -1,15 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f7ccef01-28f0-4711-9c60-4b57c692d99a" name="Default" comment="Configuracion">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/CivilianAgent.java" />
+    <list default="true" id="d5f7fd45-00f7-45a5-8e57-a3cf3ab3495f" name="Default" comment="se empezó con los mensajes en los civiles">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/libs.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test-results/addPerformance.log" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test-results/containsPerformance.log" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test-results/deletePerformance.log" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test-results/intersectPerformance.log" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/test-results/nearestPerformance.log" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/libs/rcrscs-v1.231.jar" afterPath="$PROJECT_DIR$/libs/rcrscs-v1.231.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/README.md" afterPath="$PROJECT_DIR$/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/robocup_agents.iml" afterPath="$PROJECT_DIR$/robocup_agents.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/AbstractSampleRCRSCSAgent.java" afterPath="$PROJECT_DIR$/src/AbstractSampleRCRSCSAgent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/CivilianAgent.java" afterPath="$PROJECT_DIR$/src/CivilianAgent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DistanceRCRSCSSorter.java" afterPath="$PROJECT_DIR$/src/DistanceRCRSCSSorter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/DummyRCRSCSAgent.java" afterPath="$PROJECT_DIR$/src/DummyRCRSCSAgent.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/LaunchSampleRCRSCSAgents.java" afterPath="$PROJECT_DIR$/src/LaunchSampleRCRSCSAgents.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SampleRCRSCSAmbulanceTeam.java" afterPath="$PROJECT_DIR$/src/SampleRCRSCSAmbulanceTeam.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SampleRCRSCSCentre.java" afterPath="$PROJECT_DIR$/src/SampleRCRSCSCentre.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SampleRCRSCSFireBrigade.java" afterPath="$PROJECT_DIR$/src/SampleRCRSCSFireBrigade.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SampleRCRSCSPoliceForce.java" afterPath="$PROJECT_DIR$/src/SampleRCRSCSPoliceForce.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/SampleRCRSCSSearch.java" afterPath="$PROJECT_DIR$/src/SampleRCRSCSSearch.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/bdi/messages/ACLMessage.java" afterPath="$PROJECT_DIR$/src/commlib/bdi/messages/ACLMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/bdi/messages/ACLPerformative.java" afterPath="$PROJECT_DIR$/src/commlib/bdi/messages/ACLPerformative.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/components/AbstractCSAgent.java" afterPath="$PROJECT_DIR$/src/commlib/components/AbstractCSAgent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/components/RCRSCSAgent.java" afterPath="$PROJECT_DIR$/src/commlib/components/RCRSCSAgent.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/data/DataType.java" afterPath="$PROJECT_DIR$/src/commlib/data/DataType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/data/EntityIDData.java" afterPath="$PROJECT_DIR$/src/commlib/data/EntityIDData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/data/EntityIDListData.java" afterPath="$PROJECT_DIR$/src/commlib/data/EntityIDListData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/data/ListData.java" afterPath="$PROJECT_DIR$/src/commlib/data/ListData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/data/RCRSCSData.java" afterPath="$PROJECT_DIR$/src/commlib/data/RCRSCSData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/data/ValueData.java" afterPath="$PROJECT_DIR$/src/commlib/data/ValueData.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/AmbulanceTeamInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/AmbulanceTeamInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/BlockadeInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/BlockadeInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/BuildingInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/BuildingInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/FireBrigadeInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/FireBrigadeInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/PoliceForceInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/PoliceForceInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/PositionInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/PositionInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/TransferInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/TransferInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/UnpassableInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/UnpassableInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/VictimInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/VictimInformation.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/information/WorldInformation.java" afterPath="$PROJECT_DIR$/src/commlib/information/WorldInformation.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/message/BaseMessageType.java" afterPath="$PROJECT_DIR$/src/commlib/message/BaseMessageType.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/message/EntityIDComparator.java" afterPath="$PROJECT_DIR$/src/commlib/message/EntityIDComparator.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/message/IMessage.java" afterPath="$PROJECT_DIR$/src/commlib/message/IMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/message/RCRSCSMessage.java" afterPath="$PROJECT_DIR$/src/commlib/message/RCRSCSMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/message/RCRSCSMessageConverter.java" afterPath="$PROJECT_DIR$/src/commlib/message/RCRSCSMessageConverter.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/report/DoneReportMessage.java" afterPath="$PROJECT_DIR$/src/commlib/report/DoneReportMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/report/ExceptionReportMessage.java" afterPath="$PROJECT_DIR$/src/commlib/report/ExceptionReportMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/report/ReportMessage.java" afterPath="$PROJECT_DIR$/src/commlib/report/ReportMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/DecideLeaderTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/DecideLeaderTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/ITaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/ITaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/MoveTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/MoveTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/MoveWithStagingPostTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/MoveWithStagingPostTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/RestAtRefugeTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/RestAtRefugeTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/RestTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/RestTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/ScoutAreaTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/ScoutAreaTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/TaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/TaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/at/AmbulanceTeamTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/at/AmbulanceTeamTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/at/RescueAreaTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/at/RescueAreaTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/fb/ExtinguishAreaTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/fb/ExtinguishAreaTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/fb/FireBrigadeTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/fb/FireBrigadeTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/pf/ClearRouteTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/pf/ClearRouteTaskMessage.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/commlib/task/pf/PoliceForceTaskMessage.java" afterPath="$PROJECT_DIR$/src/commlib/task/pf/PoliceForceTaskMessage.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,64 +75,28 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="ErrorTreeViewConfiguration">
+    <option name="hideWarnings" value="true" />
+    <option name="HIDE_WARNINGS" value="true" />
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="SampleRCRSCSCentre.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSCentre.java">
+      <file leaf-file-name="SampleRCRSCSPoliceForce.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSPoliceForce.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="792">
-              <caret line="67" column="33" lean-forward="false" selection-start-line="67" selection-start-column="33" selection-end-line="67" selection-end-column="33" />
+            <state relative-caret-position="48">
+              <caret line="92" column="27" lean-forward="false" selection-start-line="92" selection-start-column="27" selection-end-line="92" selection-end-column="27" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ClearRouteTaskMessage.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/commlib/task/pf/ClearRouteTaskMessage.java">
+      <file leaf-file-name="LaunchSampleRCRSCSAgents.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/LaunchSampleRCRSCSAgents.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="972">
-              <caret line="61" column="24" lean-forward="false" selection-start-line="61" selection-start-column="11" selection-end-line="61" selection-end-column="32" />
+            <state relative-caret-position="-72">
+              <caret line="93" column="62" lean-forward="false" selection-start-line="93" selection-start-column="62" selection-end-line="93" selection-end-column="62" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RCRSCSMessageConverter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/commlib/message/RCRSCSMessageConverter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="7704">
-              <caret line="480" column="38" lean-forward="false" selection-start-line="480" selection-start-column="31" selection-end-line="480" selection-end-column="49" />
-              <folding>
-                <marker date="1501517044975" expanded="true" signature="33709:33963" ph="{...}" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DummyRCRSCSAgent.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/DummyRCRSCSAgent.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1026">
-              <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="89" selection-end-column="39" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#944#945#0" expanded="true" />
-                <element signature="e#980#981#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AbstractSampleRCRSCSAgent.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/AbstractSampleRCRSCSAgent.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="990">
-              <caret line="68" column="28" lean-forward="false" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
-              <folding>
-                <element signature="e#2117#2127#0" expanded="true" />
-                <element signature="e#2183#2193#0" expanded="true" />
-                <element signature="e#2383#2393#0" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -84,28 +104,24 @@
       <file leaf-file-name="CivilianAgent.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/CivilianAgent.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="296">
-              <caret line="40" column="9" lean-forward="true" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="390">
+              <caret line="60" column="12" lean-forward="false" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ACLMessage.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/commlib/bdi/messages/ACLMessage.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="234">
+              <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
-  </component>
-  <component name="FileTemplateManagerImpl">
-    <option name="RECENT_TEMPLATES">
-      <list>
-        <option value="Class" />
-      </list>
-    </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>undefined data type</find>
-    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -118,37 +134,17 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/src/SampleRCRSCSPoliceForce.java" />
-        <option value="$PROJECT_DIR$/src/ACLMessage.java" />
-        <option value="$PROJECT_DIR$/src/commlib/data/DataType.java" />
-        <option value="$PROJECT_DIR$/src/commlib/message/RCRSCSMessageConverter.java" />
-        <option value="$PROJECT_DIR$/src/commlib/bdi/messages/ACLPerformatives.java" />
-        <option value="$PROJECT_DIR$/src/commlib/bdi/messages/ACLPerformative.java" />
-        <option value="$PROJECT_DIR$/src/commlib/message/BaseMessageType.java" />
-        <option value="$PROJECT_DIR$/src/commlib/bdi/messages/ACLMessage.java" />
-        <option value="$PROJECT_DIR$/src/commlib/task/TaskMessage.java" />
-        <option value="$PROJECT_DIR$/src/SampleRCRSCSFireBrigade.java" />
-        <option value="$PROJECT_DIR$/src/SampleRCRSCSCentre.java" />
-        <option value="$PROJECT_DIR$/src/DummyRCRSCSAgent.java" />
-        <option value="$PROJECT_DIR$/src/commlib/CivilianAgent.java" />
         <option value="$PROJECT_DIR$/src/LaunchSampleRCRSCSAgents.java" />
-        <option value="$PROJECT_DIR$/src/AbstractSampleRCRSCSAgent.java" />
         <option value="$PROJECT_DIR$/src/CivilianAgent.java" />
       </list>
     </option>
   </component>
-  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
-  <component name="JsGulpfileManager">
-    <detection-done>true</detection-done>
-    <sorting>DEFINITION_ORDER</sorting>
-  </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="991" />
+    <option name="x" value="1431" />
     <option name="y" value="-4" />
-    <option name="width" value="930" />
-    <option name="height" value="1085" />
+    <option name="width" value="1855" />
+    <option name="height" value="1084" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
@@ -176,11 +172,6 @@
             <path>
               <item name="robocup_agents" type="b2602c69:ProjectViewProjectNode" />
               <item name="robocup_agents" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="robocup_agents" type="b2602c69:ProjectViewProjectNode" />
-              <item name="robocup_agents" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -191,29 +182,22 @@
             </path>
             <path>
               <item name="robocup_agents" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="robocup_agents" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="commlib" type="462c0819:PsiDirectoryNode" />
+              <item name="messages" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.15" />
-    <property name="project.structure.side.proportion" value="0.2" />
-  </component>
-  <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/src" />
-    </key>
+    <property name="ChangesBrowser.SHOW_FLATTEN" value="false" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -231,9 +215,9 @@
     <configuration name="LaunchSampleRCRSCSAgents" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="LaunchSampleRCRSCSAgents" />
-      <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="-pf 0" />
-      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
       <option name="ENABLE_SWING_INSPECTOR" value="false" />
@@ -334,560 +318,184 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="f7ccef01-28f0-4711-9c60-4b57c692d99a" name="Default" comment="" />
-      <created>1501223775851</created>
+      <changelist id="d5f7fd45-00f7-45a5-8e57-a3cf3ab3495f" name="Default" comment="" />
+      <created>1501828708582</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1501223775851</updated>
-      <workItem from="1501223779438" duration="1131000" />
-      <workItem from="1501260201723" duration="4300000" />
-      <workItem from="1501264699136" duration="12763000" />
-      <workItem from="1501602584998" duration="11517000" />
-      <workItem from="1501696050994" duration="33000" />
+      <updated>1501828708582</updated>
     </task>
-    <task id="LOCAL-00001" summary="Iniciando el proyecto de agentes">
-      <created>1501224186578</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1501224186579</updated>
-    </task>
-    <task id="LOCAL-00002" summary="El ejemplo de Centre tiene un bug, requiere el super.postConnect(); para que no ocurran excepciones al ejecutar">
-      <created>1501224304765</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1501224304765</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Para que un agente pueda recibir mensajes es necesario que se suscriba a un canal">
-      <created>1501224531852</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1501224531852</updated>
-    </task>
-    <task id="LOCAL-00004" summary="Cambios al README">
-      <created>1501224628481</created>
-      <option name="number" value="00004" />
-      <option name="presentableId" value="LOCAL-00004" />
-      <option name="project" value="LOCAL" />
-      <updated>1501224628481</updated>
-    </task>
-    <task id="LOCAL-00005" summary="Configuracion">
-      <created>1501224772161</created>
-      <option name="number" value="00005" />
-      <option name="presentableId" value="LOCAL-00005" />
-      <option name="project" value="LOCAL" />
-      <updated>1501224772161</updated>
-    </task>
-    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
-  <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49913000" />
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
+    <frame x="1431" y="-4" width="1857" height="1092" extended-state="6" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32984293" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23827493" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.17910448" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3997955" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32924336" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
-  </component>
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Iniciando el proyecto de agentes" />
-    <MESSAGE value="El ejemplo de Centre tiene un bug, requiere el super.postConnect(); para que no ocurran excepciones al ejecutar" />
-    <MESSAGE value="Para que un agente pueda recibir mensajes es necesario que se suscriba a un canal" />
-    <MESSAGE value="Cambios al README" />
-    <MESSAGE value="Configuracion" />
-    <option name="LAST_COMMIT_MESSAGE" value="Configuracion" />
+    <MESSAGE value="se empezó con los mensajes en los civiles" />
+    <option name="LAST_COMMIT_MESSAGE" value="se empezó con los mensajes en los civiles" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <option name="time" value="9" />
-    </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="this.roadList" language="JAVA" />
-      </configuration>
-    </watches-manager>
+    <breakpoint-manager />
+    <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/task/DecideLeaderTaskMessage.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="15" column="11" lean-forward="false" selection-start-line="15" selection-start-column="11" selection-end-line="15" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/task/at/RescueAreaTaskMessage.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="16" column="11" lean-forward="false" selection-start-line="16" selection-start-column="11" selection-end-line="16" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rescuecore2.jar!/rescuecore2/misc/WorkerThread.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="78">
-          <caret line="33" column="23" lean-forward="false" selection-start-line="33" selection-start-column="23" selection-end-line="33" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/components/RCRSCSAgent.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="30" column="135" lean-forward="false" selection-start-line="30" selection-start-column="135" selection-end-line="30" selection-end-column="135" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/information/WorldInformation.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="17" column="0" lean-forward="false" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/standard.jar!/rescuecore2/standard/entities/PoliceOffice.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="10" column="39" lean-forward="false" selection-start-line="10" selection-start-column="39" selection-end-line="10" selection-end-column="39" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/standard.jar!/rescuecore2/standard/entities/Building.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="16" column="13" lean-forward="false" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/information/PositionInformation.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="198">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/information/BuildingInformation.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="19" column="0" lean-forward="false" selection-start-line="19" selection-start-column="0" selection-end-line="20" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/message/RCRSCSMessageConverter.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="719" column="0" lean-forward="false" selection-start-line="719" selection-start-column="0" selection-end-line="719" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/message/BaseMessageType.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="77">
-          <caret line="11" column="66" lean-forward="false" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/components/AbstractCSAgent.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rcrscs-v1.231.jar!/commlib/message/RCRSCSMessage.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="136" column="51" lean-forward="false" selection-start-line="136" selection-start-column="51" selection-end-line="136" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/data/ValueData.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="25" column="19" lean-forward="true" selection-start-line="25" selection-start-column="14" selection-end-line="25" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/bdi/messages/ACLPerformative.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="37" column="18" lean-forward="true" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/information/BuildingInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-330">
-          <caret line="18" column="53" lean-forward="true" selection-start-line="18" selection-start-column="53" selection-end-line="18" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/information/BlockadeInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-684">
-          <caret line="19" column="13" lean-forward="false" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/information/PositionInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="39" column="22" lean-forward="false" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/information/VictimInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="103" column="53" lean-forward="true" selection-start-line="103" selection-start-column="53" selection-end-line="103" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/message/RCRSCSMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3">
-          <caret line="167" column="53" lean-forward="false" selection-start-line="167" selection-start-column="48" selection-end-line="167" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/information/AmbulanceTeamInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="35" column="16" lean-forward="true" selection-start-line="35" selection-start-column="16" selection-end-line="35" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/information/WorldInformation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="18" column="22" lean-forward="false" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/task/TaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="568">
-          <caret line="68" column="13" lean-forward="true" selection-start-line="68" selection-start-column="13" selection-end-line="68" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/data/DataType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2412">
-          <caret line="134" column="7" lean-forward="true" selection-start-line="134" selection-start-column="7" selection-end-line="134" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/task/MoveTaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="19" column="8" lean-forward="false" selection-start-line="19" selection-start-column="8" selection-end-line="19" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/task/RestTaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="16" column="77" lean-forward="false" selection-start-line="16" selection-start-column="64" selection-end-line="16" selection-end-column="77" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/bdi/messages/ACLMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="13" column="48" lean-forward="false" selection-start-line="13" selection-start-column="32" selection-end-line="13" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/standard.jar!/rescuecore2/standard/entities/PoliceForce.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="10" column="13" lean-forward="false" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSPoliceForce.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="31" column="16" lean-forward="false" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/task/ScoutAreaTaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="42" column="31" lean-forward="false" selection-start-line="42" selection-start-column="11" selection-end-line="42" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSFireBrigade.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1504">
-          <caret line="159" column="24" lean-forward="true" selection-start-line="159" selection-start-column="24" selection-end-line="159" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/message/EntityIDComparator.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="6" lean-forward="false" selection-start-line="12" selection-start-column="6" selection-end-line="12" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rescuecore2.jar!/rescuecore2/components/AbstractAgent.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1512">
-          <caret line="25" column="22" lean-forward="false" selection-start-line="25" selection-start-column="22" selection-end-line="25" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSAmbulanceTeam.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1648">
-          <caret line="131" column="25" lean-forward="false" selection-start-line="131" selection-start-column="25" selection-end-line="131" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/task/fb/ExtinguishAreaTaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="21" column="13" lean-forward="false" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/task/pf/PoliceForceTaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-198">
-          <caret line="18" column="22" lean-forward="false" selection-start-line="18" selection-start-column="22" selection-end-line="18" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/message/BaseMessageType.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="141" column="4" lean-forward="false" selection-start-line="141" selection-start-column="4" selection-end-line="141" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSCentre.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="792">
-          <caret line="67" column="33" lean-forward="false" selection-start-line="67" selection-start-column="33" selection-end-line="67" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/task/pf/ClearRouteTaskMessage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="972">
-          <caret line="61" column="24" lean-forward="false" selection-start-line="61" selection-start-column="11" selection-end-line="61" selection-end-column="32" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/message/RCRSCSMessageConverter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="7704">
-          <caret line="480" column="38" lean-forward="false" selection-start-line="480" selection-start-column="31" selection-end-line="480" selection-end-column="49" />
-          <folding>
-            <marker date="1501517044975" expanded="true" signature="33709:33963" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rescuecore2.jar!/rescuecore2/connection/Connection.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="16" column="9" lean-forward="false" selection-start-line="16" selection-start-column="9" selection-end-line="16" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rescuecore2.jar!/rescuecore2/connection/StreamConnection.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-450">
-          <caret line="80" column="0" lean-forward="true" selection-start-line="80" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rescuecore2.jar!/rescuecore2/connection/AbstractConnection.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="504">
-          <caret line="171" column="12" lean-forward="false" selection-start-line="171" selection-start-column="12" selection-end-line="171" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/components/AbstractCSAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="33" column="21" lean-forward="true" selection-start-line="33" selection-start-column="21" selection-end-line="33" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/rescuecore2.jar!/rescuecore2/components/AbstractComponent.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1244">
-          <caret line="65" column="13" lean-forward="true" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/standard.jar!/rescuecore2/standard/components/StandardAgent.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="94" column="17" lean-forward="false" selection-start-line="94" selection-start-column="17" selection-end-line="94" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/commlib/components/RCRSCSAgent.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="110" column="13" lean-forward="true" selection-start-line="110" selection-start-column="13" selection-end-line="110" selection-end-column="13" />
+        <state relative-caret-position="522">
+          <caret line="29" column="13" lean-forward="false" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/LaunchSampleRCRSCSAgents.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="151" column="53" lean-forward="true" selection-start-line="151" selection-start-column="53" selection-end-line="151" selection-end-column="53" />
+        <state relative-caret-position="1854">
+          <caret line="103" column="58" lean-forward="false" selection-start-line="103" selection-start-column="58" selection-end-line="103" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/CivilianAgent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="32" column="32" lean-forward="false" selection-start-line="32" selection-start-column="32" selection-end-line="32" selection-end-column="32" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/DummyRCRSCSAgent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1026">
-          <caret line="78" column="0" lean-forward="false" selection-start-line="78" selection-start-column="0" selection-end-line="89" selection-end-column="39" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#944#945#0" expanded="true" />
-            <element signature="e#980#981#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="1206">
+          <caret line="67" column="87" lean-forward="false" selection-start-line="67" selection-start-column="87" selection-end-line="67" selection-end-column="87" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/AbstractSampleRCRSCSAgent.java">
+    <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSFireBrigade.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="68" column="28" lean-forward="false" selection-start-line="68" selection-start-column="28" selection-end-line="68" selection-end-column="28" />
-          <folding>
-            <element signature="e#2117#2127#0" expanded="true" />
-            <element signature="e#2183#2193#0" expanded="true" />
-            <element signature="e#2383#2393#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="-2832">
+          <caret line="28" column="13" lean-forward="false" selection-start-line="28" selection-start-column="13" selection-end-line="28" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSAmbulanceTeam.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1044">
+          <caret line="29" column="13" lean-forward="false" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DummyRCRSCSAgent.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="63" column="53" lean-forward="true" selection-start-line="63" selection-start-column="53" selection-end-line="63" selection-end-column="53" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DistanceRCRSCSSorter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="8" column="13" lean-forward="false" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/commlib/message/RCRSCSMessageConverter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="384">
+          <caret line="814" column="20" lean-forward="true" selection-start-line="814" selection-start-column="20" selection-end-line="814" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/commlib/bdi/messages/ACLPerformative.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-726">
+          <caret line="2" column="12" lean-forward="false" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/LaunchSampleRCRSCSAgents.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-72">
+          <caret line="93" column="62" lean-forward="false" selection-start-line="93" selection-start-column="62" selection-end-line="93" selection-end-column="62" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/commlib/bdi/messages/ACLMessage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="22" column="5" lean-forward="true" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/SampleRCRSCSPoliceForce.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="92" column="27" lean-forward="false" selection-start-line="92" selection-start-column="27" selection-end-line="92" selection-end-column="27" />
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/CivilianAgent.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="296">
-          <caret line="40" column="9" lean-forward="true" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+        <state relative-caret-position="390">
+          <caret line="60" column="12" lean-forward="false" selection-start-line="60" selection-start-column="12" selection-end-line="60" selection-end-column="12" />
+          <folding />
         </state>
       </provider>
     </entry>
   </component>
   <component name="masterDetails">
     <states>
-      <state key="ArtifactsStructureConfigurable.UI">
-        <settings>
-          <artifact-editor />
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="FacetStructureConfigurable.UI">
-        <settings>
-          <last-edited>No facets are configured</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="GlobalLibrariesConfigurable.UI">
-        <settings>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="JdkListConfigurable.UI">
+      <state key="ProjectJDKs.UI">
         <settings>
           <last-edited>1.8</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ModuleStructureConfigurable.UI">
-        <settings>
-          <last-edited>robocup_agents</last-edited>
-          <splitter-proportions>
-            <option name="proportions">
-              <list>
-                <option value="0.2" />
-              </list>
-            </option>
-          </splitter-proportions>
-        </settings>
-      </state>
-      <state key="ProjectLibrariesConfigurable.UI">
-        <settings>
           <splitter-proportions>
             <option name="proportions">
               <list>
