@@ -8,6 +8,7 @@ import commlib.information.BuildingInformation;
 import commlib.message.RCRSCSMessage;
 import commlib.task.RestTaskMessage;
 import commlib.task.pf.ClearRouteTaskMessage;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import rescuecore2.Constants;
 import rescuecore2.log.Logger;
 import rescuecore2.standard.entities.Blockade;
@@ -25,7 +26,7 @@ import rescuecore2.worldmodel.EntityID;
 public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
 
     private boolean channelComm;
-
+    ContractNet cnet;
 
     @Override
     public String toString() {
@@ -36,7 +37,9 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
     @Override
     protected void postConnect() {
         super.postConnect();
+        System.out.println("id "+this.getID());
         model.indexClass(StandardEntityURN.ROAD);
+        cnet=new ContractNet(this.getID(),1);
         boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY)
                 .equals(ChannelCommunicationModel.class.getName());
 
@@ -61,13 +64,17 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
 
         for(RCRSCSMessage msg : this.receivedMessageList){
             Logger.info(msg.toString());
-            if(msg instanceof ClearRouteTaskMessage){
+            if(msg instanceof ACLMessage){
 
-                ClearRouteTaskMessage aclMessage = (ClearRouteTaskMessage)msg;
+                ACLMessage aclMessage = (ACLMessage)msg;
 
                 System.out.println("Mensaje entrante acl "+ me().getID()+" , " + aclMessage);
-                //move(time,aclMessage.getTargetAgentID());
             }
+            /*
+            if(msg instanceof ACLMessage){
+                System.out.println(" mensaje ACL ----- ");
+                //cnet.addRequest((ACLMessage)msg);
+            }*/
         }
 
         sendMove(time, randomWalk());

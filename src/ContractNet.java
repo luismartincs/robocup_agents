@@ -10,10 +10,10 @@ public class ContractNet {
     /**
      * the first part is sending the request message
      */
-    ArrayList<EntityID> Request;
+    ArrayList<IDandTime> Request;
     ArrayList<EntityID> ack;
     ArrayList<EntityID> Response;
-    Entity entity;
+    EntityID entity;
     int serviceID;
 
 
@@ -24,7 +24,7 @@ public class ContractNet {
      * Constructor
      * @param entity
      */
-    public ContractNet(Entity entity, int serviceID){
+    public ContractNet(EntityID entity, int serviceID){
         this.entity=entity;
         this.serviceID=serviceID;
         Request=new ArrayList<>();
@@ -41,12 +41,14 @@ public class ContractNet {
      * @return
      */
     public ACLMessage msgRequest(int time, EntityID entity){
-        ACLMessage message=new ACLMessage(time,this.entity.getID(), ACLPerformative.REQUEST,entity);//falta el service id
-            if (existRequest(entity)) {
-                return null;
-            } else {
-                Request.add(entity);
+        ACLMessage message=new ACLMessage(time,this.entity, ACLPerformative.REQUEST,entity);//falta el service id
+            if (!existRequest(entity)) {
+                Request.add(new IDandTime(entity));
                 return message;
+            } else {
+                addTime();
+                removeRequests(7);
+                return null;
             }
     }
 
@@ -74,10 +76,10 @@ public class ContractNet {
      * @return
      */
     public ACLMessage msgInform(int time, EntityID entity){
-        ACLMessage message=new ACLMessage(time,this.entity.getID(), ACLPerformative.INFORM,entity);
+        ACLMessage message=new ACLMessage(time,this.entity, ACLPerformative.INFORM,entity);
             if(existACK(entity)){
                 removeACK(entity);
-                Request.add(entity);
+                Request.add(new IDandTime(entity));
                 return message;
             }
             else{
@@ -86,11 +88,40 @@ public class ContractNet {
     }
 
     public boolean existRequest(EntityID ids){
-        return Request.indexOf(ids)!=-1;
+
+        for(IDandTime idt:Request){
+            if(idt.getId().equals(ids)){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void removeRequest(EntityID id){
-        Request.remove(Request.indexOf(id));
+
+        for(int i=0;i<Request.size();i++){
+            if(Request.get(i).getId().equals(id)){
+                Request.remove(i);
+                break;
+            }
+        }
+    }
+
+    public void addTime(){
+        for(IDandTime idt:Request){
+            idt.addTime();
+        }
+    }
+
+    public void removeRequests(int limit){
+        ArrayList <IDandTime> newRequest=new ArrayList<>();
+        for(IDandTime idt:Request){
+            if(idt.getTime()<=limit){
+                newRequest.add(idt);
+            }
+        }
+        Request.clear();
+        Request.addAll(newRequest);
     }
 
     public boolean existACK(EntityID id){
@@ -122,10 +153,11 @@ public class ContractNet {
      * @param msg
      */
     public void addRequest(ACLMessage msg){
-        if(msg.getTargetAgentID().equals(entity.getID())&&msg.getPerformative().equals(ACLPerformative.REQUEST)){
+        if(msg.getTargetAgentID().equals(entity)&&msg.getPerformative().equals(ACLPerformative.REQUEST)){
             if(!existRequest(msg.getEntityID())){
-                Request.add(msg.getEntityID());
+                Request.add(new IDandTime(msg.getEntityID()));
                 ack.add(msg.getEntityID());
+                System.out.println("se añadió el request de "+msg.getTargetAgentID()+" por "+entity);
             }
         }
     }
@@ -140,7 +172,7 @@ public class ContractNet {
             EntityID id=ack.get(0);
             removeRequest(id);
             removeACK(id);
-            return new ACLMessage(time, this.entity.getID(), ACLPerformative.INFORM,id);
+            return new ACLMessage(time, this.entity, ACLPerformative.INFORM,id);
         }
         return null;
     }
@@ -150,8 +182,38 @@ public class ContractNet {
      * @param msg
      */
     public void addResponse(ACLMessage msg){
-        if(msg.getTargetAgentID().equals(entity.getID())&&msg.getPerformative().equals(ACLPerformative.INFORM)){
+        if(msg.getTargetAgentID().equals(entity)&&msg.getPerformative().equals(ACLPerformative.INFORM)){
             Response.add(msg.getEntityID());
         }
+    }
+}
+
+
+class IDandTime{
+    EntityID  id;
+    int time=0;
+
+    public IDandTime(EntityID id) {
+        this.id = id;
+    }
+
+    public EntityID getId() {
+        return id;
+    }
+
+    public void setId(EntityID id) {
+        this.id = id;
+    }
+
+    public int getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public void addTime(){
+        this.time++;
     }
 }
