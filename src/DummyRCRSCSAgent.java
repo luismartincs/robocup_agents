@@ -60,9 +60,12 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
         }
 
         for(RCRSCSMessage msg : this.receivedMessageList){
-            if(msg instanceof ACLMessage){
+            Logger.info(msg.toString());
+            if(msg instanceof ClearRouteTaskMessage){
 
-                System.out.println("Mensaje entrante acl en police "+ me().getID()+" , " + ((ACLMessage) msg).getEntityID());
+                ClearRouteTaskMessage aclMessage = (ClearRouteTaskMessage)msg;
+
+                System.out.println("Mensaje entrante acl "+ me().getID()+" , " + aclMessage);
                 //move(time,aclMessage.getTargetAgentID());
             }
         }
@@ -90,12 +93,16 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
 
 
 
-
+    @Override
+    protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum(){
+        return EnumSet.of(StandardEntityURN.POLICE_FORCE);
+    }
+    /*
     @Override
     protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum() {
         return EnumSet.of(StandardEntityURN.FIRE_BRIGADE,
                 StandardEntityURN.FIRE_STATION, StandardEntityURN.AMBULANCE_TEAM,
                 StandardEntityURN.AMBULANCE_CENTRE, StandardEntityURN.POLICE_FORCE,
                 StandardEntityURN.POLICE_OFFICE);
-    }
+    }*/
 }
