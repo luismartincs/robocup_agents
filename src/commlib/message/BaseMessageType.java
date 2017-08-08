@@ -33,7 +33,7 @@ import javax.xml.crypto.Data;
 public enum BaseMessageType {
 
 
-	ACL_MESSAGE(new DataType[]{DataType.ALL_ENTITIES,DataType.PERFORMATIVE,DataType.ALL_ENTITIES}),
+	ACL_MESSAGE(new DataType[]{DataType.ALL_ENTITIES,DataType.PERFORMATIVE,DataType.ALL_ENTITIES,DataType.CONVERSATION_ID,DataType.CONTENT}),
 
 	UNPASSABLE(new DataType[] { DataType.PLATOON_AGENT, DataType.AREA,
 			DataType.AREA, DataType.BLOCKADE }),

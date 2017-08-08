@@ -1,6 +1,6 @@
 package commlib.cinvesframework.agent;
 
-import commlib.bdi.messages.ACLMessage;
+import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.belief.Beliefs;
 import commlib.cinvesframework.desire.Desires;
 import commlib.components.AbstractCSAgent;

@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 
-import commlib.bdi.messages.ACLMessage;
+import commlib.cinvesframework.messages.ACLMessage;
 import commlib.data.DataType;
 import commlib.data.EntityIDData;
 import commlib.data.EntityIDListData;
@@ -372,13 +372,12 @@ public class RCRSCSMessageConverter {
          * @CinvesRudos
          *
          */
-        //performative
+        //ACLMessages
 
         this.dataBitSizeMap.put(DataType.PERFORMATIVE,32);
-
-        //All entities
-
         this.dataBitSizeMap.put(DataType.ALL_ENTITIES,32);
+        this.dataBitSizeMap.put(DataType.CONVERSATION_ID,32);
+        this.dataBitSizeMap.put(DataType.CONTENT,32);
 
         // time
         this.dataBitSizeMap.put(DataType.TIME, calculateBitSize(1000));
@@ -840,6 +839,10 @@ public class RCRSCSMessageConverter {
                     break;
                 case ALL_ENTITIES:
                     break;
+                case CONVERSATION_ID:
+                    break;
+                case CONTENT:
+                    break;
                 default:
                     System.err.println("undefined data type:"
                             + messageData.getType());
@@ -1104,7 +1107,8 @@ public class RCRSCSMessageConverter {
                      */
                 case PERFORMATIVE:
                 case ALL_ENTITIES:
-
+                case CONVERSATION_ID:
+                case CONTENT:
                     res = (Integer) data.getData();
                     break;
                 default:

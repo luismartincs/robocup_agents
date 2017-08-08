@@ -18,9 +18,11 @@ public enum DataType {
 
 	ALL_ENTITIES,
 
-
-
 	PERFORMATIVE,
+
+	CONVERSATION_ID,
+
+	CONTENT,
 
 	/**
 	 * time that simulation is started.
@@ -153,6 +155,8 @@ public enum DataType {
 		switch (type) {
 		case ALL_ENTITIES:
 		case PERFORMATIVE:
+		case CONVERSATION_ID:
+		case CONTENT:
 		case TIME:
 		case X_COORDINATE:
 		case Y_COORDINATE:

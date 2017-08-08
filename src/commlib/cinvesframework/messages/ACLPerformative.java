@@ -1,4 +1,4 @@
-package commlib.bdi.messages;
+package commlib.cinvesframework.messages;
 
 public enum ACLPerformative {
 
