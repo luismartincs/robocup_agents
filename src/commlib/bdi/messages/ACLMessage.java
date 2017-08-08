@@ -17,7 +17,7 @@ public class ACLMessage extends WorldInformation{
         super(BaseMessageType.ACL_MESSAGE, time);
         this.setData(new EntityIDData(DataType.CENTER_AGENT, platoonID));
         this.setData(new ValueData(DataType.PERFORMATIVE,performative.getValue()));
-        this.setData(new EntityIDData(DataType.AREA, targetAgent));
+       // this.setData(new EntityIDData(DataType.AREA, targetAgent));
 
 
     }
@@ -35,9 +35,6 @@ public class ACLMessage extends WorldInformation{
         return this.getAgentID();
     }
 
-    public EntityID getTargetAgentID(){
-        return super.getID(DataType.CENTER_AGENT,1);
-    }
 
     public ACLPerformative getPerformative(){
         int res = -1;

@@ -4,6 +4,7 @@ public enum BeliefType {
 
     BUILDINGS,
     ROADS,
-    REFUGE;
+    REFUGE,
+    TARGET_LOCATION;
 
 }

@@ -63,9 +63,9 @@ public class SampleRCRSCSCentre extends AbstractCSAgent<PoliceOffice>{
 
 //32737
 
-		//addMessage(new ACLMessage(time,getID(), ACLPerformative.CFP,new EntityID()));
+		addMessage(new ACLMessage(time,getID(), ACLPerformative.CFP,new EntityID(531016945)));
 
-		addMessage(new ClearRouteTaskMessage(time, this.getID(),new EntityID(531016945),new EntityID(32737),new EntityID(32737)));
+		//addMessage(new ClearRouteTaskMessage(time, this.getID(),new EntityID(531016945),new EntityID(32737),new EntityID(32737)));
 
 
 

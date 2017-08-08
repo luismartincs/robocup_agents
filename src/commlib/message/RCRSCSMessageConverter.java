@@ -772,6 +772,7 @@ public class RCRSCSMessageConverter {
 			}
 		} else {
 			switch (messageData.getType()) {
+
 			case AMBULANCE_TEAM:
 				((EntityIDData) messageData).setData(this.ambulanceTeamList
 						.get(((EntityID) messageData.getData()).getValue()));
@@ -789,8 +790,16 @@ public class RCRSCSMessageConverter {
 						.get(((EntityID) messageData.getData()).getValue()));
 				break;
 			case CENTER_AGENT:
-				((EntityIDData) messageData).setData(this.centerList
-						.get(((EntityID) messageData.getData()).getValue()));
+				try{((EntityIDData) messageData).setData(this.centerList
+						.get(((EntityID) messageData.getData()).getValue()));}catch (Exception ex){
+					System.out.println("VALIO QUESO");
+				}
+				try {
+					((EntityIDData) messageData).setData(this.platoonAgentList.get(((EntityID) messageData.getData()).getValue()));
+				}catch (Exception ex){
+					System.out.println("FALLO AL BUSCAR 2");
+				}
+
 				break;
 			case RESCUE_AGENT:
 				((EntityIDData) messageData).setData(this.rescueList

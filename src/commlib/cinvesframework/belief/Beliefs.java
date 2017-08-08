@@ -27,10 +27,9 @@ public class Beliefs {
         beliefs = new HashMap<>();
         buildings = new EntityListBelief();
 
-        loadDefaultBeliefs();
     }
 
-    private void loadDefaultBeliefs(){
+    public void loadDefaultBeliefs(){
 
         for(StandardEntity next : agent.getWorldModel()){
             if(next instanceof Building){
@@ -52,8 +51,8 @@ public class Beliefs {
         return beliefs.get(beliefType);
     }
 
-    public void addBelief(Belief belief){
-       // beliefs.put()
+    public void addBelief(BeliefType beliefType,Belief belief){
+       beliefs.put(beliefType,belief);
     }
 
 }
