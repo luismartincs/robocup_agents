@@ -13,10 +13,11 @@ import java.util.List;
 
 public class ACLMessage extends WorldInformation{
 
-    public ACLMessage(int time, EntityID platoonID, ACLPerformative performative,EntityID targetAgent) {
+    public ACLMessage(int time, EntityID platoonID, ACLPerformative performative) {
         super(BaseMessageType.ACL_MESSAGE, time);
-        this.setData(new EntityIDData(DataType.CENTER_AGENT, platoonID));
-        this.setData(new ValueData(DataType.PERFORMATIVE,performative.getValue()));
+
+        this.setData(new EntityIDData(DataType.ALL_ENTITIES, platoonID));
+        this.setData(new ValueData(DataType.PERFORMATIVE, performative.getValue()));
        // this.setData(new EntityIDData(DataType.AREA, targetAgent));
 
 
@@ -27,7 +28,7 @@ public class ACLMessage extends WorldInformation{
     }
 
     public EntityID getAgentID() {
-        return super.getID(DataType.CENTER_AGENT, 0);
+        return super.getID(DataType.ALL_ENTITIES, 0);
     }
 
 

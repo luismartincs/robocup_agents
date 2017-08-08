@@ -16,6 +16,10 @@ public enum DataType {
 	 * Para los mensajes ACL
 	 */
 
+	ALL_ENTITIES,
+
+
+
 	PERFORMATIVE,
 
 	/**
@@ -162,6 +166,7 @@ public enum DataType {
 		case WATER:
 			res = new ValueData(type, value);
 			break;
+		case ALL_ENTITIES:
 		case AREA:
 		case ROAD:
 		case BUILDING:
