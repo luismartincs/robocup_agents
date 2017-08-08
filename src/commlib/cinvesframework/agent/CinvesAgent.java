@@ -1,10 +1,10 @@
 package commlib.cinvesframework.agent;
 
+import commlib.bdi.messages.ACLMessage;
 import commlib.cinvesframework.belief.Beliefs;
-import commlib.cinvesframework.desire.Desire;
-import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.components.AbstractCSAgent;
+import commlib.message.RCRSCSMessage;
 import rescuecore2.Constants;
 import rescuecore2.messages.Command;
 import rescuecore2.standard.entities.StandardEntity;
@@ -13,6 +13,7 @@ import rescuecore2.standard.entities.StandardWorldModel;
 import rescuecore2.standard.kernel.comms.ChannelCommunicationModel;
 import rescuecore2.worldmodel.ChangeSet;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -25,6 +26,8 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     private Beliefs beliefs;
     private Desires desires;
 
+    private boolean filterACLMessages = true;
+    protected ArrayList<ACLMessage> aclMessages;
 
     protected CinvesAgent(){
 
@@ -33,6 +36,9 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         channel = 1;
         listenChannels = new int[]{1};
+
+        aclMessages = new ArrayList<>();
+
     }
 
     protected CinvesAgent(int channel,int listenChannels[]){
@@ -40,6 +46,8 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         beliefs = new Beliefs(this);
         this.channel = channel;
         this.listenChannels = listenChannels;
+
+        aclMessages = new ArrayList<>();
     }
 
     /**
@@ -68,7 +76,10 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         //----
 
-        model.indexClass(StandardEntityURN.ROAD); //<-- Investigar para que sirve
+        model.indexClass(StandardEntityURN.CIVILIAN,
+                StandardEntityURN.FIRE_BRIGADE, StandardEntityURN.POLICE_FORCE,
+                StandardEntityURN.AMBULANCE_TEAM, StandardEntityURN.REFUGE,
+                StandardEntityURN.BUILDING); //<-- Mejora el desempeño de acceso a las clases mas utilizadas
 
         boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY).equals(ChannelCommunicationModel.class.getName());
 
@@ -88,6 +99,14 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
                 sendSubscribe(time, listenChannels);
             }
         }
+
+        if(isFilterACLMessages()){
+            for(RCRSCSMessage msg : this.receivedMessageList){
+                if(msg instanceof ACLMessage){
+                    aclMessages.add((ACLMessage)msg);
+                }
+            }
+        }
     }
 
     public Beliefs getBeliefs() {
@@ -98,4 +117,11 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         return desires;
     }
 
+    public boolean isFilterACLMessages() {
+        return filterACLMessages;
+    }
+
+    public void setFilterACLMessages(boolean filterACLMessages) {
+        this.filterACLMessages = filterACLMessages;
+    }
 }

@@ -37,8 +37,10 @@ public class DummyCinvesAgent extends CinvesAgent<Civilian>{
     protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
         super.thinking(time,changed,heard);
 
-        ACLMessage message = new ACLMessage(time,getID(),ACLPerformative.CFP); //,new EntityID(531016945));
-        System.out.println("ME "+getID());
+        ACLMessage message = new ACLMessage(time,getID(),ACLPerformative.CFP,new EntityID(531016945));
+
+        getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(new EntityID(4335)));
+
         List<EntityID> steps = plan.createPlan(getBeliefs(),getDesires());
 
         addMessage(message);

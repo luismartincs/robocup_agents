@@ -151,6 +151,7 @@ public enum DataType {
 	public static RCRSCSData<?> createData(DataType type, int value) {
 		RCRSCSData<?> res = null;
 		switch (type) {
+		case ALL_ENTITIES:
 		case PERFORMATIVE:
 		case TIME:
 		case X_COORDINATE:
@@ -166,7 +167,6 @@ public enum DataType {
 		case WATER:
 			res = new ValueData(type, value);
 			break;
-		case ALL_ENTITIES:
 		case AREA:
 		case ROAD:
 		case BUILDING:

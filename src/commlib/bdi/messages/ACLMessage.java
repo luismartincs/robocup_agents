@@ -13,10 +13,11 @@ import java.util.List;
 
 public class ACLMessage extends WorldInformation{
 
-    public ACLMessage(int time, EntityID platoonID, ACLPerformative performative) {
+    public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver) {
         super(BaseMessageType.ACL_MESSAGE, time);
 
-        this.setData(new EntityIDData(DataType.ALL_ENTITIES, platoonID));
+        this.setData(new ValueData(DataType.ALL_ENTITIES, sender.getValue()),0);
+        this.setData(new ValueData(DataType.ALL_ENTITIES, receiver.getValue()),1);
         this.setData(new ValueData(DataType.PERFORMATIVE, performative.getValue()));
        // this.setData(new EntityIDData(DataType.AREA, targetAgent));
 
@@ -36,6 +37,29 @@ public class ACLMessage extends WorldInformation{
         return this.getAgentID();
     }
 
+    public int getSender(){
+        int res = -1;
+        RCRSCSData<?> d = this.getData(DataType.ALL_ENTITIES, 0);
+        if (d != null) {
+            Integer id = ((ValueData) d).getData();
+            if (id != null) {
+                res = id;
+            }
+        }
+        return res;
+    }
+
+    public int getReceiver(){
+        int res = -1;
+        RCRSCSData<?> d = this.getData(DataType.ALL_ENTITIES, 1);
+        if (d != null) {
+            Integer id = ((ValueData) d).getData();
+            if (id != null) {
+                res = id;
+            }
+        }
+        return res;
+    }
 
     public ACLPerformative getPerformative(){
         int res = -1;

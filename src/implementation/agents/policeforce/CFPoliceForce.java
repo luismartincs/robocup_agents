@@ -16,27 +16,27 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
-public class CFPoliceForce extends CinvesAgent<PoliceForce>{
+public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
     @Override
     protected void postConnect() {
         super.postConnect();
+        setFilterACLMessages(false);
     }
 
     @Override
     protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
-        super.thinking(time,changed,heard);
+        super.thinking(time, changed, heard);
 
-        /*
-        for(RCRSCSMessage msg : this.receivedMessageList){
-            if(msg instanceof ACLMessage){
+        for (ACLMessage msg : this.aclMessages) {
 
-                ACLMessage aclMessage = (ACLMessage)msg;
+            ACLMessage aclMessage = msg;
 
-                System.out.println("Mensaje entrante acl "+ me().getID()+" , " + aclMessage.getAgentID());
-                //move(time,aclMessage.getTargetAgentID());
-            }
-        }*/
+            System.out.println("Mensaje entrante acl " + me().getID() + " , " + aclMessage.getSender() + " " + aclMessage.getReceiver());
+            System.out.println(getWorldModel().getEntity(new EntityID(aclMessage.getSender())));
+            System.out.println(getWorldModel().getEntitiesOfType(StandardEntityURN.CIVILIAN).size());
+
+        }
 
     }
 

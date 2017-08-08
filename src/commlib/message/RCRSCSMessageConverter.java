@@ -374,11 +374,11 @@ public class RCRSCSMessageConverter {
          */
         //performative
 
-        this.dataBitSizeMap.put(DataType.PERFORMATIVE, 32);
+        this.dataBitSizeMap.put(DataType.PERFORMATIVE,32);
 
         //All entities
 
-        this.dataBitSizeMap.put(DataType.ALL_ENTITIES,calculateBitSize(Math.max(this.centerList.size(),this.platoonAgentList.size())));
+        this.dataBitSizeMap.put(DataType.ALL_ENTITIES,32);
 
         // time
         this.dataBitSizeMap.put(DataType.TIME, calculateBitSize(1000));
@@ -772,29 +772,6 @@ public class RCRSCSMessageConverter {
         } else {
             switch (messageData.getType()) {
 
-                case ALL_ENTITIES:
-
-                    EntityID entityID = null;
-                    System.out.println("datos" +messageData.getData());
-                    try {
-                        entityID = this.centerList.get(((EntityID) messageData.getData()).getValue());
-                    } catch (Exception ex) {
-                        System.out.println("VALIO QUESO");
-                    }
-                    try {
-                        entityID = this.platoonAgentList.get(((EntityID) messageData.getData()).getValue());
-
-                        System.out.println(this.platoonAgentList.size());
-
-                    } catch (Exception ex) {
-                        System.out.println("FALLO AL BUSCAR 2");
-                    }
-                    System.out.println("Es "+entityID);
-
-                    ((EntityIDData) messageData).setData(entityID);
-
-                    break;
-
                 case AMBULANCE_TEAM:
                     ((EntityIDData) messageData).setData(this.ambulanceTeamList
                             .get(((EntityID) messageData.getData()).getValue()));
@@ -860,6 +837,8 @@ public class RCRSCSMessageConverter {
                      * @CinvesRudos
                      */
                 case PERFORMATIVE:
+                    break;
+                case ALL_ENTITIES:
                     break;
                 default:
                     System.err.println("undefined data type:"
@@ -1066,21 +1045,6 @@ public class RCRSCSMessageConverter {
         try {
             switch (data.getType()) {
 
-                case ALL_ENTITIES:
-
-                    res = this.centerList.indexOf((EntityID) data.getData());
-
-                    if(res == -1){
-
-                        res = this.platoonAgentList.indexOf((EntityID) data.getData());
-
-                        if (res == -1){
-                            res = ((EntityID) data.getData()).getValue();
-                        }
-                    }
-
-                    break;
-
                 case AMBULANCE_TEAM:
                     res = this.ambulanceTeamList.indexOf((EntityID) data.getData());
                     break;
@@ -1139,6 +1103,7 @@ public class RCRSCSMessageConverter {
                      * @CinvesRudos
                      */
                 case PERFORMATIVE:
+                case ALL_ENTITIES:
 
                     res = (Integer) data.getData();
                     break;
