@@ -2,10 +2,7 @@ package commlib.cinvesframework.belief;
 
 import commlib.cinvesframework.agent.CinvesAgent;
 import rescuecore2.standard.components.StandardAgent;
-import rescuecore2.standard.entities.Building;
-import rescuecore2.standard.entities.Refuge;
-import rescuecore2.standard.entities.Road;
-import rescuecore2.standard.entities.StandardEntity;
+import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -20,12 +17,14 @@ public class Beliefs {
 
 
     private EntityListBelief buildings;
+    private EntityListBelief areas;
 
     public Beliefs(CinvesAgent agent){
 
         this.agent = agent;
         beliefs = new HashMap<>();
         buildings = new EntityListBelief();
+        areas = new EntityListBelief();
 
     }
 
@@ -41,9 +40,13 @@ public class Beliefs {
             if(next instanceof Refuge){
                 //refugeIDs.add(next.getID());
             }
+            if(next instanceof Area){
+                areas.addEntity(next.getID());
+            }
         }
 
         beliefs.put(BeliefType.BUILDINGS,buildings);
+        beliefs.put(BeliefType.AREAS,areas);
 
     }
 

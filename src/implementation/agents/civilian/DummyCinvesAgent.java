@@ -1,3 +1,5 @@
+package implementation.agents.civilian;
+
 import commlib.bdi.messages.ACLMessage;
 import commlib.bdi.messages.ACLPerformative;
 import commlib.cinvesframework.agent.CinvesAgent;
@@ -21,11 +23,15 @@ import java.util.List;
 
 public class DummyCinvesAgent extends CinvesAgent<Civilian>{
 
+    private CivilianPlan plan;
+
     @Override
     protected void postConnect() {
         super.postConnect();
 
-        getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(new EntityID(283444)));
+        getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(new EntityID(31109)));
+
+        plan = new CivilianPlan(this);
 
     }
 
@@ -33,20 +39,9 @@ public class DummyCinvesAgent extends CinvesAgent<Civilian>{
     protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
         super.thinking(time,changed,heard);
 
-        Desire lb = (Desire) getDesires().getDesire(DesireType.GOAL_LOCATION);
+        List<EntityID> steps = plan.createPlan(getBeliefs(),getDesires());
 
-        /*
-        for(RCRSCSMessage msg : this.receivedMessageList){
-            if(msg instanceof ACLMessage){
-
-                System.out.println("Mensaje entrante acl "+ me().getID()+" , " + ((ACLMessage) msg).getEntityID());
-                //move(time,aclMessage.getTargetAgentID());
-            }
-        }*/
-
-        addMessage(new ACLMessage(time,getID(), ACLPerformative.CFP,new EntityID(531016945)));
-
-
+        sendMove(time,steps);
     }
 
     @Override

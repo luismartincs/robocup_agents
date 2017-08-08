@@ -7,7 +7,7 @@ public class Desire {
     private EntityID entityID;
 
     public Desire(EntityID entityID){
-
+        this.entityID = entityID;
     }
 
     public EntityID getEntityID() {

@@ -50,6 +50,10 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         return this.model;
     }
 
+    public E me(){
+        return super.me();
+    }
+
     public boolean isUsingChannel(){
         return usingChannel;
     }
