@@ -9,6 +9,7 @@ import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import rescuecore2.misc.collections.LazyMap;
 import rescuecore2.standard.entities.Area;
+import rescuecore2.standard.entities.Human;
 import rescuecore2.standard.entities.StandardWorldModel;
 import rescuecore2.worldmodel.Entity;
 import rescuecore2.worldmodel.EntityID;
@@ -46,9 +47,9 @@ public class SearchPlan extends AbstractPlan {
 
         Desire goal = desires.getDesire(DesireType.GOAL_LOCATION);
 
-        System.out.println("des "+goal.getEntityID());
+        EntityID position = ((Human)getAgent().me()).getPosition();
 
-        List<EntityID> steps = breadthFirstSearch(getAgent().getID(),goal.getEntityID());
+        List<EntityID> steps = breadthFirstSearch(beliefs,desires,position,goal.getEntityID());
 
         return steps;
     }
@@ -62,11 +63,11 @@ public class SearchPlan extends AbstractPlan {
         return graph;
     }
 
-    private List<EntityID> breadthFirstSearch(EntityID start, EntityID... goals) {
-        return breadthFirstSearch(start, Arrays.asList(goals));
+    private List<EntityID> breadthFirstSearch(Beliefs beliefs, Desires desires,EntityID start, EntityID... goals) {
+        return breadthFirstSearch(beliefs,desires,start, Arrays.asList(goals));
     }
 
-    public List<EntityID> breadthFirstSearch(EntityID start, Collection<EntityID> goals) {
+    private List<EntityID> breadthFirstSearch(Beliefs beliefs, Desires desires,EntityID start, Collection<EntityID> goals) {
 
         List<EntityID> open = new LinkedList<EntityID>();
         Map<EntityID, EntityID> ancestors = new HashMap<EntityID, EntityID>();
@@ -78,6 +79,7 @@ public class SearchPlan extends AbstractPlan {
             next = open.remove(0);
             if (isGoal(next, goals)) {
                 found = true;
+                desires.removeDesire(DesireType.GOAL_LOCATION);
                 break;
             }
             Collection<EntityID> neighbours = graph.get(next);
@@ -89,6 +91,7 @@ public class SearchPlan extends AbstractPlan {
                     ancestors.put(neighbour, next);
                     next = neighbour;
                     found = true;
+                    //desires.removeDesire(DesireType.GOAL_LOCATION);
                     break;
                 } else {
                     if (!ancestors.containsKey(neighbour)) {

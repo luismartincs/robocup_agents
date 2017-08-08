@@ -24,6 +24,10 @@ public class Desires {
         this.desires.put(desireType,desire);
     }
 
+    public void removeDesire(DesireType desireType){
+        this.desires.remove(desireType);
+    }
+
     public HashMap<DesireType, Desire> getDesires() {
         return desires;
     }

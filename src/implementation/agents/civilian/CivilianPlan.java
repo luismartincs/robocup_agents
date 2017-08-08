@@ -4,6 +4,8 @@ import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.Beliefs;
 import commlib.cinvesframework.belief.EntityListBelief;
+import commlib.cinvesframework.desire.Desire;
+import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.intention.AbstractPlan;
 import commlib.cinvesframework.intention.SearchPlan;
@@ -27,8 +29,6 @@ public class CivilianPlan extends AbstractPlan{
     @Override
     public List<EntityID> createPlan(Beliefs beliefs, Desires desires) {
 
-        System.out.println("Deliverando...");
-
         List<EntityID> steps = randomDestination(beliefs,desires);
 
         return steps;
@@ -36,15 +36,26 @@ public class CivilianPlan extends AbstractPlan{
 
     private List<EntityID> randomDestination(Beliefs beliefs, Desires desires){
 
+
         EntityListBelief buildings = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS);
         ArrayList<EntityID> buildingIDs = buildings.getEntities();
 
+        Desire targetBuilding = desires.getDesire(DesireType.GOAL_LOCATION);
+        EntityID target = null;
+
+        if(targetBuilding == null){
+            target = buildingIDs.get((int)(Math.random()*buildingIDs.size()));
+        }else{
+            target = targetBuilding.getEntityID();
+        }
+
         List<EntityID> targets = new ArrayList<>();
-        targets.add(buildingIDs.get((int)Math.random()*buildingIDs.size()));
-        EntityID current = ((Human)getAgent().me()).getPosition();
-        System.out.println("curr "+current);
+        targets.add(target);
+
+        desires.addDesire(DesireType.GOAL_LOCATION,new Desire(target));
+
         List<EntityID> path = searchPlan.createPlan(beliefs,desires);
-        System.out.println("Path "+path);
+
         return path;
     }
 }

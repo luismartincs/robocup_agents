@@ -29,8 +29,6 @@ public class DummyCinvesAgent extends CinvesAgent<Civilian>{
     protected void postConnect() {
         super.postConnect();
 
-        getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(new EntityID(31109)));
-
         plan = new CivilianPlan(this);
 
     }
