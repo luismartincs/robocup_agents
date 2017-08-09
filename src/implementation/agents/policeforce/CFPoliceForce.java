@@ -2,6 +2,7 @@ package implementation.agents.policeforce;
 
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.agent.CinvesAgent;
+import commlib.cinvesframework.messages.ACLPerformative;
 import rescuecore2.messages.Command;
 import rescuecore2.standard.entities.PoliceForce;
 import rescuecore2.standard.entities.StandardEntityURN;
@@ -26,10 +27,14 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
             ACLMessage aclMessage = msg;
 
-            System.out.println("Mensaje entrante acl " + me().getID() + " , " + aclMessage.getSender() + " " + aclMessage.getReceiver() +" "+aclMessage.getConversationId()+" "+aclMessage.getContent());
-            System.out.println(getWorldModel().getEntity(new EntityID(aclMessage.getSender())));
-            System.out.println(getWorldModel().getEntitiesOfType(StandardEntityURN.CIVILIAN).size());
-
+            switch (aclMessage.getPerformative()){
+                case CFP:
+                    System.out.println(getID()+" get "+aclMessage.getPerformative()+" "+aclMessage.getConversationId());
+                    ACLMessage message = new ACLMessage(time,getID(), ACLPerformative.REJECT_PROPOSAL,new EntityID(aclMessage.getSender()),aclMessage.getConversationId(),0);
+                    addMessage(message);
+                    System.out.println(getID()+" send "+message.getPerformative() +" "+aclMessage.getConversationId());
+                    break;
+            }
         }
 
     }

@@ -15,6 +15,7 @@ import rescuecore2.worldmodel.ChangeSet;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 
 public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCSAgent<E>{
@@ -29,6 +30,14 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     private boolean filterACLMessages = true;
     protected ArrayList<ACLMessage> aclMessages;
 
+    /*
+    * Para ContractNet
+    */
+
+    private int conversationId;
+    protected HashMap<Integer,ACLMessage> queuedMessages;
+
+
     protected CinvesAgent(){
 
         beliefs = new Beliefs(this);
@@ -39,6 +48,9 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         aclMessages = new ArrayList<>();
 
+        queuedMessages = new HashMap<>();
+        conversationId = 1;
+
     }
 
     protected CinvesAgent(int channel,int listenChannels[]){
@@ -48,6 +60,9 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         this.listenChannels = listenChannels;
 
         aclMessages = new ArrayList<>();
+
+        queuedMessages = new HashMap<>();
+        conversationId = 1;
     }
 
     /**
@@ -64,6 +79,10 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     public boolean isUsingChannel(){
         return usingChannel;
+    }
+
+    public int nextConversationId(){
+        return ++conversationId;
     }
 
 
@@ -101,9 +120,20 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         }
 
         if(isFilterACLMessages()){
+
+            this.aclMessages.clear();
+
             for(RCRSCSMessage msg : this.receivedMessageList){
                 if(msg instanceof ACLMessage){
-                    aclMessages.add((ACLMessage)msg);
+                    ACLMessage aclMessage = (ACLMessage)msg;
+                    if(aclMessage.getSender() != getID().getValue()) { //Evita que recibas tus propios mensajes
+
+                        if(aclMessage.getReceiver() == getID().getValue() || aclMessage.getReceiver() == 0) { //Si es para mi o para todos
+
+                            aclMessages.add((ACLMessage) msg);
+
+                        }
+                    }
                 }
             }
         }

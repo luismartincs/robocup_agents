@@ -91,7 +91,6 @@ public class SearchPlan extends AbstractPlan {
                     ancestors.put(neighbour, next);
                     next = neighbour;
                     found = true;
-                    //desires.removeDesire(DesireType.GOAL_LOCATION);
                     break;
                 } else {
                     if (!ancestors.containsKey(neighbour)) {
