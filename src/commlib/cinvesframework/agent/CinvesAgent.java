@@ -1,5 +1,8 @@
 package commlib.cinvesframework.agent;
 
+import commlib.cinvesframework.belief.BeliefType;
+import commlib.cinvesframework.belief.EntityListBelief;
+import commlib.cinvesframework.intention.ReportFirePlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.belief.Beliefs;
 import commlib.cinvesframework.desire.Desires;
@@ -7,11 +10,10 @@ import commlib.components.AbstractCSAgent;
 import commlib.message.RCRSCSMessage;
 import rescuecore2.Constants;
 import rescuecore2.messages.Command;
-import rescuecore2.standard.entities.StandardEntity;
-import rescuecore2.standard.entities.StandardEntityURN;
-import rescuecore2.standard.entities.StandardWorldModel;
+import rescuecore2.standard.entities.*;
 import rescuecore2.standard.kernel.comms.ChannelCommunicationModel;
 import rescuecore2.worldmodel.ChangeSet;
+import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,8 +39,12 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     private int conversationId;
     protected HashMap<Integer,ACLMessage> queuedMessages;
 
+    private ReportFirePlan reportFirePlan;
+
 
     protected CinvesAgent(){
+
+        reportFirePlan = new ReportFirePlan(this);
 
         beliefs = new Beliefs(this);
         desires = new Desires(this);
@@ -55,6 +61,8 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     protected CinvesAgent(int channel,int listenChannels[]){
 
+        reportFirePlan = new ReportFirePlan(this);
+
         beliefs = new Beliefs(this);
         this.channel = channel;
         this.listenChannels = listenChannels;
@@ -66,7 +74,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     /**
-     * Make getModel public
+     * Make some methods public
      */
 
     public StandardWorldModel getWorldModel(){
@@ -82,9 +90,12 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     public int nextConversationId(){
-        return ++conversationId;
+        return conversationId++;
     }
 
+    public void addACLMessage(ACLMessage message){
+        addMessage(message);
+    }
 
     @Override
     protected void postConnect(){
@@ -137,6 +148,15 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
                 }
             }
         }
+
+        if(me() instanceof Human){
+            senseBuildingsOnFire();
+        }
+
+    }
+
+    protected void senseBuildingsOnFire(){
+        reportFirePlan.createPlan(getBeliefs(),getDesires());
     }
 
     public Beliefs getBeliefs() {

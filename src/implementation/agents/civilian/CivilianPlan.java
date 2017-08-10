@@ -11,6 +11,7 @@ import commlib.cinvesframework.intention.AbstractPlan;
 import commlib.cinvesframework.intention.SearchPlan;
 import rescuecore2.log.Logger;
 import rescuecore2.standard.entities.Human;
+import rescuecore2.standard.entities.StandardEntity;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -38,18 +39,19 @@ public class CivilianPlan extends AbstractPlan{
 
 
         EntityListBelief buildings = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS);
-        ArrayList<EntityID> buildingIDs = buildings.getEntities();
+        ArrayList<StandardEntity> buildingIDs = buildings.getEntities();
 
         Desire targetBuilding = desires.getDesire(DesireType.GOAL_LOCATION);
         EntityID target = null;
 
         if(targetBuilding == null){
-            target = buildingIDs.get((int)(Math.random()*buildingIDs.size()));
+            target = buildingIDs.get((int)(Math.random()*buildingIDs.size())).getID();
         }else{
             target = targetBuilding.getEntityID();
         }
 
         List<EntityID> targets = new ArrayList<>();
+
         targets.add(target);
 
         desires.addDesire(DesireType.GOAL_LOCATION,new Desire(target));

@@ -10,6 +10,7 @@ import commlib.cinvesframework.desire.Desires;
 import rescuecore2.misc.collections.LazyMap;
 import rescuecore2.standard.entities.Area;
 import rescuecore2.standard.entities.Human;
+import rescuecore2.standard.entities.StandardEntity;
 import rescuecore2.standard.entities.StandardWorldModel;
 import rescuecore2.worldmodel.Entity;
 import rescuecore2.worldmodel.EntityID;
@@ -33,9 +34,9 @@ public class SearchPlan extends AbstractPlan {
 
         EntityListBelief listBelief = (EntityListBelief) agent.getBeliefs().getBelief(BeliefType.AREAS);
 
-        for (EntityID next : listBelief.getEntities()) {
-            Collection<EntityID> areaNeighbours = ((Area) agent.getWorldModel().getEntity(next)).getNeighbours();
-            neighbours.get(next).addAll(areaNeighbours);
+        for (StandardEntity next : listBelief.getEntities()) {
+            Collection<EntityID> areaNeighbours = ((Area) next).getNeighbours();
+            neighbours.get(next.getID()).addAll(areaNeighbours);
         }
 
         setGraph(neighbours);
