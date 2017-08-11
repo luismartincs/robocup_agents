@@ -19,12 +19,14 @@ public class Beliefs {
     private EntityListBelief buildings;
     private EntityMapBelief buildingsOnFire;
     private EntityListBelief areas;
+    private EntityListBelief refuges;
 
     public Beliefs(CinvesAgent agent){
 
         this.agent = agent;
         beliefs = new HashMap<>();
         buildings = new EntityListBelief();
+        refuges = new EntityListBelief();
         buildingsOnFire = new EntityMapBelief();
         areas = new EntityListBelief();
 
@@ -40,7 +42,7 @@ public class Beliefs {
                // roadIDs.add(next.getID());
             }
             if(next instanceof Refuge){
-                //refugeIDs.add(next.getID());
+                refuges.addEntity(next);
             }
             if(next instanceof Area){
                 areas.addEntity(next);
@@ -49,6 +51,7 @@ public class Beliefs {
 
         beliefs.put(BeliefType.BUILDINGS,buildings);
         beliefs.put(BeliefType.AREAS,areas);
+        beliefs.put(BeliefType.REFUGE,refuges);
         beliefs.put(BeliefType.BUILDINGS_ON_FIRE,buildingsOnFire);
 
     }

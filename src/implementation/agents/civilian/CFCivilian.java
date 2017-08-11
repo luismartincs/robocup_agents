@@ -39,12 +39,9 @@ public class CFCivilian extends CinvesAgent<Civilian>{
         super.thinking(time,changed,heard);
 
         //getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(new EntityID(4335)));
-
+/*
         List<EntityID> steps = plan.createPlan(getBeliefs(),getDesires());
 
-        /**
-         * ContractNet
-         */
 
         for (ACLMessage aclMessage:this.aclMessages) {
 
@@ -76,7 +73,7 @@ public class CFCivilian extends CinvesAgent<Civilian>{
         }
 
         sendMove(time,steps);
-
+*/
     }
 
     @Override

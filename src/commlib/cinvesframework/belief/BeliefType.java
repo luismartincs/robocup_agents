@@ -7,6 +7,7 @@ public enum BeliefType {
     BUILDINGS_ON_FIRE,
     ROADS,
     REFUGE,
-    TARGET_LOCATION;
+    TARGET_LOCATION,
+    GOAL_PATH;
 
 }
