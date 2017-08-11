@@ -8,6 +8,7 @@ public enum BeliefType {
     ROADS,
     REFUGE,
     TARGET_LOCATION,
-    GOAL_PATH;
+    GOAL_PATH,
+    REPAIR_DISTANCE;
 
 }

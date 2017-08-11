@@ -1,16 +1,15 @@
 package commlib.cinvesframework.agent;
 
 import com.sun.org.apache.xpath.internal.SourceTree;
-import commlib.cinvesframework.belief.BeliefType;
-import commlib.cinvesframework.belief.EntityListBelief;
-import commlib.cinvesframework.belief.PathBelief;
+import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
+import commlib.cinvesframework.intention.GoToRefugePlan;
 import commlib.cinvesframework.intention.ReportFirePlan;
 import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
-import commlib.cinvesframework.belief.Beliefs;
 import commlib.cinvesframework.desire.Desires;
+import commlib.cinvesframework.utils.GeneralUtils;
 import commlib.components.AbstractCSAgent;
 import commlib.message.RCRSCSMessage;
 import rescuecore2.Constants;
@@ -52,6 +51,9 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     protected HashMap<Integer,ACLMessage> queuedMessages;
 
     private ReportFirePlan reportFirePlan;
+    private GoToRefugePlan refugePlan;
+
+    private int distance = 0;
 
     /**
      * Default Health Info
@@ -73,6 +75,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     protected CinvesAgent(){
 
         reportFirePlan = new ReportFirePlan(this);
+        refugePlan = new GoToRefugePlan(this);
 
         beliefs = new Beliefs(this);
         desires = new Desires(this);
@@ -85,11 +88,14 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         queuedMessages = new HashMap<>();
         conversationId = 1;
 
+
+
     }
 
     protected CinvesAgent(int channel,int listenChannels[]){
 
         reportFirePlan = new ReportFirePlan(this);
+        refugePlan = new GoToRefugePlan(this);
 
         beliefs = new Beliefs(this);
         this.channel = channel;
@@ -99,11 +105,19 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         queuedMessages = new HashMap<>();
         conversationId = 1;
+
     }
+
+
 
     /**
      * Make some methods public
      */
+
+    @Override
+    public StandardEntity location() {
+        return super.location();
+    }
 
     public StandardWorldModel getWorldModel(){
         return this.model;
@@ -126,11 +140,30 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     @Override
+    public void sendMove(int time, List<EntityID> path) {
+        super.sendMove(time, path);
+    }
+
+    @Override
+    public void sendRest(int time) {
+        super.sendRest(time);
+    }
+
+    @Override
+    public void sendClear(int time, EntityID target) {
+        super.sendClear(time, target);
+    }
+
+    @Override
     protected void postConnect(){
 
         super.postConnect();
 
         beliefs.loadDefaultBeliefs();
+
+        distance = config.getIntValue("clear.repair.distance");
+
+        beliefs.addBelief(BeliefType.REPAIR_DISTANCE,new LocationBelief(new EntityID(distance)));
 
         //----
 
@@ -187,27 +220,56 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         if(me() instanceof Human){
 
             senseBuildingsOnFire();
-            clean(time);
 
             if(canHelp()){
-                System.out.println("Puedo ayudar");
-                clean(time);
+                onFullHealthBehaviour(time,changed,heard);
             }else if(canMove()){
-                System.out.println("Puedo moverme pero no ayudar =(");
-
+                onRegularHealthBehaviour(time,changed,heard);;
             }else {
-                System.out.println("Im sorry guys");
+                onLowHealthBehaviour(time,changed,heard);
             }
-
 
         }
 
 
     }
 
+    /**
+     * Agent Methods to override for a custom behaviour
+     */
+
+    public void onBlockadeDetected(int time,EntityID entityID){
+        sendClear(time,entityID);
+    }
+
+    protected void onFullHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
+
+        System.out.println("Puedo ayudar");
+
+        refugePlan.setTime(time);
+        refugePlan.setRemoveBlockades(true);
+        refugePlan.createPlan(getBeliefs(),getDesires());
+
+    }
+
+    protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
+
+        System.out.println("Puedo moverme pero no ayudar =(");
+
+    }
+
+    protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
+
+        System.out.println("Help me bitches!");
+        sendRest(time);
+
+    }
+
+
     protected void senseBuildingsOnFire(){
         reportFirePlan.createPlan(getBeliefs(),getDesires());
     }
+
 
     protected boolean canHelp(){
 
@@ -229,139 +291,6 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         return false;
     }
 
-    protected void senseGoToClosestRefuge(int time){
-
-        SearchPlan sp = new SearchPlan(this);
-
-        Desire goalLocation = getDesires().getDesire(DesireType.GOAL_LOCATION);
-
-        if(goalLocation == null){
-
-            EntityListBelief refugesList = (EntityListBelief)getBeliefs().getBelief(BeliefType.REFUGE);
-            ArrayList<StandardEntity> refuges = refugesList.getEntities();
-
-            int minSteps = Integer.MAX_VALUE;
-            int pathSize = 0;
-            StandardEntity closestRefuge = null;
-            List<EntityID> closestPath = null;
-            List<EntityID> path = null;
-
-            for (StandardEntity entity:refuges){
-
-                Refuge refuge = (Refuge)entity;
-                getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(refuge.getID()));
-                path = sp.createPlan(getBeliefs(),getDesires());
-
-                if(path != null) {
-
-                    pathSize = path.size();
-
-                    if (pathSize < minSteps) {
-                        minSteps = pathSize;
-                        closestRefuge = refuge;
-                        closestPath = path;
-                    }
-
-                }
-
-            }
-
-            getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(closestRefuge.getID()));
-            getBeliefs().addBelief(BeliefType.GOAL_PATH,new PathBelief(closestPath));
-
-            sendMove(time,path);
-
-        }else {
-
-            EntityID position = ((Human)me()).getPosition();
-
-            if(goalLocation.getEntityID().getValue() == position.getValue()){
-                System.out.println("Llegue al refugio");
-            }else {
-
-                List<EntityID> path = sp.createPlan(getBeliefs(), getDesires());
-                sendMove(time, path);
-
-            }
-        }
-
-    }
-
-    protected void clean(int time){
-        Blockade target = getTargetBlockade();
-        if(target != null){
-            System.out.println("TARGET "+target);
-            //sendSpeak(time, 1, ("Clearing " + target).getBytes());
-            sendClear(time, target.getID());
-            return;
-        }else {
-            senseGoToClosestRefuge(time);
-        }
-    }
-
-    private Blockade getTargetBlockade(){
-        int distance = config.getIntValue("clear.repair.distance");
-        Area location = (Area) location();
-        Blockade result = getTargetBlockade(location, distance);
-        if(result != null){
-            return result;
-        }
-
-        for(EntityID next : location.getNeighbours()){
-            location = (Area) model.getEntity(next);
-            result = getTargetBlockade(location, distance);
-            if(result != null){
-                return result;
-            }
-        }
-        return null;
-    }
-
-    private Blockade getTargetBlockade(Area area, int maxDistance){
-        // Logger.debug("Looking for nearest blockade in " + area);
-        Human human = ((Human)me());
-
-        if(area == null || !area.isBlockadesDefined()){
-            // Logger.debug("Blockades undefined");
-            return null;
-        }
-        List<EntityID> ids = area.getBlockades();
-        // Find the first blockade that is in range.
-        int x = human.getX();
-        int y = human.getY();
-        for(EntityID next : ids){
-            Blockade b = (Blockade) model.getEntity(next);
-            double d = findDistanceTo(b, x, y);
-            // Logger.debug("Distance to " + b + " = " + d);
-            if(maxDistance < 0 || d < maxDistance){
-                // Logger.debug("In range");
-                return b;
-            }
-        }
-        // Logger.debug("No blockades in range");
-        return null;
-    }
-
-
-    private int findDistanceTo(Blockade b, int x, int y){
-        // Logger.debug("Finding distance to " + b + " from " + x + ", " + y);
-        List<Line2D> lines = GeometryTools2D.pointsToLines(
-                GeometryTools2D.vertexArrayToPoints(b.getApexes()), true);
-        double best = Double.MAX_VALUE;
-        Point2D origin = new Point2D(x, y);
-        for(Line2D next : lines){
-            Point2D closest = GeometryTools2D.getClosestPointOnSegment(next, origin);
-            double d = GeometryTools2D.getDistance(origin, closest);
-            // Logger.debug("Next line: " + next + ", closest point: " + closest +
-            // ", distance: " + d);
-            if(d < best){
-                best = d;
-                // Logger.debug("New best distance");
-            }
-
-        }
-        return (int) best;
-    }
 
     public Beliefs getBeliefs() {
         return beliefs;
