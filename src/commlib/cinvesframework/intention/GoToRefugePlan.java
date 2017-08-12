@@ -33,6 +33,8 @@ public class GoToRefugePlan extends AbstractPlan {
 
         int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
 
+        removeBlockades = beliefs.getBelief(BeliefType.REMOVE_BLOCKADES).isDataBoolean();
+
         Blockade target = null;
 
         if(removeBlockades){
@@ -40,7 +42,8 @@ public class GoToRefugePlan extends AbstractPlan {
         }
 
         if (target != null) {
-            getAgent().onBlockadeDetected(time,target.getID());
+            //().onBlockadeDetected(time,target.getID());
+            getAgent().sendClear(time,target.getID());
             return null;
         } else {
             SearchPlan sp = new SearchPlan(getAgent());

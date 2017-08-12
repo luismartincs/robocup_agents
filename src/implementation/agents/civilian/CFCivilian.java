@@ -1,7 +1,9 @@
 package implementation.agents.civilian;
 
+import commlib.cinvesframework.belief.Belief;
 import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.EntityListBelief;
+import commlib.cinvesframework.intention.GoToRefugePlan;
 import commlib.cinvesframework.interaction.ContractNet;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
@@ -23,7 +25,11 @@ import java.util.List;
 
 public class CFCivilian extends CinvesAgent<Civilian>{
 
+    private final double BECOMES_VOLUNTEER = 0.20;
+
     private CivilianPlan plan;
+    private GoToRefugePlan refugePlan;
+
     private int send = 0;
 
     @Override
@@ -31,13 +37,33 @@ public class CFCivilian extends CinvesAgent<Civilian>{
         super.postConnect();
 
         plan = new CivilianPlan(this);
+        refugePlan = new GoToRefugePlan(this);
 
+        Belief isVolunteer = new Belief();
+
+        if(Math.random() < BECOMES_VOLUNTEER){
+            isVolunteer.setDataBoolean(true);
+            System.out.println(me()+" es voluntario");
+        }else{
+            isVolunteer.setDataBoolean(false);
+        }
+
+        getBeliefs().addBelief(BeliefType.REMOVE_BLOCKADES,isVolunteer);
     }
 
     @Override
+    protected void onFullHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+
+        System.out.println("Do something");
+        refugePlan.setTime(time);
+        refugePlan.createPlan(getBeliefs(),getDesires());
+    }
+
+
+    /* @Override
     protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
         super.thinking(time,changed,heard);
-
+*/
         //getDesires().addDesire(DesireType.GOAL_LOCATION,new Desire(new EntityID(4335)));
 /*
         List<EntityID> steps = plan.createPlan(getBeliefs(),getDesires());
@@ -74,7 +100,7 @@ public class CFCivilian extends CinvesAgent<Civilian>{
 
         sendMove(time,steps);
 */
-    }
+ //   }
 
     @Override
     protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum() {

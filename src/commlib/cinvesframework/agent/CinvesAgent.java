@@ -239,22 +239,19 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
      */
 
     public void onBlockadeDetected(int time,EntityID entityID){
-        sendClear(time,entityID);
+        //sendClear(time,entityID);
     }
 
     protected void onFullHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
-
-        System.out.println("Puedo ayudar");
-
-        refugePlan.setTime(time);
-        refugePlan.setRemoveBlockades(true);
-        refugePlan.createPlan(getBeliefs(),getDesires());
 
     }
 
     protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
 
         System.out.println("Puedo moverme pero no ayudar =(");
+        refugePlan.setTime(time);
+        refugePlan.setRemoveBlockades(false);
+        refugePlan.createPlan(getBeliefs(),getDesires());
 
     }
 

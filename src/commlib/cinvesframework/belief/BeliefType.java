@@ -9,6 +9,7 @@ public enum BeliefType {
     REFUGE,
     TARGET_LOCATION,
     GOAL_PATH,
-    REPAIR_DISTANCE;
+    REPAIR_DISTANCE,
+    REMOVE_BLOCKADES;
 
 }
