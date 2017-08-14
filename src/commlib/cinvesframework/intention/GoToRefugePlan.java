@@ -6,10 +6,8 @@ import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.utils.GeneralUtils;
-import rescuecore2.standard.entities.Blockade;
-import rescuecore2.standard.entities.Human;
-import rescuecore2.standard.entities.Refuge;
-import rescuecore2.standard.entities.StandardEntity;
+import rescuecore2.standard.entities.*;
+import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -18,7 +16,7 @@ import java.util.List;
 public class GoToRefugePlan extends AbstractPlan {
 
     private int time;
-    private boolean removeBlockades = false;
+    private boolean isVolunteer = false;
 
     public GoToRefugePlan(CinvesAgent agent) {
         super(agent);
@@ -33,18 +31,31 @@ public class GoToRefugePlan extends AbstractPlan {
 
         int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
 
-        removeBlockades = beliefs.getBelief(BeliefType.REMOVE_BLOCKADES).isDataBoolean();
+        isVolunteer = beliefs.getBelief(BeliefType.VOLUNTEER).isDataBoolean();
 
-        Blockade target = null;
+        Blockade target = GeneralUtils.getTargetBlockade(distance, getAgent());
 
-        if(removeBlockades){
-            target = GeneralUtils.getTargetBlockade(distance, getAgent());
-        }
 
         if (target != null) {
-            //().onBlockadeDetected(time,target.getID());
-            getAgent().sendClear(time,target.getID());
+
+            if(isVolunteer){ //Si es un voluntario/policia entonces remueve el bloqueo sin reportarlo, pa que
+
+                getAgent().sendClear(time,target.getID());
+
+            }else{ //Reporta un bloqueo si no hay alguien que lo este removiendo (policia cerca)
+
+                ChangeSet changeSet = ((EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT)).getChangeSet();
+                ArrayList<PoliceForce> policeForcesAround = GeneralUtils.getPoliceForceAround(getAgent(),changeSet);
+
+                if (policeForcesAround.size() > 0){
+
+                }else{
+                    System.out.println("Aviso a policeoffice");
+                }
+            }
+
             return null;
+
         } else {
             SearchPlan sp = new SearchPlan(getAgent());
 
@@ -105,11 +116,11 @@ public class GoToRefugePlan extends AbstractPlan {
         }
     }
 
-    public boolean isRemoveBlockades() {
-        return removeBlockades;
+    public boolean isVolunteer() {
+        return isVolunteer;
     }
 
-    public void setRemoveBlockades(boolean removeBlockades) {
-        this.removeBlockades = removeBlockades;
+    public void setVolunteer(boolean volunteer) {
+        this.isVolunteer = volunteer;
     }
 }

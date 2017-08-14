@@ -10,6 +10,8 @@ public enum BeliefType {
     TARGET_LOCATION,
     GOAL_PATH,
     REPAIR_DISTANCE,
-    REMOVE_BLOCKADES;
+    VOLUNTEER,
+    CHANGED_ENVIRONMENT
+    ;
 
 }

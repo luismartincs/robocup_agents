@@ -2,26 +2,16 @@ package implementation.agents.civilian;
 
 import commlib.cinvesframework.belief.Belief;
 import commlib.cinvesframework.belief.BeliefType;
-import commlib.cinvesframework.belief.EntityListBelief;
+import commlib.cinvesframework.belief.EnvironmentBelief;
 import commlib.cinvesframework.intention.GoToRefugePlan;
-import commlib.cinvesframework.interaction.ContractNet;
-import commlib.cinvesframework.messages.ACLMessage;
-import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.agent.CinvesAgent;
-import commlib.cinvesframework.desire.Desire;
-import commlib.cinvesframework.desire.DesireType;
+import commlib.cinvesframework.utils.GeneralUtils;
 import rescuecore2.messages.Command;
-import rescuecore2.standard.entities.Building;
-import rescuecore2.standard.entities.Civilian;
-import rescuecore2.standard.entities.StandardEntity;
-import rescuecore2.standard.entities.StandardEntityURN;
+import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
-import rescuecore2.worldmodel.EntityID;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.List;
 
 public class CFCivilian extends CinvesAgent<Civilian>{
 
@@ -43,20 +33,34 @@ public class CFCivilian extends CinvesAgent<Civilian>{
 
         if(Math.random() < BECOMES_VOLUNTEER){
             isVolunteer.setDataBoolean(true);
-            System.out.println(me()+" es voluntario");
         }else{
             isVolunteer.setDataBoolean(false);
         }
 
-        getBeliefs().addBelief(BeliefType.REMOVE_BLOCKADES,isVolunteer);
+        getBeliefs().addBelief(BeliefType.VOLUNTEER,isVolunteer);
     }
 
     @Override
     protected void onFullHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
 
-        System.out.println("Do something");
+        getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
+
         refugePlan.setTime(time);
         refugePlan.createPlan(getBeliefs(),getDesires());
+
+        /*
+         Hacer esto un plan y agregar el reporte de la victima
+
+        for(Civilian victim: GeneralUtils.getCivilianAround(this,changed)){
+            if(victim.isPositionDefined() & victim.isHPDefined()
+                    & victim.isBuriednessDefined() & victim.isDamageDefined()){
+                if(victim.getDamage() > 0 || victim.getBuriedness()>0) {
+                    System.out.println("There is victim in " + victim.getPosition());
+                }
+            }
+        }
+
+        */
     }
 
 

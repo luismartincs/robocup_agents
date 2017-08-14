@@ -1,23 +1,14 @@
 package commlib.cinvesframework.agent;
 
-import com.sun.org.apache.xpath.internal.SourceTree;
 import commlib.cinvesframework.belief.*;
-import commlib.cinvesframework.desire.Desire;
-import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.intention.GoToRefugePlan;
 import commlib.cinvesframework.intention.ReportFirePlan;
-import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.desire.Desires;
-import commlib.cinvesframework.utils.GeneralUtils;
 import commlib.components.AbstractCSAgent;
 import commlib.message.RCRSCSMessage;
 import rescuecore2.Constants;
-import rescuecore2.log.Logger;
 import rescuecore2.messages.Command;
-import rescuecore2.misc.geometry.GeometryTools2D;
-import rescuecore2.misc.geometry.Line2D;
-import rescuecore2.misc.geometry.Point2D;
 import rescuecore2.standard.entities.*;
 import rescuecore2.standard.kernel.comms.ChannelCommunicationModel;
 import rescuecore2.worldmodel.ChangeSet;
@@ -250,7 +241,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         System.out.println("Puedo moverme pero no ayudar =(");
         refugePlan.setTime(time);
-        refugePlan.setRemoveBlockades(false);
+        refugePlan.setVolunteer(false);
         refugePlan.createPlan(getBeliefs(),getDesires());
 
     }

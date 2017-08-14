@@ -4,16 +4,62 @@ import commlib.cinvesframework.agent.CinvesAgent;
 import rescuecore2.misc.geometry.GeometryTools2D;
 import rescuecore2.misc.geometry.Line2D;
 import rescuecore2.misc.geometry.Point2D;
-import rescuecore2.standard.entities.Area;
-import rescuecore2.standard.entities.Blockade;
-import rescuecore2.standard.entities.Human;
+import rescuecore2.standard.entities.*;
+import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GeneralUtils {
 
+    /**
+     * Check Civilians Around
+     */
 
+    public static ArrayList<Civilian> getCivilianAround(CinvesAgent agent,ChangeSet changeSet){
+
+        StandardEntity entity;
+        StandardWorldModel model = agent.getWorldModel();
+        ArrayList<Civilian> civilians = new ArrayList<>();
+
+        for(EntityID id : changeSet.getChangedEntities()){
+
+            entity = model.getEntity(id);
+
+            if(entity instanceof Civilian){
+                civilians.add((Civilian)entity);
+            }
+        }
+
+        return civilians;
+    }
+
+    /**
+     * Check PoliceForce
+     */
+
+    public static ArrayList<PoliceForce> getPoliceForceAround(CinvesAgent agent,ChangeSet changeSet){
+
+        StandardEntity entity;
+        StandardWorldModel model = agent.getWorldModel();
+        ArrayList<PoliceForce> policeForces = new ArrayList<>();
+
+        for(EntityID id : changeSet.getChangedEntities()){
+
+            entity = model.getEntity(id);
+
+            if(entity instanceof PoliceForce){
+                policeForces.add((PoliceForce)entity);
+            }
+        }
+
+        return policeForces;
+    }
+
+    /**
+     * Check Blockades
+     */
     public static Blockade getTargetBlockade(int distance, CinvesAgent agent){
        // int distance = config.getIntValue("clear.repair.distance");
 
