@@ -2,6 +2,7 @@ package implementation.agents.civilian;
 
 import commlib.cinvesframework.belief.Belief;
 import commlib.cinvesframework.belief.BeliefType;
+import commlib.cinvesframework.belief.EntityMapBelief;
 import commlib.cinvesframework.belief.EnvironmentBelief;
 import commlib.cinvesframework.intention.GoToRefugePlan;
 import commlib.cinvesframework.agent.CinvesAgent;
@@ -38,6 +39,7 @@ public class CFCivilian extends CinvesAgent<Civilian>{
         }
 
         getBeliefs().addBelief(BeliefType.VOLUNTEER,isVolunteer);
+        getBeliefs().addBelief(BeliefType.REPORTED_BLOCKADES,new EntityMapBelief());
     }
 
     @Override

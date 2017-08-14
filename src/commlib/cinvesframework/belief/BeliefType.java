@@ -11,7 +11,8 @@ public enum BeliefType {
     GOAL_PATH,
     REPAIR_DISTANCE,
     VOLUNTEER,
-    CHANGED_ENVIRONMENT
+    CHANGED_ENVIRONMENT,
+    REPORTED_BLOCKADES,
     ;
 
 }

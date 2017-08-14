@@ -188,6 +188,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
             for(RCRSCSMessage msg : this.receivedMessageList){
                 if(msg instanceof ACLMessage){
+
                     ACLMessage aclMessage = (ACLMessage)msg;
                     if(aclMessage.getSender() != getID().getValue()) { //Evita que recibas tus propios mensajes
 

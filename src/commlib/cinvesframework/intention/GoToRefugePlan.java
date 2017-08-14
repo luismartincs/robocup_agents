@@ -52,11 +52,17 @@ public class GoToRefugePlan extends AbstractPlan {
                 if (policeForcesAround.size() > 0){
 
                 }else{
-                    //public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId, int xPosition, int yPosition, int victims, int injured,int blockade, int repairCost) {
+
+                    EntityMapBelief entityMapBelief = (EntityMapBelief)beliefs.getBelief(BeliefType.REPORTED_BLOCKADES);
+
+                    if (!entityMapBelief.contains(target)){
 
                         ACLMessage informBlockade = new ACLMessage(time,getAgent().getID(),ACLPerformative.INFORM,new EntityID(0),getAgent().nextConversationId(),0,target.getX(),target.getY(),0,0,target.getID(),target.getRepairCost());
                         getAgent().addACLMessage(informBlockade);
-                        System.out.println("Aviso a policeoffice");
+
+                        entityMapBelief.addEntity(target);
+
+                    }
                 }
             }
 
