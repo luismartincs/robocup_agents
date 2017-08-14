@@ -378,6 +378,8 @@ public class RCRSCSMessageConverter {
         this.dataBitSizeMap.put(DataType.ALL_ENTITIES,32);
         this.dataBitSizeMap.put(DataType.CONVERSATION_ID,32);
         this.dataBitSizeMap.put(DataType.CONTENT,32);
+        this.dataBitSizeMap.put(DataType.INJURED_NUMBER,32);
+        this.dataBitSizeMap.put(DataType.VICTIMS_NUMBER,32);
 
         // time
         this.dataBitSizeMap.put(DataType.TIME, calculateBitSize(1000));
@@ -843,6 +845,10 @@ public class RCRSCSMessageConverter {
                     break;
                 case CONTENT:
                     break;
+                case INJURED_NUMBER:
+                    break;
+                case VICTIMS_NUMBER:
+                    break;
                 default:
                     System.err.println("undefined data type:"
                             + messageData.getType());
@@ -1109,6 +1115,9 @@ public class RCRSCSMessageConverter {
                 case ALL_ENTITIES:
                 case CONVERSATION_ID:
                 case CONTENT:
+                case INJURED_NUMBER:
+                case VICTIMS_NUMBER:
+
                     res = (Integer) data.getData();
                     break;
                 default:

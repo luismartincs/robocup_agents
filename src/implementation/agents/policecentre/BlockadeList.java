@@ -14,6 +14,8 @@ public class BlockadeList {
 
     public void addBlockade(BlockadeInfo bi){
         blockades.add(bi);
+
+        System.out.println(blockades.size());
     }
 
     public void addBlockade(Blockade bl){

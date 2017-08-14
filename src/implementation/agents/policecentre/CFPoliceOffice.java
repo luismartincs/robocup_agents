@@ -16,49 +16,37 @@ import java.util.EnumSet;
 
 public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
 
-    private boolean							channelComm;
     BlockadeList blockadeList;
 
     @Override
     public void postConnect(){
-        System.out.println("hola soy un police office "+this.getID());
-        blockadeList=new BlockadeList();
         super.postConnect();
-        boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY)
-                .equals(ChannelCommunicationModel.class.getName());
 
-        int numChannels = this.config.getIntValue("comms.channels.count");
-        if((speakComm) && (numChannels > 1)){
-            this.channelComm = true;
-        }else{
-            this.channelComm = false;
-        }
+        blockadeList=new BlockadeList();
+
+        System.out.println("hola soy un police office "+this.getID());
+
     }
 
     @Override
     protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
-        if(time == config
-                .getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)){
-            if(this.channelComm){
-                // Assign the agent to channel 1
-                setMessageChannel(1);
-                sendSubscribe(time,getMessageChannel());
-            }
-        }
-        for(RCRSCSMessage msg : this.receivedMessageList){
-            if(msg instanceof ACLMessage){
-                if(((ACLMessage) msg).getPerformative().equals(ACLPerformative.INFORM)){
-                    BlockadeInfo binfo=new BlockadeInfo(((ACLMessage) msg).getXPosition(),((ACLMessage) msg).getYPosition(),((ACLMessage) msg).getRepairCost(),((ACLMessage) msg).getBlockade());
-                    blockadeList.addBlockade(binfo);
-                    System.out.println("agregada información de blockade ");
-                }
+        super.thinking(time, changed, heard);
+
+        for(ACLMessage msg:this.aclMessages){
+            if(msg.getPerformative().equals(ACLPerformative.INFORM)){
+
+                BlockadeInfo binfo=new BlockadeInfo(msg.getXPosition(),msg.getYPosition(),msg.getRepairCost(),msg.getBlockade().getValue());
+                blockadeList.addBlockade(binfo);
+
+                System.out.println("agregada información de blockade ");
+
             }
         }
 
     }
+
     @Override
     protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum() {
-        return EnumSet.of(StandardEntityURN.FIRE_STATION,
-                StandardEntityURN.AMBULANCE_CENTRE, StandardEntityURN.POLICE_OFFICE,StandardEntityURN.POLICE_FORCE);
+        return EnumSet.of(StandardEntityURN.POLICE_OFFICE);
     }
 }

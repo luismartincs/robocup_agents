@@ -1,6 +1,7 @@
 package commlib.cinvesframework.messages;
 
 import commlib.data.DataType;
+import commlib.data.EntityIDData;
 import commlib.data.RCRSCSData;
 import commlib.data.ValueData;
 import commlib.information.WorldInformation;
@@ -24,7 +25,7 @@ public class ACLMessage extends WorldInformation{
 
     }
 
-    public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId, int xPosition, int yPosition, int victims, int injured,int blockade, int repairCost) {
+    public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId, int xPosition, int yPosition, int victims, int injured,EntityID blockade, int repairCost) {
         super(BaseMessageType.ACL_MESSAGE, time);
 
         this.setData(new ValueData(DataType.ALL_ENTITIES, sender.getValue()),0);
@@ -36,7 +37,7 @@ public class ACLMessage extends WorldInformation{
         this.setData(new ValueData(DataType.CONTENT,contentId),0);
         this.setData(new ValueData(DataType.VICTIMS_NUMBER,victims));
         this.setData(new ValueData(DataType.INJURED_NUMBER,injured));
-        this.setData(new ValueData(DataType.BLOCKADE,blockade));
+        this.setData(new EntityIDData(DataType.BLOCKADE,blockade));
         this.setData(new ValueData(DataType.REPAIR_COST,repairCost));
         // this.setData(new EntityIDData(DataType.AREA, targetAgent));
 
@@ -79,7 +80,7 @@ public class ACLMessage extends WorldInformation{
 
     public int getInjured(){ return getValueData(DataType.INJURED_NUMBER,0);}
 
-    public int getBlockade(){ return getValueData(DataType.BLOCKADE,0);}
+    public EntityID getBlockade(){ return getID(DataType.BLOCKADE,0);}
 
     public int getRepairCost(){ return getValueData(DataType.REPAIR_COST,0);}
 

@@ -5,6 +5,8 @@ import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
+import commlib.cinvesframework.messages.ACLMessage;
+import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
@@ -50,7 +52,11 @@ public class GoToRefugePlan extends AbstractPlan {
                 if (policeForcesAround.size() > 0){
 
                 }else{
-                    System.out.println("Aviso a policeoffice");
+                    //public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId, int xPosition, int yPosition, int victims, int injured,int blockade, int repairCost) {
+
+                        ACLMessage informBlockade = new ACLMessage(time,getAgent().getID(),ACLPerformative.INFORM,new EntityID(0),getAgent().nextConversationId(),0,target.getX(),target.getY(),0,0,target.getID(),target.getRepairCost());
+                        getAgent().addACLMessage(informBlockade);
+                        System.out.println("Aviso a policeoffice");
                 }
             }
 
