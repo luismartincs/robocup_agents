@@ -76,8 +76,8 @@ public class SampleRCRSCSPoliceForce extends
 			}
 		}
 
-		EntityID id2=new EntityID(20425);
-		addMessage(new ACLMessage(time,this.getID(), ACLPerformative.INFORM,id2,1,1));
+		//EntityID id2=new EntityID(20425);
+		//addMessage(new ACLMessage(time,this.getID(), ACLPerformative.INFORM,id2,1,1));
 		
 		// Agent send its position
 		PositionInformation position = new PositionInformation(time, me().getID(),
