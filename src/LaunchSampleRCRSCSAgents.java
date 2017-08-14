@@ -1,4 +1,6 @@
 import java.io.IOException;
+
+import implementation.agents.policecentre.CFPoliceOffice;
 import rescuecore2.components.ComponentLauncher;
 import rescuecore2.components.TCPComponentLauncher;
 import rescuecore2.components.ComponentConnectionException;
@@ -117,12 +119,12 @@ public final class LaunchSampleRCRSCSAgents{
 			Logger.info("failed: " + e.getMessage());
 		}
 
-		int pc = 2;
+		int pc = 1;
 
 		try{
 			while(pc-- != 0){
 				Logger.info("Connecting police office " + (i++) + "...");
-				launcher.connect(new SampleRCRSCSCentre());
+				launcher.connect(new CFPoliceOffice());
 				Logger.info("success");
 			}
 		}catch(ComponentConnectionException e){
