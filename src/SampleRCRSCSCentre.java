@@ -2,8 +2,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
-import commlib.bdi.messages.ACLMessage;
-import commlib.bdi.messages.ACLPerformative;
+import commlib.cinvesframework.messages.ACLMessage;
 import commlib.data.DataType;
 import commlib.message.BaseMessageType;
 import commlib.message.RCRSCSMessage;
@@ -37,6 +36,7 @@ public class SampleRCRSCSCentre extends AbstractCSAgent<PoliceOffice>{
 	
 	@Override
 	public void postConnect(){
+		System.out.println("hola soy un police centre "+this.getID());
 		super.postConnect();
 		boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY)
 				.equals(ChannelCommunicationModel.class.getName());
@@ -61,16 +61,11 @@ public class SampleRCRSCSCentre extends AbstractCSAgent<PoliceOffice>{
 			}
 		}
 
-//32737
-
-		addMessage(new ACLMessage(time,getID(), ACLPerformative.CFP,new EntityID(531016945)));
-
-		//addMessage(new ClearRouteTaskMessage(time, this.getID(),new EntityID(531016945),new EntityID(32737),new EntityID(32737)));
-
-
 
 		for(RCRSCSMessage msg : this.receivedMessageList){
-			Logger.info(msg.toString());
+			if(msg instanceof ACLMessage){
+				System.out.println("recibo mensaje de "+((ACLMessage) msg).getSender());
+			}
 		}
 
 

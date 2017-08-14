@@ -3,7 +3,8 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
-import commlib.bdi.messages.ACLMessage;
+import commlib.cinvesframework.messages.ACLMessage;
+import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.information.BuildingInformation;
 import commlib.message.RCRSCSMessage;
 import commlib.task.RestTaskMessage;
@@ -71,6 +72,7 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
         }
 
         sendMove(time, randomWalk());
+
     }
 
     private void move(int time,EntityID agentID){
@@ -89,6 +91,8 @@ public class DummyRCRSCSAgent extends AbstractSampleRCRSCSAgent<PoliceForce> {
         Logger.debug("Couldn't plan a path to a blocked road");
         Logger.info("Moving randomly");
         sendMove(time, randomWalk());
+
+
     }
 
 

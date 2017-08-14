@@ -2,6 +2,9 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
+
+import commlib.cinvesframework.messages.ACLMessage;
+import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.message.RCRSCSMessage;
 import commlib.information.BlockadeInformation;
 import commlib.information.BuildingInformation;
@@ -72,6 +75,9 @@ public class SampleRCRSCSPoliceForce extends
 				sendSubscribe(time,getMessageChannel());
 			}
 		}
+
+		EntityID id2=new EntityID(20425);
+		addMessage(new ACLMessage(time,this.getID(), ACLPerformative.INFORM,id2,1,1));
 		
 		// Agent send its position
 		PositionInformation position = new PositionInformation(time, me().getID(),
@@ -142,6 +148,8 @@ public class SampleRCRSCSPoliceForce extends
 		Logger.debug("Couldn't plan a path to a blocked road");
 		Logger.info("Moving randomly");
 		sendMove(time, randomWalk());
+
+
 	}
 	
 	

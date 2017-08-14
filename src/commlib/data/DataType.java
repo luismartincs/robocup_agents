@@ -127,7 +127,15 @@ public enum DataType {
 	 */
 	BROKENNESS,
 	/**
-	 * water quantity that fb has.
+	 * Number of victims
+	 */
+	VICTIMS_NUMBER,
+	/*
+	Numbers of wounded
+	 */
+	INJURED_NUMBER,
+	/*
+
 	 */
 	WATER,
 	// list type
@@ -165,6 +173,8 @@ public enum DataType {
 		case BURIEDNESS:
 		case FIERYNESS:
 		case WATER_POWER:
+		case VICTIMS_NUMBER:
+		case INJURED_NUMBER:
 			// case SUPPLY_QUANTITY:
 		case REPAIR_COST:
 		case BROKENNESS:

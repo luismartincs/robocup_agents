@@ -117,7 +117,7 @@ public final class LaunchSampleRCRSCSAgents{
 			Logger.info("failed: " + e.getMessage());
 		}
 
-		int pc = 1;
+		int pc = 2;
 
 		try{
 			while(pc-- != 0){

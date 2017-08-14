@@ -1,6 +1,4 @@
 
-import commlib.bdi.messages.ACLMessage;
-import commlib.bdi.messages.ACLPerformative;
 import commlib.message.RCRSCSMessage;
 import commlib.task.pf.ClearRouteTaskMessage;
 import rescuecore2.Constants;
@@ -20,7 +18,7 @@ import java.util.List;
 public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
 
     private boolean channelComm;
-    ContractNet cnet;
+    //ContractNet cnet;
 
     @Override
     public String toString() {
@@ -32,7 +30,7 @@ public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
     protected void postConnect() {
         super.postConnect();
         System.out.println("post civil ---  id "+this.getID());
-        cnet=new ContractNet(this.getID(), 1);
+        //cnet=new ContractNet(this.getID(), 1);
         model.indexClass(StandardEntityURN.ROAD);
         boolean speakComm = config.getValue(Constants.COMMUNICATION_MODEL_KEY).equals(ChannelCommunicationModel.class.getName());
 
@@ -55,19 +53,14 @@ public class CivilianAgent extends AbstractSampleRCRSCSAgent<Civilian> {
 
             }
         }
-        StandardEntity entity;
-        ACLMessage  msg;
+
         /**
          * SEND REQUEST
          */
         EntityID id=new EntityID(710989643);
        // msg=new ACLMessage(time,this.getID(),ACLPerformative.REQUEST,id);
 
-        msg=cnet.msgRequest(time, id);
-        if(msg!=null){
-            //addMessage(msg);
-            System.out.println("enviando request a "+id+" de "+this.getID());
-        }
+
 
 
        sendMove(time, randomDestination());
