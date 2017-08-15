@@ -14,11 +14,10 @@ public class BlockadeList {
 
     public void addBlockade(BlockadeInfo bi){
         blockades.add(bi);
-
-        System.out.println(blockades.size());
     }
 
     public void addBlockade(Blockade bl){
         blockades.add(new BlockadeInfo(bl.getX(),bl.getY(),bl.getRepairCost(),bl.getID().getValue()));
+
     }
 }

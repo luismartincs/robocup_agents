@@ -38,7 +38,7 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
                 BlockadeInfo binfo=new BlockadeInfo(msg.getXPosition(),msg.getYPosition(),msg.getRepairCost(),msg.getBlockade().getValue());
                 blockadeList.addBlockade(binfo);
 
-                System.out.println("agregada información de blockade ");
+                System.out.println("agregada información de blockade "+msg.getBlockade().getValue());
 
             }
         }

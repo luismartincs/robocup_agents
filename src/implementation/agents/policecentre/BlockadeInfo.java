@@ -83,6 +83,12 @@ public class BlockadeInfo implements Comparator<BlockadeInfo>{
         return id;
     }
 
+    @Override
+    public boolean equals(Object arg0) {
+        return this.getId()==((BlockadeInfo)arg0).getId();
+    }
+
+
 
     @Override
     public int compare(BlockadeInfo blockadeInfo, BlockadeInfo t1) {
