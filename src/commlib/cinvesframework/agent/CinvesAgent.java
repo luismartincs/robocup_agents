@@ -30,7 +30,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     private Desires desires;
 
     private boolean filterACLMessages = true;
-    protected ArrayList<ACLMessage> aclMessages;
+    private ArrayList<ACLMessage> aclMessages;
 
     private boolean isHuman = false;
 
@@ -39,7 +39,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     */
 
     private int conversationId;
-    protected HashMap<Integer,ACLMessage> queuedMessages;
+    private HashMap<Integer,ACLMessage> queuedMessages;
 
     private ReportFirePlan reportFirePlan;
     private GoToRefugePlan refugePlan;
@@ -74,9 +74,9 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         channel = 1;
         listenChannels = new int[]{1};
 
-        aclMessages = new ArrayList<>();
+        setAclMessages(new ArrayList<>());
 
-        queuedMessages = new HashMap<>();
+        setQueuedMessages(new HashMap<>());
         conversationId = 1;
 
 
@@ -92,9 +92,9 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         this.channel = channel;
         this.listenChannels = listenChannels;
 
-        aclMessages = new ArrayList<>();
+        setAclMessages(new ArrayList<>());
 
-        queuedMessages = new HashMap<>();
+        setQueuedMessages(new HashMap<>());
         conversationId = 1;
 
     }
@@ -145,6 +145,14 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         super.sendClear(time, target);
     }
 
+    public void addACLMessageToQueue(int conversationId,ACLMessage message){
+        getQueuedMessages().put(conversationId,message);
+    }
+
+    public ACLMessage getACLMessageFromQueue(int conversationId){
+        return getQueuedMessages().get(conversationId);
+    }
+
     @Override
     protected void postConnect(){
 
@@ -184,7 +192,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         if(isFilterACLMessages()){
 
-            this.aclMessages.clear();
+            this.getAclMessages().clear();
 
             for(RCRSCSMessage msg : this.receivedMessageList){
                 if(msg instanceof ACLMessage){
@@ -194,7 +202,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
                         if(aclMessage.getReceiver() == getID().getValue() || aclMessage.getReceiver() == 0) { //Si es para mi o para todos
 
-                            aclMessages.add((ACLMessage) msg);
+                            getAclMessages().add((ACLMessage) msg);
 
                         }
                     }
@@ -295,5 +303,21 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     public void setFilterACLMessages(boolean filterACLMessages) {
         this.filterACLMessages = filterACLMessages;
+    }
+
+    public HashMap<Integer, ACLMessage> getQueuedMessages() {
+        return queuedMessages;
+    }
+
+    public void setQueuedMessages(HashMap<Integer, ACLMessage> queuedMessages) {
+        this.queuedMessages = queuedMessages;
+    }
+
+    public ArrayList<ACLMessage> getAclMessages() {
+        return this.aclMessages;
+    }
+
+    public void setAclMessages(ArrayList<ACLMessage> aclMessages) {
+        this.aclMessages = aclMessages;
     }
 }

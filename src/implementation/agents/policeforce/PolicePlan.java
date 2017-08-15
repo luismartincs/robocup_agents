@@ -8,6 +8,7 @@ import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
+import implementation.agents.ActionConstants;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.EntityID;
 
@@ -34,6 +35,13 @@ public class PolicePlan extends AbstractPlan {
 
     @Override
     public Object createPlan(Beliefs beliefs, Desires desires) {
+
+        ArrayList<ACLMessage> aclMessages = getAgent().getAclMessages();
+
+        for(ACLMessage msg: aclMessages){
+            System.out.println(msg.getPerformative());
+        }
+
 
         int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
 
@@ -140,7 +148,22 @@ public class PolicePlan extends AbstractPlan {
                         getAgent().sendMove(time, path);
 
                     }else {
-                        System.out.println("SOLICITAR DONDE QUITAR BLOQUEO");
+
+
+                        if(getAgent().getQueuedMessages().size() <= 0){
+
+                            System.out.println("SOLICITAR DONDE QUITAR BLOQUEO");
+
+                            int conversationId = getAgent().nextConversationId();
+
+                            ACLMessage requestBlockade = new ACLMessage(time,getAgent().getID(), ACLPerformative.REQUEST,new EntityID(0),
+                                    conversationId, ActionConstants.REQUEST_BLOCKADE,0,0,0,0,new EntityID(0),0);
+
+                            getAgent().addACLMessageToQueue(conversationId,requestBlockade);
+
+                            getAgent().addACLMessage(requestBlockade);
+                        }
+
                         getAgent().sendRest(time);
                     }
 
