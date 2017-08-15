@@ -1,6 +1,8 @@
 import java.io.IOException;
 
+import implementation.agents.civilian.CFCivilian;
 import implementation.agents.policecentre.CFPoliceOffice;
+import implementation.agents.policeforce.CFPoliceForce;
 import rescuecore2.components.ComponentLauncher;
 import rescuecore2.components.TCPComponentLauncher;
 import rescuecore2.components.ComponentConnectionException;
@@ -89,7 +91,7 @@ public final class LaunchSampleRCRSCSAgents{
 	
 	private static void connect(ComponentLauncher launcher, int fb, int pf,
 			int at, Config config) throws InterruptedException, ConnectionException{
-		int i = 0;
+		/*int i = 0;
 		try{
 			while(fb-- != 0){
 				Logger.info("Connecting fire brigade " + (i++) + "...");
@@ -117,13 +119,13 @@ public final class LaunchSampleRCRSCSAgents{
 			}
 		}catch(ComponentConnectionException e){
 			Logger.info("failed: " + e.getMessage());
-		}
+		}*/
 
-		int pc = 1;
+		int po = 1;
 
 		try{
-			while(pc-- != 0){
-				Logger.info("Connecting police office " + (i++) + "...");
+			while(po-- != 0){
+				Logger.info("Connecting police office ...");
 				launcher.connect(new CFPoliceOffice());
 				Logger.info("success");
 			}
@@ -131,38 +133,26 @@ public final class LaunchSampleRCRSCSAgents{
 			Logger.info("failed: " + e.getMessage());
 		}
 
-		/**
-		 * try{
-		 * while(true){
-		 * Logger.info("Connecting centre " + (i++) + "...");
-		 * launcher.connect(new SampleRCRSCSCentre());
-		 * Logger.info("success");
-		 * }
-		 * }catch(ComponentConnectionException e){
-		 * Logger.info("failed: " + e.getMessage());
-		 * }
-		 */
-
-		int r = 2;
+		int pc = 200;
 
 		try{
-			while(r-- != 0){
-				Logger.info("Connecting dummy agent " + (i++) + "...");
-				System.out.println("conectado dummy");
-				launcher.connect(new DummyRCRSCSAgent());
+			while(pc-- != 0){
+				Logger.info("Connecting police...");
+				launcher.connect(new CFPoliceForce());
 				Logger.info("success");
 			}
 		}catch(ComponentConnectionException e){
 			Logger.info("failed: " + e.getMessage());
 		}
 
-		int civ = 3;
+
+		int civ = 200;
 
 		try{
 			while(civ-- != 0){
-				Logger.info("Connecting dummy agent " + (i++) + "...");
+				Logger.info("Connecting dummy agent...");
 				System.out.println("conectado civil"+civ);
-				launcher.connect(new CivilianAgent());
+				launcher.connect(new CFCivilian());
 				Logger.info("success");
 			}
 		}catch(ComponentConnectionException e){

@@ -153,6 +153,10 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         return getQueuedMessages().get(conversationId);
     }
 
+    public ACLMessage removeACLMessageFromQueue(int conversationId){
+        return getQueuedMessages().remove(conversationId);
+    }
+
     @Override
     protected void postConnect(){
 

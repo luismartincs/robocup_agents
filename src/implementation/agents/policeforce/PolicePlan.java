@@ -5,6 +5,7 @@ import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.desire.*;
 import commlib.cinvesframework.intention.AbstractPlan;
 import commlib.cinvesframework.intention.SearchPlan;
+import commlib.cinvesframework.interaction.ContractNet;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
@@ -36,11 +37,33 @@ public class PolicePlan extends AbstractPlan {
     @Override
     public Object createPlan(Beliefs beliefs, Desires desires) {
 
+        SearchPlan sp = new SearchPlan(getAgent());
+
+        /**
+         * ContractNet se revisan los mensajes de solicitud antes de hacer algun movimiento
+         */
         ArrayList<ACLMessage> aclMessages = getAgent().getAclMessages();
 
         for(ACLMessage msg: aclMessages){
-            System.out.println(msg.getPerformative());
+
+            ACLMessage previous = getAgent().getACLMessageFromQueue(msg.getConversationId());
+
+            if(previous != null) {
+
+                if (ContractNet.isValidState(previous.getPerformative(), msg.getPerformative())) {
+                    System.out.println(msg.getPerformative() + " - " + msg.getBlockade());
+
+                    desires.addDesire(DesireType.GOAL_LOCATION, new Desire(msg.getBlockade()));
+                    getAgent().removeACLMessageFromQueue(msg.getConversationId());
+                }
+
+            }
+
         }
+
+        /**
+         * Comportamiento normal
+         */
 
 
         int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
@@ -56,15 +79,13 @@ public class PolicePlan extends AbstractPlan {
 
             if (!entityMapBelief.contains(target) && time > 5){
 
-                System.out.println("Voy a reportar que ya quite el bloqueo");
+               // System.out.println("Voy a reportar que ya quite el bloqueo");
                 /*
                 ACLMessage informBlockade = new ACLMessage(time,getAgent().getID(), ACLPerformative.INFORM,new EntityID(0),getAgent().nextConversationId(),0,target.getX(),target.getY(),0,0,target.getID(),target.getRepairCost());
                 getAgent().addACLMessage(informBlockade);
                 */
                 entityMapBelief.addEntity(target);
 
-            }else {
-                System.out.println("Ya lo reporte");
             }
 
             getAgent().sendClear(time,target.getID());
@@ -73,7 +94,7 @@ public class PolicePlan extends AbstractPlan {
 
         } else {
 
-            SearchPlan sp = new SearchPlan(getAgent());
+
 
             Desire goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
 
@@ -152,7 +173,7 @@ public class PolicePlan extends AbstractPlan {
 
                         if(getAgent().getQueuedMessages().size() <= 0){
 
-                            System.out.println("SOLICITAR DONDE QUITAR BLOQUEO");
+                            //System.out.println("SOLICITAR DONDE QUITAR BLOQUEO");
 
                             int conversationId = getAgent().nextConversationId();
 

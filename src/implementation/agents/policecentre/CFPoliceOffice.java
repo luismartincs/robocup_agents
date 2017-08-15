@@ -42,7 +42,7 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
             }else if(msg.getPerformative().equals(ACLPerformative.REQUEST)){
 
                 ACLMessage informBlockade = new ACLMessage(time,me().getID(), ACLPerformative.INFORM,new EntityID(msg.getSender()),
-                        msg.getConversationId(), ActionConstants.REQUEST_BLOCKADE,0,0,0,0,new EntityID(0),0);
+                        msg.getConversationId(), ActionConstants.REQUEST_BLOCKADE,0,0,0,0,new EntityID(32987),0);
 
                 addACLMessage(informBlockade);
 
