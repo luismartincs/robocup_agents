@@ -10,6 +10,8 @@ public class Desire {
         this.entityID = entityID;
     }
 
+    public Desire(){}
+
     public EntityID getEntityID() {
         return entityID;
     }

@@ -1,27 +1,30 @@
-package commlib.cinvesframework.intention;
+package implementation.agents.policeforce;
 
 import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.*;
-import commlib.cinvesframework.desire.Desire;
-import commlib.cinvesframework.desire.DesireType;
-import commlib.cinvesframework.desire.Desires;
+import commlib.cinvesframework.desire.*;
+import commlib.cinvesframework.intention.AbstractPlan;
+import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
-import implementation.agents.policeforce.CFPoliceForce;
 import rescuecore2.standard.entities.*;
-import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GoToRefugePlan extends AbstractPlan {
+import commlib.cinvesframework.desire.Desire;
+import commlib.cinvesframework.desire.DesireType;
+import commlib.cinvesframework.desire.Desires;
+
+
+public class PolicePlan extends AbstractPlan {
 
     private int time;
     private boolean isVolunteer = false;
 
-    public GoToRefugePlan(CinvesAgent agent) {
+    public PolicePlan(CinvesAgent agent) {
         super(agent);
     }
 
@@ -34,46 +37,34 @@ public class GoToRefugePlan extends AbstractPlan {
 
         int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
 
-        isVolunteer = beliefs.getBelief(BeliefType.VOLUNTEER).isDataBoolean();
-
         Blockade target = GeneralUtils.getTargetBlockade(distance, getAgent());
 
 
         if (target != null) {
 
-            if(isVolunteer){ //Si es un voluntario/policia entonces remueve el bloqueo sin reportarlo, pa que
 
-                if(getAgent() instanceof CFPoliceForce){
-                    System.out.println("Voy a reportar que ya quite el bloqueo");
-                }
 
-                getAgent().sendClear(time,target.getID());
+            EntityMapBelief entityMapBelief = (EntityMapBelief)beliefs.getBelief(BeliefType.REPORTED_BLOCKADES);
 
-            }else{ //Reporta un bloqueo si no hay alguien que lo este removiendo (policia cerca)
+            if (!entityMapBelief.contains(target) && time > 5){
 
-                ChangeSet changeSet = ((EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT)).getChangeSet();
-                ArrayList<PoliceForce> policeForcesAround = GeneralUtils.getPoliceForceAround(getAgent(),changeSet);
+                System.out.println("Voy a reportar que ya quite el bloqueo");
+                /*
+                ACLMessage informBlockade = new ACLMessage(time,getAgent().getID(), ACLPerformative.INFORM,new EntityID(0),getAgent().nextConversationId(),0,target.getX(),target.getY(),0,0,target.getID(),target.getRepairCost());
+                getAgent().addACLMessage(informBlockade);
+                */
+                entityMapBelief.addEntity(target);
 
-                if (policeForcesAround.size() > 0){
-
-                }else{
-
-                    EntityMapBelief entityMapBelief = (EntityMapBelief)beliefs.getBelief(BeliefType.REPORTED_BLOCKADES);
-
-                    if (!entityMapBelief.contains(target) && time > 5){
-
-                        ACLMessage informBlockade = new ACLMessage(time,getAgent().getID(),ACLPerformative.INFORM,new EntityID(0),getAgent().nextConversationId(),0,target.getX(),target.getY(),0,0,target.getID(),target.getRepairCost());
-                        getAgent().addACLMessage(informBlockade);
-
-                        entityMapBelief.addEntity(target);
-
-                    }
-                }
+            }else {
+                System.out.println("Ya lo reporte");
             }
+
+            getAgent().sendClear(time,target.getID());
 
             return null;
 
         } else {
+
             SearchPlan sp = new SearchPlan(getAgent());
 
             Desire goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
@@ -82,6 +73,9 @@ public class GoToRefugePlan extends AbstractPlan {
 
                 EntityListBelief refugesList = (EntityListBelief) beliefs.getBelief(BeliefType.REFUGE);
                 ArrayList<StandardEntity> refuges = refugesList.getEntities();
+
+                EntityListDesire nextGoals = new EntityListDesire();
+
 
                 int minSteps = Integer.MAX_VALUE;
                 int pathSize = 0;
@@ -109,6 +103,15 @@ public class GoToRefugePlan extends AbstractPlan {
 
                 }
 
+
+                for (StandardEntity ref:refuges) {
+                    if(ref.getID().getValue() != closestRefuge.getID().getValue()) {
+                        nextGoals.addEntity(ref);
+                    }
+                }
+
+                desires.addDesire(DesireType.NEXT_GOALS,nextGoals);
+
                 desires.addDesire(DesireType.GOAL_LOCATION, new Desire(closestRefuge.getID()));
                 beliefs.addBelief(BeliefType.GOAL_PATH, new PathBelief(closestPath));
 
@@ -121,7 +124,26 @@ public class GoToRefugePlan extends AbstractPlan {
                 EntityID position = ((Human) getAgent().me()).getPosition();
 
                 if (goalLocation.getEntityID().getValue() == position.getValue()) {
-                    getAgent().sendRest(time);
+
+                    EntityListDesire nextGoals = (EntityListDesire)desires.getDesire(DesireType.NEXT_GOALS);
+
+                    if(nextGoals.getEntities().size() > 0){
+
+                        StandardEntity entity = nextGoals.getEntities().get(0);
+
+                        desires.addDesire(DesireType.GOAL_LOCATION, new Desire(entity.getID()));
+
+                        List<EntityID> path = sp.createPlan(beliefs, desires);
+
+                        nextGoals.removeEntity(entity);
+
+                        getAgent().sendMove(time, path);
+
+                    }else {
+                        System.out.println("SOLICITAR DONDE QUITAR BLOQUEO");
+                        getAgent().sendRest(time);
+                    }
+
                     return null;
                 } else {
 
@@ -141,3 +163,4 @@ public class GoToRefugePlan extends AbstractPlan {
         this.isVolunteer = volunteer;
     }
 }
+
