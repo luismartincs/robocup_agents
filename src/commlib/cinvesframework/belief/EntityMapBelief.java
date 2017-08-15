@@ -25,4 +25,6 @@ public class EntityMapBelief extends Belief{
         return entities.containsKey(entity.getID().getValue());
     }
 
+    //test.
+
 }
