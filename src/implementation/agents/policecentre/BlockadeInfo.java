@@ -25,6 +25,7 @@ public class BlockadeInfo implements Comparator<BlockadeInfo>{
         blockade.setX(xPosition);
         blockade.setY(yPosition);
         blockade.setRepairCost(repairCost);
+        blockade.setPosition(new EntityID(id));
     }
 
     public BlockadeInfo(int xPosition, int yPosition, int id) {
@@ -35,7 +36,17 @@ public class BlockadeInfo implements Comparator<BlockadeInfo>{
         blockade=new Blockade(new EntityID(id));
         blockade.setX(xPosition);
         blockade.setY(yPosition);
-        blockade.setRepairCost(repairCost);
+        blockade.setRepairCost(unknowCost);
+        blockade.setPosition(new EntityID(id));
+    }
+
+    public BlockadeInfo(Blockade blockade){
+        this.blockade=blockade;
+        System.out.println(blockade.getX());
+        xPosition=blockade.getX();
+        yPosition=blockade.getY();
+        repairCost=blockade.getRepairCost();
+        id=blockade.getID().getValue();
     }
 
     public Blockade getBlockade() {

@@ -173,7 +173,7 @@ public class PolicePlan extends AbstractPlan {
 
                         if(getAgent().getQueuedMessages().size() <= 0){
 
-                            //System.out.println("SOLICITAR DONDE QUITAR BLOQUEO");
+                            System.out.println("SOLICITAR DONDE QUITAR BLOQUEO");
 
                             int conversationId = getAgent().nextConversationId();
 

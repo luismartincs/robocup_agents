@@ -21,7 +21,7 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
     @Override
     protected void postConnect() {
         super.postConnect();
-
+        System.out.println("conectado police force "+this.getID());
         policePlan = new PolicePlan(this);
 
         Belief removeBlockades = new Belief();
