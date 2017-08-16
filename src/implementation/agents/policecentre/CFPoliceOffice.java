@@ -4,13 +4,10 @@ import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import implementation.agents.ActionConstants;
-import implementation.agents.policeforce.CFPoliceForce;
 import rescuecore2.messages.Command;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
-import rescuecore2.worldmodel.Entity;
 import rescuecore2.worldmodel.EntityID;
-import rescuecore2.worldmodel.Property;
 
 import java.util.Collection;
 import java.util.EnumSet;

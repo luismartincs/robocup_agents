@@ -15,13 +15,12 @@ import java.util.EnumSet;
 
 public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
-
     private PolicePlan policePlan;
 
     @Override
     protected void postConnect() {
         super.postConnect();
-        System.out.println("conectado police force "+this.getID());
+        System.out.println("conectado police force "+this.getID()+"     "+"[quadrant : "+quadrant+"]");
         policePlan = new PolicePlan(this);
 
         Belief removeBlockades = new Belief();

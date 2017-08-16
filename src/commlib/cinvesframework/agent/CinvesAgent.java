@@ -7,6 +7,7 @@ import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.desire.Desires;
 import commlib.components.AbstractCSAgent;
 import commlib.message.RCRSCSMessage;
+import implementation.agents.Quadrant;
 import rescuecore2.Constants;
 import rescuecore2.messages.Command;
 import rescuecore2.standard.entities.*;
@@ -25,6 +26,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     private boolean usingChannel;
     private int channel;
     private int listenChannels[];
+    public int quadrant;
 
     private Beliefs beliefs;
     private Desires desires;
@@ -161,7 +163,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     protected void postConnect(){
 
         super.postConnect();
-
+        getQuadrant();
         beliefs.loadDefaultBeliefs();
 
         distance = config.getIntValue("clear.repair.distance");
@@ -217,6 +219,8 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
 
 
+
+
         /**
          * Default General Human Behaviour
          */
@@ -236,6 +240,17 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         }
 
 
+    }
+
+    /**
+     * get the quadrant of the agent
+     */
+    public void getQuadrant(){
+        StandardEntity entity=getWorldModel().getEntity(this.getID());
+        int px=Integer.parseInt(entity.getProperty("urn:rescuecore2.standard:property:x").getValue().toString());
+        int py=Integer.parseInt(entity.getProperty("urn:rescuecore2.standard:property:y").getValue().toString());
+        System.out.println(px+"      "+py);
+        quadrant= Quadrant.getQuadrant(px,py);
     }
 
     /**
