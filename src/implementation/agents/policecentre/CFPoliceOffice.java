@@ -46,7 +46,7 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
                         msg.getConversationId(), ActionConstants.REQUEST_BLOCKADE,0,0,0,0,new EntityID(32987),0);*/
 
 
-                StandardEntity entity=getWorldModel().getEntity(new EntityID(81001552));
+                StandardEntity entity=getWorldModel().getEntity(new EntityID(msg.getSender()));
                 int px=Integer.parseInt(entity.getProperty("urn:rescuecore2.standard:property:x").getValue().toString());
                 int py=Integer.parseInt(entity.getProperty("urn:rescuecore2.standard:property:y").getValue().toString());
                 BlockadeInfo nearBlockade=blockadeList.getNearestBlockeade( entity.getID(),px,py);
