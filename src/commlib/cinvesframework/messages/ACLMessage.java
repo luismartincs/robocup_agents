@@ -12,14 +12,36 @@ import java.util.List;
 
 public class ACLMessage extends WorldInformation{
 
-    public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId) {
+    public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId,int... extra) {
         super(BaseMessageType.ACL_MESSAGE, time);
 
         this.setData(new ValueData(DataType.ALL_ENTITIES, sender.getValue()),0);
         this.setData(new ValueData(DataType.ALL_ENTITIES, receiver.getValue()),1);
         this.setData(new ValueData(DataType.PERFORMATIVE, performative.getValue()));
         this.setData(new ValueData(DataType.CONVERSATION_ID,conversationId));
+        this.setData(new ValueData(DataType.X_COORDINATE,0));
+        this.setData(new ValueData(DataType.Y_COORDINATE,0));
         this.setData(new ValueData(DataType.CONTENT,contentId),0);
+
+        for(int i=0; i < 5; i++){
+            this.setData(new ValueData(DataType.CONTENT,0),(i+1));
+        }
+
+        if(extra.length < 5) {
+            for (int i = 0; i < extra.length; i++) {
+                this.setData(new ValueData(DataType.CONTENT, extra[i]), i+1);
+            }
+        }else{
+            for (int i = 0; i < 5; i++) {
+                this.setData(new ValueData(DataType.CONTENT, extra[i]), i+1);
+            }
+        }
+
+
+        this.setData(new ValueData(DataType.VICTIMS_NUMBER,0));
+        this.setData(new ValueData(DataType.INJURED_NUMBER,0));
+        this.setData(new EntityIDData(DataType.BLOCKADE,new EntityID(0)));
+        this.setData(new ValueData(DataType.REPAIR_COST,0));
        // this.setData(new EntityIDData(DataType.AREA, targetAgent));
 
 
@@ -41,6 +63,9 @@ public class ACLMessage extends WorldInformation{
         this.setData(new ValueData(DataType.REPAIR_COST,repairCost));
         // this.setData(new EntityIDData(DataType.AREA, targetAgent));
 
+        for(int i=0; i < 5; i++){
+            this.setData(new ValueData(DataType.CONTENT,0),i+1);
+        }
 
     }
 
@@ -96,6 +121,9 @@ public class ACLMessage extends WorldInformation{
         return res;
     }
 
+    public int getExtra(int index){
+        return getValueData(DataType.CONTENT,index+1);
+    }
 
     public ACLPerformative getPerformative(){
         int res = -1;

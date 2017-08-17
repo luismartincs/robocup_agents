@@ -50,7 +50,9 @@ public class GeneralUtils {
             entity = model.getEntity(id);
 
             if(entity instanceof PoliceForce){
-                policeForces.add((PoliceForce)entity);
+                if(entity.getID().getValue() != agent.getID().getValue()) {
+                    policeForces.add((PoliceForce) entity);
+                }
             }
         }
 

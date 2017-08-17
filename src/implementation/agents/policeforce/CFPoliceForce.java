@@ -16,12 +16,16 @@ import java.util.EnumSet;
 public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
     private PolicePlan policePlan;
+    private LeaderElectionPlan leaderElectionPlan;
 
     @Override
     protected void postConnect() {
         super.postConnect();
+
         System.out.println("conectado police force "+this.getID()+"     "+"[quadrant : "+quadrant+"]");
+
         policePlan = new PolicePlan(this);
+        leaderElectionPlan = new LeaderElectionPlan(this);
 
         Belief removeBlockades = new Belief();
         removeBlockades.setDataBoolean(true);
@@ -36,8 +40,13 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
         getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
 
+        /*
         policePlan.setTime(time);
         policePlan.createPlan(getBeliefs(),getDesires());
+        */
+
+        leaderElectionPlan.setTime(time);
+        leaderElectionPlan.createPlan(getBeliefs(),getDesires());
 
     }
 

@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.IOException;
 
 import implementation.agents.civilian.CFCivilian;
@@ -91,6 +92,7 @@ public final class LaunchSampleRCRSCSAgents{
 	
 	private static void connect(ComponentLauncher launcher, int fb, int pf,
 			int at, Config config) throws InterruptedException, ConnectionException{
+
 		/*int i = 0;
 		try{
 			while(fb-- != 0){
