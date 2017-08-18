@@ -10,8 +10,12 @@ public class ContractNet {
 
     static
     {
-        states.put(ACLPerformative.CFP, new ACLPerformative[]{ACLPerformative.PROPOSE,ACLPerformative.REJECT_PROPOSAL});
+        states.put(ACLPerformative.CFP, new ACLPerformative[]{ACLPerformative.PROPOSE,ACLPerformative.REJECT_PROPOSAL,ACLPerformative.ACCEPT_PROPOSAL});
+        states.put(ACLPerformative.PROPOSE, new ACLPerformative[]{ACLPerformative.REJECT_PROPOSAL,ACLPerformative.ACCEPT_PROPOSAL});
         states.put(ACLPerformative.REQUEST, new ACLPerformative[]{ACLPerformative.INFORM});
+        states.put(ACLPerformative.REJECT_PROPOSAL, new ACLPerformative[]{ACLPerformative.REJECT_PROPOSAL,ACLPerformative.ACCEPT_PROPOSAL});
+        states.put(ACLPerformative.ACCEPT_PROPOSAL, new ACLPerformative[]{ACLPerformative.REJECT_PROPOSAL,ACLPerformative.ACCEPT_PROPOSAL});
+
 
     }
 

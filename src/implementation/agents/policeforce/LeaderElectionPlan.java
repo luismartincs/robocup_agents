@@ -3,7 +3,6 @@ package implementation.agents.policeforce;
 import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.Beliefs;
-import commlib.cinvesframework.belief.EnvironmentBelief;
 import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
@@ -12,11 +11,8 @@ import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.interaction.ContractNet;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
-import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.ActionConstants;
 import rescuecore2.standard.entities.Human;
-import rescuecore2.standard.entities.PoliceForce;
-import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -47,52 +43,74 @@ public class LeaderElectionPlan extends AbstractPlan{
         this.time = time;
     }
 
-    private void sendPropose(int sender,int conversationId){
+    private void sendPropose(int receiver,int conversationId,int action){
 
-        ACLMessage propose = new ACLMessage(time,getAgent().getID(), ACLPerformative.PROPOSE,new EntityID(sender),conversationId, ActionConstants.REQUEST_ENTITY_ID,getAgent().getID().getValue());
+        System.out.println("send propose");
+
+        ACLMessage propose = new ACLMessage(time,
+                getAgent().getID(),
+                ACLPerformative.PROPOSE,
+                new EntityID(receiver),
+                conversationId,
+                action,
+                getAgent().getID().getValue());
+
+        getAgent().addACLMessage(propose);
+    }
+
+
+
+    private void sendReject(int receiver,int conversationId,int action){
+
+        ACLMessage propose = new ACLMessage(time,
+                getAgent().getID(),
+                ACLPerformative.REJECT_PROPOSAL,
+                new EntityID(receiver),
+                conversationId,
+                action,0);
 
         getAgent().addACLMessage(propose);
     }
 
 
+    private void sendAccept(int receiver,int conversationId,int action){
 
-    private void sendReject(int sender,int conversationId){
-
-        ACLMessage propose = new ACLMessage(time,getAgent().getID(), ACLPerformative.REJECT_PROPOSAL,new EntityID(sender),conversationId, ActionConstants.REQUEST_ENTITY_ID,0);
-
-        getAgent().addACLMessage(propose);
-    }
-
-
-    private void sendAccept(int sender,int conversationId){
-
-        ACLMessage propose = new ACLMessage(time,getAgent().getID(), ACLPerformative.ACCEPT_PROPOSAL,new EntityID(sender),conversationId, ActionConstants.REQUEST_ENTITY_ID,0);
+        ACLMessage propose = new ACLMessage(time,
+                getAgent().getID(),
+                ACLPerformative.ACCEPT_PROPOSAL,
+                new EntityID(receiver),
+                conversationId,
+                action,0);
 
         getAgent().addACLMessage(propose);
     }
 
-    private void sendInform(int sender,int conversationId){
+    private void sendInform(int receiver,int conversationId){
 
         EntityID position = ((Human) getAgent().me()).getPosition();
 
-        ACLMessage propose = new ACLMessage(time,getAgent().getID(), ACLPerformative.INFORM,new EntityID(sender),conversationId, ActionConstants.REQUEST_ENTITY_ID,position.getValue());
+        ACLMessage propose = new ACLMessage(time,getAgent().getID(),
+                ACLPerformative.INFORM,
+                new EntityID(receiver),
+                conversationId,
+                ActionConstants.LEADER_ELECTION,
+                position.getValue());
 
         getAgent().addACLMessage(propose);
     }
 
     private void sendCFP(int quadrant){
 
-        if(time >= 3){
+        System.out.println("send cfp");
 
-            int conversationId = getAgent().nextConversationId();
+        int conversationId = getAgent().nextConversationId();
 
-            ACLMessage leaderCFP = new ACLMessage(time, getAgent().getID(), ACLPerformative.CFP, new EntityID(0), conversationId, ActionConstants.REQUEST_ENTITY_ID, quadrant);
+        ACLMessage leaderCFP = new ACLMessage(time, getAgent().getID(), ACLPerformative.CFP, new EntityID(0), conversationId, ActionConstants.LEADER_ELECTION, quadrant);
 
-            getAgent().addACLMessageToQueue(conversationId, leaderCFP);
+        getAgent().addACLMessageToQueue(conversationId, leaderCFP);
 
-            getAgent().addACLMessage(leaderCFP);
+        getAgent().addACLMessage(leaderCFP);
 
-        }
 
     }
 
@@ -113,27 +131,36 @@ public class LeaderElectionPlan extends AbstractPlan{
 
                 case CFP:
 
-                    if (msg.getContent() == ActionConstants.REQUEST_ENTITY_ID && msg.getExtra(0) == quadrant){
+                    if (msg.getContent() == ActionConstants.LEADER_ELECTION && msg.getExtra(0) == quadrant){
 
-                        knownEntities.add(msg.getSender());
+                        if(!knownEntities.contains(msg.getSender())){
+                            knownEntities.add(msg.getSender());
+                        }
 
-                        sendPropose(msg.getSender(),msg.getConversationId());
+                        sendPropose(msg.getSender(),msg.getConversationId(),ActionConstants.LEADER_ELECTION);
                     }
 
                     break;
 
                 case PROPOSE:
 
-                    ACLMessage previous = getAgent().getACLMessageFromQueue(msg.getConversationId());
+                    if (msg.getContent() == ActionConstants.LEADER_ELECTION){
 
-                    if(previous != null) {
+                        ACLMessage previous = getAgent().getACLMessageFromQueue(msg.getConversationId());
 
-                        int proposedValue = msg.getExtra(0);
+                        if(previous != null) {
 
-                        if (proposedValue < getAgent().getID().getValue()){
-                            sendReject(msg.getSender(),msg.getConversationId());
-                        }else {
-                            sendAccept(msg.getSender(), msg.getConversationId());
+                            if(ContractNet.isValidState(previous.getPerformative(),msg.getPerformative())){
+
+                                int proposedValue = msg.getExtra(0);
+
+                                if (proposedValue < getAgent().getID().getValue()){
+                                    sendReject(msg.getSender(),msg.getConversationId(),ActionConstants.LEADER_ELECTION);
+                                }else {
+                                    sendAccept(msg.getSender(), msg.getConversationId(),ActionConstants.LEADER_ELECTION);
+                                }
+                            }
+
                         }
 
                     }
@@ -142,32 +169,53 @@ public class LeaderElectionPlan extends AbstractPlan{
 
                 case REJECT_PROPOSAL:
 
-                    if (msg.getContent() == ActionConstants.REQUEST_ENTITY_ID){
-                        imLeader &= false;
-                        lastConversationID = msg.getConversationId();
-                        getAgent().addACLMessageToQueue(msg.getConversationId(), msg);
+                    if (msg.getContent() == ActionConstants.LEADER_ELECTION){
+
+                        ACLMessage previous = getAgent().getACLMessageFromQueue(msg.getConversationId());
+                        System.out.println("reject "+previous.getPerformative()+" - "+msg.getPerformative());
+
+                        if(previous != null) {
+                            if(ContractNet.isValidState(previous.getPerformative(),msg.getPerformative())){
+                                imLeader &= false;
+                                lastConversationID = msg.getConversationId();
+                                getAgent().getQueuedMessages().put(msg.getConversationId(),msg);
+                            }
+                        }
+                        System.out.println(getAgent().getQueuedMessages().size());
+
                     }
 
                     break;
 
                 case ACCEPT_PROPOSAL:
 
-                    if (msg.getContent() == ActionConstants.REQUEST_ENTITY_ID){
-                        lastConversationID = msg.getConversationId();
-                        getAgent().addACLMessageToQueue(msg.getConversationId(), msg);
+                    if (msg.getContent() == ActionConstants.LEADER_ELECTION){
+                        ACLMessage previous = getAgent().getACLMessageFromQueue(msg.getConversationId());
+
+                        if(previous != null) {
+                            System.out.println("accept "+previous.getPerformative()+" - "+msg.getPerformative());
+                            if(ContractNet.isValidState(previous.getPerformative(),msg.getPerformative())){
+                                imLeader&=true;
+                                lastConversationID = msg.getConversationId();
+                                getAgent().getQueuedMessages().put(msg.getConversationId(),msg);
+                            }
+                        }
+
+                        System.out.println(getAgent().getQueuedMessages().size());
                     }
 
                     break;
 
                 case INFORM:
 
-                    if (msg.getContent() == ActionConstants.REQUEST_ENTITY_ID){
+                    if (msg.getContent() == ActionConstants.LEADER_ELECTION){
+
                         leaderElected = true;
+
                         getAgent().getQueuedMessages().clear();
 
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
 
-                        System.out.println(getAgent().getID()+" mi lider es: "+msg.getSender());
                     }
 
                     break;
@@ -210,7 +258,7 @@ public class LeaderElectionPlan extends AbstractPlan{
               if (lastMessage.getPerformative() == ACLPerformative.REJECT_PROPOSAL || lastMessage.getPerformative() == ACLPerformative.ACCEPT_PROPOSAL) {
                  if(imLeader){
                     for(Integer ent:knownEntities){
-                        sendInform(ent,lastConversationID);
+                        sendInform(ent,getAgent().nextConversationId());
                     }
                  }
               }

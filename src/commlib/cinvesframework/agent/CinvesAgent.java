@@ -238,14 +238,20 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         if(me() instanceof Human){
 
-            senseBuildingsOnFire();
+            //senseBuildingsOnFire();
+            /**
+             * Se ejecutan las interacciones despues de 3 tiempos debido a que hay un bug en la plataforma que no procesa los mensajes en los tiempos
+             * inferiores
+             */
+            if(time > 3) {
 
-            if(canHelp()){
-                onFullHealthBehaviour(time,changed,heard);
-            }else if(canMove()){
-                onRegularHealthBehaviour(time,changed,heard);;
-            }else {
-                onLowHealthBehaviour(time,changed,heard);
+                if (canHelp()) {
+                    onFullHealthBehaviour(time, changed, heard);
+                } else if (canMove()) {
+                    onRegularHealthBehaviour(time, changed, heard);
+                } else {
+                    onLowHealthBehaviour(time, changed, heard);
+                }
             }
 
         }
