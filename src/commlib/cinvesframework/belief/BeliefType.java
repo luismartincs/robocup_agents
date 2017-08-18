@@ -13,7 +13,9 @@ public enum BeliefType {
     VOLUNTEER,
     CHANGED_ENVIRONMENT,
     REPORTED_BLOCKADES,
-    QUADRANT
+    QUADRANT,
+    BUILDINGS_IN_QUADRANT,
+    IM_LEADER
     ;
 
 }

@@ -1,6 +1,7 @@
 package implementation.agents.policeforce;
 
 import commlib.cinvesframework.agent.CinvesAgent;
+import commlib.cinvesframework.belief.Belief;
 import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.Beliefs;
 import commlib.cinvesframework.desire.Desire;
@@ -16,7 +17,6 @@ import rescuecore2.standard.entities.Human;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class LeaderElectionPlan extends AbstractPlan{
 
@@ -30,7 +30,9 @@ public class LeaderElectionPlan extends AbstractPlan{
     private boolean imLeader = true;
     private boolean leaderElected = false;
 
+
     public LeaderElectionPlan(CinvesAgent agent){
+
         super(agent);
 
         knownEntities = new ArrayList<>();
@@ -44,8 +46,6 @@ public class LeaderElectionPlan extends AbstractPlan{
     }
 
     private void sendPropose(int receiver,int conversationId,int action){
-
-        System.out.println("send propose");
 
         ACLMessage propose = new ACLMessage(time,
                 getAgent().getID(),
@@ -101,8 +101,6 @@ public class LeaderElectionPlan extends AbstractPlan{
 
     private void sendCFP(int quadrant){
 
-        System.out.println("send cfp");
-
         int conversationId = getAgent().nextConversationId();
 
         ACLMessage leaderCFP = new ACLMessage(time, getAgent().getID(), ACLPerformative.CFP, new EntityID(0), conversationId, ActionConstants.LEADER_ELECTION, quadrant);
@@ -117,9 +115,62 @@ public class LeaderElectionPlan extends AbstractPlan{
     @Override
     public Object createPlan(Beliefs beliefs, Desires desires) {
 
-        /**
-         * ContractNet se revisan los mensajes de solicitud antes de hacer algun movimiento
-         */
+        if(leaderElected)return new Boolean(true);
+
+        stateControl(beliefs,desires);
+
+
+       if(getAgent().getQueuedMessages().size() == 0){
+
+            if(!leaderElected){
+
+                int quadrant = beliefs.getBelief(BeliefType.QUADRANT).getDataInt();
+
+                sendCFP(quadrant);
+
+            }
+
+       }else {
+
+          ACLMessage lastMessage = getAgent().getACLMessageFromQueue(lastConversationID);
+
+          if(lastMessage != null) {
+
+              if (lastMessage.getPerformative() == ACLPerformative.REJECT_PROPOSAL || lastMessage.getPerformative() == ACLPerformative.ACCEPT_PROPOSAL) {
+
+                  if(imLeader()){
+
+                    leaderElected = true;
+
+                    leaderID = getAgent().getID().getValue();
+
+                    Belief lb = new Belief();
+                    lb.setDataBoolean(true);
+                    lb.setDataInt(leaderID);
+
+                    beliefs.addBelief(BeliefType.IM_LEADER,lb);
+
+                    for(Integer ent:knownEntities){
+                        sendInform(ent,getAgent().nextConversationId());
+                    }
+                 }
+              }
+
+              getAgent().getQueuedMessages().clear();
+
+          }
+
+       }
+
+        return null;
+    }
+
+
+    /**
+     * ContractNet se revisan los mensajes de solicitud antes de hacer algun movimiento
+     */
+
+    private void stateControl(Beliefs beliefs, Desires desires){
 
         int quadrant = beliefs.getBelief(BeliefType.QUADRANT).getDataInt();
 
@@ -172,17 +223,14 @@ public class LeaderElectionPlan extends AbstractPlan{
                     if (msg.getContent() == ActionConstants.LEADER_ELECTION){
 
                         ACLMessage previous = getAgent().getACLMessageFromQueue(msg.getConversationId());
-                        System.out.println("reject "+previous.getPerformative()+" - "+msg.getPerformative());
 
                         if(previous != null) {
                             if(ContractNet.isValidState(previous.getPerformative(),msg.getPerformative())){
-                                imLeader &= false;
+                                imLeader = imLeader() & false;
                                 lastConversationID = msg.getConversationId();
                                 getAgent().getQueuedMessages().put(msg.getConversationId(),msg);
                             }
                         }
-                        System.out.println(getAgent().getQueuedMessages().size());
-
                     }
 
                     break;
@@ -193,15 +241,11 @@ public class LeaderElectionPlan extends AbstractPlan{
                         ACLMessage previous = getAgent().getACLMessageFromQueue(msg.getConversationId());
 
                         if(previous != null) {
-                            System.out.println("accept "+previous.getPerformative()+" - "+msg.getPerformative());
                             if(ContractNet.isValidState(previous.getPerformative(),msg.getPerformative())){
-                                imLeader&=true;
                                 lastConversationID = msg.getConversationId();
                                 getAgent().getQueuedMessages().put(msg.getConversationId(),msg);
                             }
                         }
-
-                        System.out.println(getAgent().getQueuedMessages().size());
                     }
 
                     break;
@@ -212,9 +256,15 @@ public class LeaderElectionPlan extends AbstractPlan{
 
                         leaderElected = true;
 
+                        leaderID = msg.getSender();
+
                         getAgent().getQueuedMessages().clear();
 
-                        desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
+                        Belief lb = new Belief();
+                        lb.setDataBoolean(false);
+                        lb.setDataInt(leaderID);
+
+                        beliefs.addBelief(BeliefType.IM_LEADER,lb);
 
                     }
 
@@ -224,51 +274,13 @@ public class LeaderElectionPlan extends AbstractPlan{
 
         }
 
+    }
 
+    public int getLeaderID() {
+        return leaderID;
+    }
 
-
-
-       if(getAgent().getQueuedMessages().size() == 0){
-
-            if(!leaderElected){
-                sendCFP(quadrant);
-            }else{
-                System.out.println("Me voy a mover con el lider");
-
-                Desire goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
-                EntityID position = ((Human) getAgent().me()).getPosition();
-
-                if (goalLocation.getEntityID().getValue() == position.getValue()) {
-                    getAgent().sendRest(time);
-                }else {
-
-                    List<EntityID> path = sp.createPlan(beliefs, desires);
-                    getAgent().sendMove(time, path);
-                    return path;
-                }
-
-            }
-
-       }else {
-
-          ACLMessage lastMessage = getAgent().getACLMessageFromQueue(lastConversationID);
-
-          if(lastMessage != null) {
-
-              if (lastMessage.getPerformative() == ACLPerformative.REJECT_PROPOSAL || lastMessage.getPerformative() == ACLPerformative.ACCEPT_PROPOSAL) {
-                 if(imLeader){
-                    for(Integer ent:knownEntities){
-                        sendInform(ent,getAgent().nextConversationId());
-                    }
-                 }
-              }
-
-              getAgent().getQueuedMessages().clear();
-
-          }
-
-       }
-
-        return null;
+    public boolean imLeader() {
+        return imLeader;
     }
 }

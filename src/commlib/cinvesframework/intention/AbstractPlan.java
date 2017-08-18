@@ -6,6 +6,8 @@ import commlib.cinvesframework.desire.Desires;
 
 public abstract  class AbstractPlan {
 
+    protected int time;
+
     private CinvesAgent agent;
 
     public AbstractPlan(CinvesAgent agent){
@@ -17,5 +19,11 @@ public abstract  class AbstractPlan {
     public abstract Object createPlan(Beliefs beliefs,Desires desires);
 
 
+    public int getTime() {
+        return time;
+    }
 
+    public void setTime(int time) {
+        this.time = time;
+    }
 }
