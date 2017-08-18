@@ -55,6 +55,17 @@ public class SearchPlan extends AbstractPlan {
         return steps;
     }
 
+    public List<EntityID> createPlan(Beliefs beliefs, Desires desires,EntityID position) {
+
+        Desire goal = desires.getDesire(DesireType.GOAL_LOCATION);
+
+       // EntityID position = ((Human)getAgent().me()).getPosition();
+
+        List<EntityID> steps = breadthFirstSearch(beliefs,desires,position,goal.getEntityID());
+
+        return steps;
+    }
+
 
     public void setGraph(Map<EntityID, Set<EntityID>> newGraph) {
         this.graph = newGraph;

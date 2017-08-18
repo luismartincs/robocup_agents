@@ -300,7 +300,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
 
-        System.out.println("Help me bitches!");
+        System.out.println("Help me!");
         sendRest(time);
 
     }

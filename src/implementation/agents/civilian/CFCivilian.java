@@ -16,7 +16,7 @@ import java.util.EnumSet;
 
 public class CFCivilian extends CinvesAgent<Civilian>{
 
-    private final double BECOMES_VOLUNTEER = 0.20;
+    private final double BECOMES_VOLUNTEER = 0.30;
 
     private CivilianPlan plan;
     private GoToRefugePlan refugePlan;
@@ -45,8 +45,12 @@ public class CFCivilian extends CinvesAgent<Civilian>{
 
         getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
 
+        /*
         refugePlan.setTime(time);
-        refugePlan.createPlan(getBeliefs(),getDesires());
+        refugePlan.createPlan(getBeliefs(),getDesires());*/
+
+        plan.setTime(time);
+        plan.createPlan(getBeliefs(),getDesires());
 
         /*
          Hacer esto un plan y agregar el reporte de la victima

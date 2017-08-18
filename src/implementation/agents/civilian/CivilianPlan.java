@@ -1,17 +1,19 @@
 package implementation.agents.civilian;
 
 import commlib.cinvesframework.agent.CinvesAgent;
-import commlib.cinvesframework.belief.BeliefType;
-import commlib.cinvesframework.belief.Beliefs;
-import commlib.cinvesframework.belief.EntityListBelief;
+import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.intention.AbstractPlan;
 import commlib.cinvesframework.intention.SearchPlan;
+import commlib.cinvesframework.messages.ACLMessage;
+import commlib.cinvesframework.messages.ACLPerformative;
+import commlib.cinvesframework.utils.GeneralUtils;
+import implementation.agents.ActionConstants;
 import rescuecore2.log.Logger;
-import rescuecore2.standard.entities.Human;
-import rescuecore2.standard.entities.StandardEntity;
+import rescuecore2.standard.entities.*;
+import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.List;
 public class CivilianPlan extends AbstractPlan{
 
     private SearchPlan searchPlan;
+    private boolean isVolunteer;
 
     public CivilianPlan(CinvesAgent agent){
         super(agent);
@@ -27,12 +30,102 @@ public class CivilianPlan extends AbstractPlan{
         searchPlan = new SearchPlan(agent);
     }
 
+
+    private void sendRequest(int receiver){
+
+        int conversationId = getAgent().nextConversationId();
+
+        ACLMessage leaderCFP = new ACLMessage(time,
+                getAgent().getID(),
+                ACLPerformative.REQUEST,
+                new EntityID(receiver),
+                conversationId,
+                ActionConstants.REQUEST_POLICE_INSTRUCTION,
+                0);
+
+        getAgent().addACLMessageToQueue(conversationId, leaderCFP);
+        getAgent().addACLMessage(leaderCFP);
+
+    }
+
+
     @Override
     public List<EntityID> createPlan(Beliefs beliefs, Desires desires) {
 
-        List<EntityID> steps = randomDestination(beliefs,desires);
+        stateControl(beliefs,desires);
 
-        return steps;
+        isVolunteer = beliefs.getBelief(BeliefType.VOLUNTEER).isDataBoolean();
+
+        if(isVolunteer){
+
+            policeAround(beliefs,desires);
+
+            removeBlockades(beliefs,desires);
+
+            List<EntityID> steps = randomDestination(beliefs,desires);
+
+            getAgent().sendMove(time,steps);
+
+        }else{
+
+            policeAround(beliefs,desires);
+
+            List<EntityID> steps = randomDestination(beliefs,desires);
+
+            getAgent().sendMove(time,steps);
+
+        }
+
+
+
+        return null;
+    }
+
+    /**
+     * ContractNet se revisan los mensajes de solicitud antes de hacer algun movimiento
+     */
+
+    private void stateControl(Beliefs beliefs, Desires desires){
+
+        ArrayList<ACLMessage> aclMessages = getAgent().getAclMessages();
+
+        for(ACLMessage msg: aclMessages){
+
+            switch (msg.getPerformative()){
+                case INFORM:
+                    if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
+                        desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
+                    }
+                    break;
+            }
+
+        }
+    }
+
+
+
+
+
+    private void policeAround(Beliefs beliefs, Desires desires){
+
+        ChangeSet changeSet = ((EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT)).getChangeSet();
+        ArrayList<PoliceForce> policeForcesAround = GeneralUtils.getPoliceForceAround(getAgent(),changeSet);
+
+        if(policeForcesAround.size() > 0){
+            sendRequest(policeForcesAround.get(0).getID().getValue());
+        }
+
+    }
+
+    private void removeBlockades(Beliefs beliefs, Desires desires){
+
+        int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
+
+        Blockade target = GeneralUtils.getTargetBlockade(distance, getAgent());
+
+        if (target != null) {
+            getAgent().sendClear(time,target.getID());
+        }
     }
 
     private List<EntityID> randomDestination(Beliefs beliefs, Desires desires){

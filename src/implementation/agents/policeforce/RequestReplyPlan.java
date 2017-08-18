@@ -13,6 +13,8 @@ import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.ActionConstants;
 import rescuecore2.standard.entities.Blockade;
 import rescuecore2.standard.entities.Human;
+import rescuecore2.standard.entities.Refuge;
+import rescuecore2.standard.entities.StandardEntity;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -72,6 +74,22 @@ public class RequestReplyPlan extends AbstractPlan{
         getAgent().addACLMessage(leaderCFP);
 
     }
+
+    private void sendRefugeInform(int receiver,int refuge){
+
+        int conversationId = getAgent().nextConversationId();
+
+        ACLMessage leaderCFP = new ACLMessage(time,
+                getAgent().getID(),
+                ACLPerformative.INFORM,
+                new EntityID(receiver),
+                conversationId,
+                ActionConstants.REQUEST_POLICE_INSTRUCTION,
+                refuge);
+
+        getAgent().addACLMessage(leaderCFP);
+    }
+
 
     @Override
     public Object createPlan(Beliefs beliefs, Desires desires) {
@@ -143,6 +161,10 @@ public class RequestReplyPlan extends AbstractPlan{
 
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION){
                         sendInform(msg.getSender(),beliefs);
+                    }else if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
+
+                        int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
+                        sendRefugeInform(msg.getSender(),closestRefuge);
                     }
 
                     break;
@@ -155,6 +177,43 @@ public class RequestReplyPlan extends AbstractPlan{
 
         }
     }
+
+
+    private int getClosestRefuge(Beliefs beliefs, Desires desires, int target){
+
+        Desire originalGoal = desires.getDesire(DesireType.GOAL_LOCATION);
+
+        EntityListBelief refugesList = (EntityListBelief) beliefs.getBelief(BeliefType.REFUGE);
+        ArrayList<StandardEntity> refuges = refugesList.getEntities();
+
+        Human human = (Human) getAgent().getWorldModel().getEntity(new EntityID(target));
+
+        int minSteps = Integer.MAX_VALUE;
+        int pathSize = 0;
+        StandardEntity closestRefuge = null;
+        List<EntityID> path = null;
+
+        for (StandardEntity entity : refuges) {
+
+            Refuge refuge = (Refuge) entity;
+            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(refuge.getID()));
+            path = searchPlan.createPlan(beliefs, desires,human.getPosition());
+
+            if (path != null) {
+                pathSize = path.size();
+                if (pathSize < minSteps) {
+                    minSteps = pathSize;
+                    closestRefuge = refuge;
+                }
+            }
+
+        }
+
+        desires.addDesire(DesireType.GOAL_LOCATION, originalGoal);
+
+        return closestRefuge.getID().getValue();
+    }
+
 
     private void doMove(Beliefs beliefs,Desires desires){
 
