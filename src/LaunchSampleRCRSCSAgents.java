@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.io.IOException;
 
+import implementation.agents.ambulance.CFAmbulance;
 import implementation.agents.civilian.CFCivilian;
 import implementation.agents.policecentre.CFPoliceOffice;
 import implementation.agents.policeforce.CFPoliceForce;
@@ -155,6 +156,20 @@ public final class LaunchSampleRCRSCSAgents{
 				Logger.info("Connecting dummy agent...");
 				System.out.println("conectado civil"+civ);
 				launcher.connect(new CFCivilian());
+				Logger.info("success");
+			}
+		}catch(ComponentConnectionException e){
+			System.out.println(e.getMessage());
+			Logger.info("failed: " + e.getMessage());
+		}
+
+		int amb = 200;
+
+		try{
+			while(amb-- != 0){
+				Logger.info("Connecting dummy agent...");
+				System.out.println("conectado ambulancia"+amb);
+				launcher.connect(new CFAmbulance());
 				Logger.info("success");
 			}
 		}catch(ComponentConnectionException e){

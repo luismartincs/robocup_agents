@@ -30,8 +30,6 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
     protected void postConnect() {
         super.postConnect();
 
-        System.out.println("conectado police force "+this.getID()+"     "+"[quadrant : "+quadrant+"]");
-
         policePlan = new PolicePlan(this);
         leaderElectionPlan = new LeaderElectionPlan(this);
         requestReplyPlan = new RequestReplyPlan(this);

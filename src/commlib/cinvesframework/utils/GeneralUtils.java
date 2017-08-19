@@ -1,17 +1,90 @@
 package commlib.cinvesframework.utils;
 
 import commlib.cinvesframework.agent.CinvesAgent;
+import commlib.cinvesframework.belief.BeliefType;
+import commlib.cinvesframework.belief.Beliefs;
+import commlib.cinvesframework.belief.EntityListBelief;
+import implementation.agents.Quadrant;
+import rescuecore2.misc.Pair;
 import rescuecore2.misc.geometry.GeometryTools2D;
 import rescuecore2.misc.geometry.Line2D;
 import rescuecore2.misc.geometry.Point2D;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
+import sample.DistanceSorter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
 public class GeneralUtils {
+
+
+
+    /**
+     * Check Civilians Around
+     */
+
+    public static ArrayList<Human> getHumanTargets(CinvesAgent agent,ChangeSet changeSet){
+
+        StandardEntity entity;
+        StandardWorldModel model = agent.getWorldModel();
+        ArrayList<Human> civilians = new ArrayList<>();
+
+        for(EntityID id : changeSet.getChangedEntities()){
+            entity = model.getEntity(id);
+
+            if(entity instanceof Human && agent.getID().getValue() != id.getValue()){
+
+                Human human = (Human) entity;
+
+
+                if (human.isHPDefined() && human.isBuriednessDefined()
+                        && human.isDamageDefined() && human.isPositionDefined()
+                        && human.getHP() > 0
+                        && (human.getBuriedness() > 0 || human.getDamage() > 0)) {
+
+                    civilians.add(human);
+                }
+
+                //civilians.add(human);
+
+            }
+        }
+
+        StandardEntity position = ((Human)agent.me()).getPosition(agent.getWorldModel());
+
+        Collections.sort(civilians, new DistanceSorter(position, model));
+
+        return civilians;
+    }
+
+
+
+    public static void updateBuildingsInQuadrant(Beliefs beliefs,StandardWorldModel model,int quadrant){
+        if (beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT) == null) {
+
+            EntityListBelief buildingsInQuadrant = new EntityListBelief();
+            EntityListBelief buildings = (EntityListBelief) beliefs.getBelief(BeliefType.BUILDINGS);
+
+            for (StandardEntity building : buildings.getEntities()) {
+
+                Pair<Integer, Integer> point = building.getLocation(model);
+
+                int px = point.first();
+                int py = point.second();
+                int q = Quadrant.getQuadrant(model, px, py);
+
+                if (q == quadrant) {
+                    buildingsInQuadrant.addEntity(building);
+                }
+
+            }
+            beliefs.addBelief(BeliefType.BUILDINGS_IN_QUADRANT, buildingsInQuadrant);
+        }
+    }
 
     /**
      * Check Civilians Around

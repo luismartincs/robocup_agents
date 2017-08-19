@@ -1,4 +1,4 @@
-package implementation.agents.policeforce;
+package implementation.agents.ambulance;
 
 import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.*;
@@ -11,24 +11,29 @@ import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.ActionConstants;
-import rescuecore2.standard.entities.Blockade;
-import rescuecore2.standard.entities.Human;
-import rescuecore2.standard.entities.Refuge;
-import rescuecore2.standard.entities.StandardEntity;
+import rescuecore2.standard.entities.*;
+import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
+import sample.DistanceSorter;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
-public class RequestReplyPlan extends AbstractPlan{
+public class AmbulancePlan extends AbstractPlan{
 
     private SearchPlan searchPlan;
     private int targetBuilding = 0;
 
-    public RequestReplyPlan(CinvesAgent agent){
+    private ArrayList<Integer> rescuedHumans;
+
+    public AmbulancePlan(CinvesAgent agent){
         super(agent);
         searchPlan = new SearchPlan(agent);
+
+        rescuedHumans = new ArrayList<>();
     }
 
     private void sendRequest(int leader){
@@ -55,8 +60,6 @@ public class RequestReplyPlan extends AbstractPlan{
         EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
 
         EntityID position = biq.getEntities().get(targetBuilding).getID();
-        //biq.getEntities().remove(targetBuilding);
-
         targetBuilding++;
 
         if(targetBuilding >= biq.getEntities().size()){
@@ -75,22 +78,6 @@ public class RequestReplyPlan extends AbstractPlan{
         getAgent().addACLMessage(leaderCFP);
 
     }
-
-    private void sendRefugeInform(int receiver,int refuge){
-
-        int conversationId = getAgent().nextConversationId();
-
-        ACLMessage leaderCFP = new ACLMessage(time,
-                getAgent().getID(),
-                ACLPerformative.INFORM,
-                new EntityID(receiver),
-                conversationId,
-                ActionConstants.REQUEST_POLICE_INSTRUCTION,
-                refuge);
-
-        getAgent().addACLMessage(leaderCFP);
-    }
-
 
     @Override
     public Object createPlan(Beliefs beliefs, Desires desires) {
@@ -118,7 +105,6 @@ public class RequestReplyPlan extends AbstractPlan{
                 EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
 
                 EntityID position = biq.getEntities().get(targetBuilding).getID();
-                //biq.getEntities().remove(targetBuilding);
                 targetBuilding++;
 
                 if(targetBuilding >= biq.getEntities().size()){
@@ -162,10 +148,6 @@ public class RequestReplyPlan extends AbstractPlan{
 
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION){
                         sendInform(msg.getSender(),beliefs);
-                    }else if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
-
-                        int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
-                        sendRefugeInform(msg.getSender(),closestRefuge);
                     }
 
                     break;
@@ -221,27 +203,100 @@ public class RequestReplyPlan extends AbstractPlan{
         /**
          * Remove Blockade
          */
-        int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
 
-        Blockade target = GeneralUtils.getTargetBlockade(distance, getAgent());
+        EnvironmentBelief environmentBelief = (EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT);
 
-        if (target != null) {
-            getAgent().sendClear(time,target.getID());
+
+        ChangeSet changeSet = environmentBelief.getChangeSet();
+
+        EntityID myPosition = ((Human) getAgent().me()).getPosition();
+
+        Collection<Human> humans = GeneralUtils.getHumanTargets(getAgent(),changeSet);
+
+        boolean onRefuge = onRefuge((Human) getAgent().me());
+
+        if(!someoneOnBoard()){
+            for (Human human:humans){
+
+                if (rescuedHumans.contains(human.getID().getValue()) || onRefuge || onRefuge(human)){
+                    continue;
+                }
+
+                if(human.getPosition().equals(myPosition)){
+
+                    if(human instanceof Civilian && human.getBuriedness() == 0){
+                        rescuedHumans.add(human.getID().getValue());
+                        getAgent().sendLoad(time,human.getID());
+
+                        int closestRefuge = getClosestRefuge(beliefs,desires,getAgent().getID().getValue());
+                        desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(closestRefuge)));
+                        break;
+                    }
+
+                    if (human.getBuriedness() > 0){
+                        System.out.println("Rescatando");
+                        getAgent().sendRescue(time,human.getID());
+                        break;
+                    }
+
+                }else{
+                    desires.addDesire(DesireType.GOAL_LOCATION, new Desire(human.getPosition()));
+                }
+
+            }
+        }else{
+            System.out.println("toy cargando a un civil");
         }
+
+
+
 
         /**
          * Move
          */
 
         Desire goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
-        EntityID myPosition = ((Human) getAgent().me()).getPosition();
+
 
         if (goalLocation.getEntityID().getValue() == myPosition.getValue()) {
+
             desires.addDesire(DesireType.GOAL_LOCATION,null);
-            getAgent().sendRest(time);
+//            getAgent().sendRest(time);
+
+            if(someoneOnBoard()){
+                getAgent().sendUnload(time);
+                System.out.println("Dejando al civil");
+            }
+
+
         } else {
             List<EntityID> path = searchPlan.createPlan(beliefs, desires);
-            getAgent().sendMove(time, path);
+            if(path != null) {
+                getAgent().sendMove(time, path);
+            }
         }
+    }
+
+    private boolean someoneOnBoard() {
+        for (StandardEntity next : getAgent().getWorldModel()
+                .getEntitiesOfType(StandardEntityURN.CIVILIAN)) {
+            if (((Human) next).getPosition().equals(getAgent().getID())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean onRefuge(Human human){
+
+        return (human.getPosition(getAgent().getWorldModel()) instanceof Refuge);
+
+        /*
+        for (StandardEntity r:refugesList.getEntities()){
+            if (((Human) getAgent().me()).getPosition().equals(r.getID())) {
+                return true;
+            }
+        }
+        return false;*/
     }
 }

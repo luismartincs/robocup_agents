@@ -92,6 +92,8 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         refugePlan = new GoToRefugePlan(this);
 
         beliefs = new Beliefs(this);
+        desires = new Desires(this);
+
         this.channel = channel;
         this.listenChannels = listenChannels;
 
@@ -148,7 +150,22 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         super.sendClear(time, target);
     }
 
-    public void addACLMessageToQueue(int conversationId,ACLMessage message){
+    @Override
+    public void sendLoad(int time, EntityID target) {
+        super.sendLoad(time, target);
+    }
+
+    @Override
+    public void sendRescue(int time, EntityID target) {
+        super.sendRescue(time, target);
+    }
+
+    @Override
+    public void sendUnload(int time) {
+        super.sendUnload(time);
+    }
+
+    public void addACLMessageToQueue(int conversationId, ACLMessage message){
         getQueuedMessages().put(conversationId,message);
     }
 
@@ -291,7 +308,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
 
-        System.out.println("Puedo moverme pero no ayudar =(");
+       // System.out.println("Puedo moverme pero no ayudar =(");
         refugePlan.setTime(time);
         refugePlan.setVolunteer(false);
         refugePlan.createPlan(getBeliefs(),getDesires());
@@ -300,7 +317,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
 
-        System.out.println("Help me!");
+        //System.out.println("Help me!");
         sendRest(time);
 
     }
