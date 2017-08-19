@@ -146,6 +146,12 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     @Override
+    public void sendExtinguish(int time, EntityID target, int water) {
+        /* By default, the Core prevents any non-fireBrigade from executing this action, so we make no extra checks here. */
+        super.sendExtinguish(time, target, water);
+    }
+
+    @Override
     public void sendClear(int time, EntityID target) {
         super.sendClear(time, target);
     }
