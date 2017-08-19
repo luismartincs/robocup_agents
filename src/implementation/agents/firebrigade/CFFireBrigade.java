@@ -18,10 +18,15 @@ import java.util.EnumSet;
 
 public class CFFireBrigade extends CinvesAgent<PoliceForce> {
 
+    private static final String	MAX_WATER_KEY			= "fire.tank.maximum";
+
+
     //private PolicePlan policePlan;//esto se va y se pone un fireBrigadePlan
     private LeaderElectionPlan leaderElectionPlan;
 
     private RequestReplyPlan requestReplyPlan;
+
+    private int maxWater;
 
     @Override
     protected void postConnect() {
@@ -37,10 +42,15 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
         Belief removeBlockades = new Belief();
         removeBlockades.setDataBoolean(true);
 
-        getBeliefs().addBelief(BeliefType.VOLUNTEER,removeBlockades);
+        getBeliefs().addBelief(BeliefType.VOLUNTEER,removeBlockades);//NO SÉ SI ESTO VA O NO.
         //getBeliefs().addBelief(BeliefType.REPORTED_BLOCKADES,new EntityMapBelief());//NOTE: Según yo esto ya no va.
 
-        getBeliefs().addBelief(BeliefType.REPORTED_FIRES,new EntityMapBelief());
+        Belief waterLevel = new Belief();
+        maxWater = config.getIntValue(MAX_WATER_KEY);
+
+        waterLevel.setDataInt(maxWater); //Initialize the Water level of this FireBrigade at maximum level.
+
+        getBeliefs().addBelief(BeliefType.BUILDINGS_ON_FIRE,new EntityMapBelief());
 
     }
 
