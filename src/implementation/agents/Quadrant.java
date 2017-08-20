@@ -95,7 +95,7 @@ public class Quadrant {
      * /home/quadrants.txt
      */
     public static void loadQuadrants(){
-        String str=readFile(new File("/home/quadrants.txt"));
+        String str=readFile(new File("quadrants.txt"));
         String[] array=str.split("\n");
         divX=Integer.parseInt(array[2]);
         divY=Integer.parseInt(array[3]);

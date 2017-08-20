@@ -55,9 +55,9 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
             if(leaderElectionPlan.imLeader()) {
                 GeneralUtils.updateBuildingsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
-                ambulancePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
             }
 
+            ambulancePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
             ambulancePlan.setTime(time);
             ambulancePlan.createPlan(getBeliefs(),getDesires());
         }

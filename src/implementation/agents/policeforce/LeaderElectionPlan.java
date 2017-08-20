@@ -276,7 +276,7 @@ public class LeaderElectionPlan extends AbstractPlan{
                             beliefs.addBelief(BeliefType.IM_LEADER,lb);
                         }else {
                             getNextQuadrantLeaders().add(new int[]{msg.getExtra(0),msg.getSender()});
-                            //System.out.println("El lider del cuadrante "+msg.getExtra(0)+" es "+msg.getSender());
+                            System.out.println("El lider del cuadrante "+msg.getExtra(0)+" es "+msg.getSender());
                         }
 
 

@@ -27,6 +27,7 @@ public class AmbulancePlan extends AbstractPlan{
 
     private ArrayList<Integer> rescuedHumans;
     private ArrayList<int[]> nextQuadrantLeaders;
+    private int nextQuadrantIndex = 0;
 
     private boolean helping = false;
 
@@ -175,24 +176,29 @@ public class AmbulancePlan extends AbstractPlan{
 
                     }else {
 
-                        /*
-                        imLeader = false;
-                        Belief iLB = new Belief();
-                        iLB.setDataBoolean(imLeader);
-                        beliefs.addBelief(BeliefType.IM_LEADER,iLB);
+                        if(nextQuadrantIndex < nextQuadrantLeaders.size()){
 
-                        int nextQuadrant = getAgent().getCurrentQuadrant()+1;
+                            imLeader = false;
 
-                        if(nextQuadrant >= 4){
-                            nextQuadrant = 0;
+                            int qd[] = nextQuadrantLeaders.get(nextQuadrantIndex);
+
+                            getAgent().setQuadrant(qd[0]);
+                            leaderId = qd[1];
+
+                            lb.setDataInt(leaderId);
+                            lb.setDataBoolean(false);
+
+                            nextQuadrantIndex++;
+
+                            sendRequest(leaderId);
+
+
+                        }else{
+                            nextQuadrantIndex = 0;
+                            int closestRefuge = getClosestRefuge(beliefs,desires,getAgent().getID().getValue());
+                            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(closestRefuge)));
                         }
-                        System.out.println("Cambiarme al cuadrante "+(nextQuadrant));
-                        getAgent().setQuadrant(nextQuadrant);
 
-                        sendRequest(0);
-
-                        //position = new EntityID(getClosestRefuge(beliefs,desires,human.getPosition().getValue()));
-                        */
                     }
 
 
@@ -288,30 +294,35 @@ public class AmbulancePlan extends AbstractPlan{
                 case REQUEST:
 
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION && imLeader && getAgent().getCurrentQuadrant() == msg.getExtra(1)){
-                        System.out.println("Enviar inform");
                         sendInform(msg.getSender(),beliefs,desires,msg.getExtra(0));
-                    }else {
-                        System.out.println("Nop "+msg.getSender() + " iml "+imLeader +" "+getAgent().getCurrentQuadrant()+" == "+msg.getExtra(1));
                     }
-
                     break;
                 case INFORM:
+
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION){
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
                     }else if(msg.getContent() == ActionConstants.CHANGE_QUADRANT){
 
+                        if(nextQuadrantIndex < nextQuadrantLeaders.size()){
 
+                            int qd[] = nextQuadrantLeaders.get(nextQuadrantIndex);
 
-                        /*
-                        int nextQuadrant = getAgent().getCurrentQuadrant()+1;
+                            Belief lb = beliefs.getBelief(BeliefType.IM_LEADER);
 
-                        if(nextQuadrant >= 4){
-                            nextQuadrant = 0;
+                            getAgent().setQuadrant(qd[0]);
+                            lb.setDataInt(qd[1]);
+                            lb.setDataBoolean(false);
+
+                            nextQuadrantIndex++;
+
+                            sendRequest(qd[1]);
+
+                        }else{
+                            nextQuadrantIndex = 0;
+                            int closestRefuge = getClosestRefuge(beliefs,desires,getAgent().getID().getValue());
+                            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(closestRefuge)));
                         }
-                        System.out.println("Cambiarme al cuadrante "+(nextQuadrant));
-                        getAgent().setQuadrant(nextQuadrant);
-                        sendRequest(0);
-                        */
+
                     }
                     break;
             }
@@ -373,7 +384,6 @@ public class AmbulancePlan extends AbstractPlan{
             if(someoneOnBoard()){
                 getAgent().sendUnload(time);
                 helping = false;
-                System.out.println("Dejando al civil");
             }
 
 
