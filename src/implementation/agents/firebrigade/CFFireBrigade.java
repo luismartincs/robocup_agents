@@ -40,7 +40,7 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
         getBeliefs().addBelief(BeliefType.VOLUNTEER,removeBlockades);
         //getBeliefs().addBelief(BeliefType.REPORTED_BLOCKADES,new EntityMapBelief());//NOTE: Según yo esto ya no va.
 
-       // getBeliefs().addBelief(BeliefType.REPORTED_FIRES,new EntityMapBelief());
+        getBeliefs().addBelief(BeliefType.REPORTED_FIRES,new EntityMapBelief());
 
     }
 
