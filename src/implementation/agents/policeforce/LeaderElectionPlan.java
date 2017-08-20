@@ -4,8 +4,6 @@ import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.Belief;
 import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.Beliefs;
-import commlib.cinvesframework.desire.Desire;
-import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.intention.AbstractPlan;
 import commlib.cinvesframework.intention.SearchPlan;
@@ -23,6 +21,8 @@ public class LeaderElectionPlan extends AbstractPlan{
     private SearchPlan sp;
 
     private ArrayList<Integer> knownEntities;
+    private ArrayList<int[]> nextQuadrantLeaders;
+
     private int leaderID = 0;
 
     private int time;
@@ -36,6 +36,8 @@ public class LeaderElectionPlan extends AbstractPlan{
         super(agent);
 
         knownEntities = new ArrayList<>();
+        nextQuadrantLeaders = new ArrayList<>();
+
         leaderID = agent.getID().getValue();
 
         sp = new SearchPlan(getAgent());
@@ -94,7 +96,8 @@ public class LeaderElectionPlan extends AbstractPlan{
                 new EntityID(receiver),
                 conversationId,
                 ActionConstants.LEADER_ELECTION,
-                position.getValue());
+                getAgent().getCurrentQuadrant());
+                //position.getValue());
 
         getAgent().addACLMessage(propose);
     }
@@ -150,9 +153,14 @@ public class LeaderElectionPlan extends AbstractPlan{
 
                     beliefs.addBelief(BeliefType.IM_LEADER,lb);
 
+                    sendInform(0,getAgent().nextConversationId()); //Notifica a todos quien es el lider la escuadra X
+
+                    /*
                     for(Integer ent:knownEntities){
                         sendInform(ent,getAgent().nextConversationId());
-                    }
+                    }*/
+
+
                  }
               }
 
@@ -254,17 +262,24 @@ public class LeaderElectionPlan extends AbstractPlan{
 
                     if (msg.getContent() == ActionConstants.LEADER_ELECTION){
 
-                        leaderElected = true;
+                        if(msg.getExtra(0) == getAgent().getCurrentQuadrant()){
+                            leaderElected = true;
 
-                        leaderID = msg.getSender();
+                            leaderID = msg.getSender();
 
-                        getAgent().getQueuedMessages().clear();
+                            getAgent().getQueuedMessages().clear();
 
-                        Belief lb = new Belief();
-                        lb.setDataBoolean(false);
-                        lb.setDataInt(leaderID);
+                            Belief lb = new Belief();
+                            lb.setDataBoolean(false);
+                            lb.setDataInt(leaderID);
 
-                        beliefs.addBelief(BeliefType.IM_LEADER,lb);
+                            beliefs.addBelief(BeliefType.IM_LEADER,lb);
+                        }else {
+                            getNextQuadrantLeaders().add(new int[]{msg.getExtra(0),msg.getSender()});
+                            //System.out.println("El lider del cuadrante "+msg.getExtra(0)+" es "+msg.getSender());
+                        }
+
+
 
                     }
 
@@ -282,5 +297,9 @@ public class LeaderElectionPlan extends AbstractPlan{
 
     public boolean imLeader() {
         return imLeader;
+    }
+
+    public ArrayList<int[]> getNextQuadrantLeaders() {
+        return nextQuadrantLeaders;
     }
 }

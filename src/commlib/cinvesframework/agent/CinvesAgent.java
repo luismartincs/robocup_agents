@@ -309,6 +309,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
 
        // System.out.println("Puedo moverme pero no ayudar =(");
+
         refugePlan.setTime(time);
         refugePlan.setVolunteer(false);
         refugePlan.createPlan(getBeliefs(),getDesires());
@@ -379,5 +380,13 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     public void setAclMessages(ArrayList<ACLMessage> aclMessages) {
         this.aclMessages = aclMessages;
+    }
+
+    public void setQuadrant(int quadrant){
+        this.quadrant = quadrant;
+    }
+
+    public int getCurrentQuadrant(){
+        return this.quadrant;
     }
 }

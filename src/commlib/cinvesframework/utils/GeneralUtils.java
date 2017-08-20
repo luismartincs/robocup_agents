@@ -43,8 +43,8 @@ public class GeneralUtils {
 
                 if (human.isHPDefined() && human.isBuriednessDefined()
                         && human.isDamageDefined() && human.isPositionDefined()
-                        && human.getHP() > 0
-                        && (human.getBuriedness() > 0 || human.getDamage() > 0)) {
+                        && human.getHP() >= 0
+                        && (human.getBuriedness() >= 0 || human.getDamage() >= 0)) {
 
                     civilians.add(human);
                 }
