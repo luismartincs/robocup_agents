@@ -64,6 +64,8 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
 
         Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires());
 
+        //System.out.println("Bombero en onFullHealthBehavior");
+
         if(leaderElected != null){
 
             /**
