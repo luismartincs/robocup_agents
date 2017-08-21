@@ -12,9 +12,11 @@ import rescuecore2.misc.geometry.Point2D;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
+import rescuecore2.worldmodel.WorldModel;
 import sample.DistanceSorter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,6 +62,37 @@ public class GeneralUtils {
         return civilians;
     }
 
+    public static ArrayList<Building> getBurningBuildings(CinvesAgent agent, ChangeSet changeSet) {
+        StandardWorldModel model = agent.getWorldModel();
+        Collection<StandardEntity> e = model.getEntitiesOfType(StandardEntityURN.BUILDING);
+        ArrayList<Building> result = new ArrayList<Building>();
+
+        StandardEntity entity;
+        for(EntityID id : changeSet.getChangedEntities()) {
+            entity = model.getEntity(id);
+            if (entity instanceof Building) {
+                Building b = (Building)entity;
+                if (b.isOnFire()) {
+                    result.add(b);
+                }
+            }
+        }
+
+        /*for (StandardEntity next : e) {
+            if (next instanceof Building) {
+                Building b = (Building)next;
+                if (b.isOnFire()) {
+                    result.add(b);
+                }
+            }
+        }
+        Así es como lo hacen en los samples.
+        */
+        StandardEntity position = ((Human)agent.me()).getPosition(agent.getWorldModel());
+        // Sort by distance
+        Collections.sort(result, new DistanceSorter(position, model) );
+        return result;
+    }
 
 
     public static void updateBuildingsInQuadrant(Beliefs beliefs,StandardWorldModel model,int quadrant){
@@ -183,6 +216,8 @@ public class GeneralUtils {
         // Logger.debug("No blockades in range");
         return null;
     }
+
+
 
 
     private static int findDistanceTo(Blockade b, int x, int y){
