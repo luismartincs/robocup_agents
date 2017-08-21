@@ -17,6 +17,7 @@ import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class CivilianPlan extends AbstractPlan{
@@ -94,6 +95,7 @@ public class CivilianPlan extends AbstractPlan{
             switch (msg.getPerformative()){
                 case INFORM:
                     if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
+                        System.out.println("ir a refugio");
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
                     }
                     break;
@@ -108,12 +110,28 @@ public class CivilianPlan extends AbstractPlan{
 
     private void policeAround(Beliefs beliefs, Desires desires){
 
+        EnvironmentBelief environmentBelief = (EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT);
+
+        ChangeSet changeSet = environmentBelief.getChangeSet();
+
+        ArrayList<Human> humans = GeneralUtils.getHumanTargets(getAgent(),changeSet);
+
+        for (Human human:humans) {
+            if(human instanceof PoliceForce || human instanceof AmbulanceTeam){
+                sendRequest(human.getID().getValue());
+                System.out.println("Pidiendo apoyo a "+human);
+                return;
+            }
+        }
+
+
+        /*
         ChangeSet changeSet = ((EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT)).getChangeSet();
         ArrayList<PoliceForce> policeForcesAround = GeneralUtils.getPoliceForceAround(getAgent(),changeSet);
 
         if(policeForcesAround.size() > 0){
             sendRequest(policeForcesAround.get(0).getID().getValue());
-        }
+        }*/
 
     }
 

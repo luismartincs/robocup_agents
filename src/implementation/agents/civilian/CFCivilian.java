@@ -21,6 +21,10 @@ public class CFCivilian extends CinvesAgent<Civilian>{
     private CivilianPlan plan;
     private GoToRefugePlan refugePlan;
 
+    public CFCivilian(){
+        super(1,new int[]{1,2,3});
+    }
+
     @Override
     protected void postConnect() {
         super.postConnect();

@@ -26,6 +26,7 @@ public class AmbulancePlan extends AbstractPlan{
     private int targetBuilding = 0;
 
     private ArrayList<Integer> rescuedHumans;
+    private ArrayList<Integer> informedHumans;
     private ArrayList<int[]> nextQuadrantLeaders;
     private int nextQuadrantIndex = 0;
 
@@ -36,6 +37,7 @@ public class AmbulancePlan extends AbstractPlan{
         searchPlan = new SearchPlan(agent);
 
         rescuedHumans = new ArrayList<>();
+        informedHumans = new ArrayList<>();
         nextQuadrantLeaders = new ArrayList<>();
     }
 
@@ -91,40 +93,21 @@ public class AmbulancePlan extends AbstractPlan{
 
     }
 
+    private void sendRefugeInform(int receiver,int refuge){
 
-    private StandardEntity getClosestBuilding(Beliefs beliefs, Desires desires, int target){
+        int conversationId = getAgent().nextConversationId();
 
-        Desire originalGoal = desires.getDesire(DesireType.GOAL_LOCATION);
+        ACLMessage leaderCFP = new ACLMessage(time,
+                getAgent().getID(),
+                ACLPerformative.INFORM,
+                new EntityID(receiver),
+                conversationId,
+                ActionConstants.REQUEST_POLICE_INSTRUCTION,
+                refuge);
 
-        EntityListBelief buildingList = (EntityListBelief) beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
-        ArrayList<StandardEntity> buildings = buildingList.getEntities();
-
-
-        int minSteps = Integer.MAX_VALUE;
-        int pathSize = 0;
-        StandardEntity closestBuilding = null;
-        List<EntityID> path = null;
-
-        for (StandardEntity entity : buildings) {
-
-            Building building = (Building) entity;
-            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(building.getID()));
-            path = searchPlan.createPlan(beliefs, desires,new EntityID(target));
-
-            if (path != null) {
-                pathSize = path.size();
-                if (pathSize < minSteps) {
-                    minSteps = pathSize;
-                    closestBuilding = building;
-                }
-            }
-
-        }
-
-        desires.addDesire(DesireType.GOAL_LOCATION, originalGoal);
-
-        return closestBuilding;
+        getAgent().addACLMessage(leaderCFP);
     }
+
 
     @Override
     public Object createPlan(Beliefs beliefs, Desires desires) {
@@ -289,12 +272,17 @@ public class AmbulancePlan extends AbstractPlan{
         ArrayList<ACLMessage> aclMessages = getAgent().getAclMessages();
 
         for(ACLMessage msg: aclMessages){
-
+            System.out.println("Ex "+msg.getExtra(0)+" "+msg.getPerformative());
             switch (msg.getPerformative()){
                 case REQUEST:
 
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION && imLeader && getAgent().getCurrentQuadrant() == msg.getExtra(1)){
                         sendInform(msg.getSender(),beliefs,desires,msg.getExtra(0));
+
+                    }else {
+                        System.out.println("Me pidio el refugio mas cercano");
+                        //int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
+                        //sendRefugeInform(msg.getSender(),closestRefuge);
                     }
                     break;
                 case INFORM:
@@ -331,6 +319,77 @@ public class AmbulancePlan extends AbstractPlan{
     }
 
 
+
+
+    private void doMove(Beliefs beliefs,Desires desires){
+
+
+    /**
+     * Move
+     */
+
+        EntityID myPosition = ((Human) getAgent().me()).getPosition();
+
+        Desire goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
+
+        if (goalLocation.getEntityID().getValue() == myPosition.getValue()) {
+
+            desires.addDesire(DesireType.GOAL_LOCATION,null);
+
+            if(someoneOnBoard()){
+                getAgent().sendUnload(time);
+                helping = false;
+            }
+
+
+        } else {
+            List<EntityID> path = searchPlan.createPlan(beliefs, desires);
+            if(path != null) {
+                getAgent().sendMove(time, path);
+            }
+        }
+    }
+
+
+    /**
+     *
+     */
+
+
+    private StandardEntity getClosestBuilding(Beliefs beliefs, Desires desires, int target){
+
+        Desire originalGoal = desires.getDesire(DesireType.GOAL_LOCATION);
+
+        EntityListBelief buildingList = (EntityListBelief) beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
+        ArrayList<StandardEntity> buildings = buildingList.getEntities();
+
+
+        int minSteps = Integer.MAX_VALUE;
+        int pathSize = 0;
+        StandardEntity closestBuilding = null;
+        List<EntityID> path = null;
+
+        for (StandardEntity entity : buildings) {
+
+            Building building = (Building) entity;
+            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(building.getID()));
+            path = searchPlan.createPlan(beliefs, desires,new EntityID(target));
+
+            if (path != null) {
+                pathSize = path.size();
+                if (pathSize < minSteps) {
+                    minSteps = pathSize;
+                    closestBuilding = building;
+                }
+            }
+
+        }
+
+        desires.addDesire(DesireType.GOAL_LOCATION, originalGoal);
+
+        return closestBuilding;
+    }
+
     private int getClosestRefuge(Beliefs beliefs, Desires desires, int target){
 
         Desire originalGoal = desires.getDesire(DesireType.GOAL_LOCATION);
@@ -364,35 +423,6 @@ public class AmbulancePlan extends AbstractPlan{
         desires.addDesire(DesireType.GOAL_LOCATION, originalGoal);
 
         return closestRefuge.getID().getValue();
-    }
-
-
-    private void doMove(Beliefs beliefs,Desires desires){
-
-        /**
-         * Move
-         */
-
-        EntityID myPosition = ((Human) getAgent().me()).getPosition();
-
-        Desire goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
-
-        if (goalLocation.getEntityID().getValue() == myPosition.getValue()) {
-
-            desires.addDesire(DesireType.GOAL_LOCATION,null);
-
-            if(someoneOnBoard()){
-                getAgent().sendUnload(time);
-                helping = false;
-            }
-
-
-        } else {
-            List<EntityID> path = searchPlan.createPlan(beliefs, desires);
-            if(path != null) {
-                getAgent().sendMove(time, path);
-            }
-        }
     }
 
     private boolean someoneOnBoard() {

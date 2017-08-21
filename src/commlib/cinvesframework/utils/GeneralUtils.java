@@ -40,7 +40,6 @@ public class GeneralUtils {
 
                 Human human = (Human) entity;
 
-
                 if (human.isHPDefined() && human.isBuriednessDefined()
                         && human.isDamageDefined() && human.isPositionDefined()
                         && human.getHP() >= 0
@@ -107,6 +106,8 @@ public class GeneralUtils {
 
         return civilians;
     }
+
+
 
     /**
      * Check PoliceForce

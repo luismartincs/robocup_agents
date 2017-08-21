@@ -26,6 +26,10 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
     private RequestReplyPlan requestReplyPlan;
 
+    public CFPoliceForce(){
+        super(1,new int[]{1,3});
+    }
+
     @Override
     protected void postConnect() {
         super.postConnect();

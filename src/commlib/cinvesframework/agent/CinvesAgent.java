@@ -83,7 +83,6 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         conversationId = 1;
 
 
-
     }
 
     protected CinvesAgent(int channel,int listenChannels[]){
@@ -249,11 +248,6 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
                 }
             }
         }
-
-
-
-
-
 
         /**
          * Default General Human Behaviour

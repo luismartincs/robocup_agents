@@ -5,6 +5,7 @@ import commlib.cinvesframework.belief.Belief;
 import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.EntityMapBelief;
 import commlib.cinvesframework.belief.EnvironmentBelief;
+import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.policeforce.LeaderElectionPlan;
 import implementation.agents.policeforce.PolicePlan;
@@ -23,7 +24,7 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
     private AmbulancePlan ambulancePlan;
 
     public CFAmbulance(){
-        super(2,new int[]{2});
+        super(2,new int[]{1,2});
     }
 
     @Override
@@ -67,13 +68,13 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
     @Override
     protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
         super.onRegularHealthBehaviour(time, changed, heard);
-        System.out.println("Fuck...");
+        System.out.println("Regular...");
     }
 
     @Override
     protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
         super.onLowHealthBehaviour(time, changed, heard);
-        System.out.println("Damn...");
+        System.out.println("Low...");
     }
 
     @Override
