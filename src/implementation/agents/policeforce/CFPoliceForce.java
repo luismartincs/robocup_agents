@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
+@SuppressWarnings("Duplicates")
 public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
     private PolicePlan policePlan;
@@ -27,7 +28,7 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
     private RequestReplyPlan requestReplyPlan;
 
     public CFPoliceForce(){
-        super(1,new int[]{1,3});
+        super(3,new int[]{1,3});
     }
 
     @Override

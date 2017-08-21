@@ -126,7 +126,10 @@ public class GoToRefugePlan extends AbstractPlan {
                 } else {
 
                     List<EntityID> path = sp.createPlan(beliefs, desires);
-                    getAgent().sendMove(time, path);
+
+                    if(path!=null) {
+                        getAgent().sendMove(time, path);
+                    }
                     return path;
                 }
             }

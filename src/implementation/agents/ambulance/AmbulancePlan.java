@@ -229,6 +229,13 @@ public class AmbulancePlan extends AbstractPlan{
 
                 if(human.getPosition().equals(myPosition)){
 
+                    if(human instanceof Civilian && human.getHP() <= 0){
+                        //Esta muerto
+                        rescuedHumans.add(human.getID().getValue());//para que ignore el cadaver la proxima vez
+                        System.out.println("Dejalo esta muerto =(");
+                        continue;
+                    }
+
                     if(human instanceof Civilian && human.getBuriedness() == 0){
 
                         rescuedHumans.add(human.getID().getValue());
@@ -241,7 +248,6 @@ public class AmbulancePlan extends AbstractPlan{
                     }
 
                     if (human instanceof Civilian && human.getBuriedness() > 0){
-                        System.out.println("Rescatando "+human.getID());
 
                         helping = true;
                         getAgent().sendRescue(time,human.getID());
@@ -279,7 +285,7 @@ public class AmbulancePlan extends AbstractPlan{
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION && imLeader && getAgent().getCurrentQuadrant() == msg.getExtra(1)){
                         sendInform(msg.getSender(),beliefs,desires,msg.getExtra(0));
 
-                    }else {
+                    }else if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
                         int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
                         sendRefugeInform(msg.getSender(),closestRefuge);
                     }
@@ -415,6 +421,8 @@ public class AmbulancePlan extends AbstractPlan{
                     minSteps = pathSize;
                     closestRefuge = refuge;
                 }
+            }else{
+                System.out.println("Ruta de "+target+" a ->> "+entity.getID()+" fue nula");
             }
 
         }

@@ -44,6 +44,22 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
     @Override
     protected void onFullHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+        generalBehaviour(time,changed,heard);
+    }
+
+    @Override
+    protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+        //super.onRegularHealthBehaviour(time, changed, heard);
+        generalBehaviour(time,changed,heard);
+    }
+
+    @Override
+    protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+        //super.onLowHealthBehaviour(time, changed, heard);
+        generalBehaviour(time,changed,heard);
+    }
+
+    private void generalBehaviour(int time,ChangeSet changed, Collection<Command> heard){
 
         getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
 
@@ -62,19 +78,6 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
             ambulancePlan.setTime(time);
             ambulancePlan.createPlan(getBeliefs(),getDesires());
         }
-
-    }
-
-    @Override
-    protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
-        super.onRegularHealthBehaviour(time, changed, heard);
-        System.out.println("Regular...");
-    }
-
-    @Override
-    protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
-        super.onLowHealthBehaviour(time, changed, heard);
-        System.out.println("Low...");
     }
 
     @Override

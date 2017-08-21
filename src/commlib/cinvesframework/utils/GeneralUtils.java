@@ -139,19 +139,23 @@ public class GeneralUtils {
     public static Blockade getTargetBlockade(int distance, CinvesAgent agent){
        // int distance = config.getIntValue("clear.repair.distance");
 
-        Area location = (Area) agent.location();
-        Blockade result = getTargetBlockade(agent,location, distance);
-        if(result != null){
-            return result;
-        }
+        if (agent.location() instanceof Area) {
 
-        for(EntityID next : location.getNeighbours()){
-            location = (Area) agent.getWorldModel().getEntity(next);
-            result = getTargetBlockade(agent,location, distance);
-            if(result != null){
+            Area location = (Area) agent.location();
+            Blockade result = getTargetBlockade(agent, location, distance);
+            if (result != null) {
                 return result;
             }
+
+            for (EntityID next : location.getNeighbours()) {
+                location = (Area) agent.getWorldModel().getEntity(next);
+                result = getTargetBlockade(agent, location, distance);
+                if (result != null) {
+                    return result;
+                }
+            }
         }
+
         return null;
     }
 

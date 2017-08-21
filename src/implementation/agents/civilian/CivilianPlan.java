@@ -72,7 +72,11 @@ public class CivilianPlan extends AbstractPlan{
 
                 List<EntityID> steps = randomDestination(beliefs,desires);
 
-                getAgent().sendMove(time,steps);
+                if(steps != null){
+                    getAgent().sendMove(time,steps);
+                }else {
+                    System.out.println("El civil "+getAgent().getID()+" v");
+                }
 
             }else{
 
@@ -82,7 +86,13 @@ public class CivilianPlan extends AbstractPlan{
 
                 List<EntityID> steps = randomDestination(beliefs,desires);
 
-                getAgent().sendMove(time,steps);
+                if(steps != null){
+                    getAgent().sendMove(time,steps);
+                }else {
+                    System.out.println("El civil "+getAgent().getID()+" no volunteer");
+                }
+
+
 
             }
         }else{
@@ -105,7 +115,6 @@ public class CivilianPlan extends AbstractPlan{
             switch (msg.getPerformative()){
                 case INFORM:
                     if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
-                        System.out.println("ir a refugio");
                         goingToRefuge = true;
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
                     }
@@ -128,21 +137,11 @@ public class CivilianPlan extends AbstractPlan{
         ArrayList<Human> humans = GeneralUtils.getHumanTargets(getAgent(),changeSet);
 
         for (Human human:humans) {
-            if(human instanceof PoliceForce || human instanceof AmbulanceTeam){
+            if(human instanceof PoliceForce || human instanceof AmbulanceTeam && (onRoad((Human) getAgent().me()))){
                 sendRequest(human.getID().getValue());
-                System.out.println("Pidiendo apoyo a "+human);
                 return;
             }
         }
-
-
-        /*
-        ChangeSet changeSet = ((EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT)).getChangeSet();
-        ArrayList<PoliceForce> policeForcesAround = GeneralUtils.getPoliceForceAround(getAgent(),changeSet);
-
-        if(policeForcesAround.size() > 0){
-            sendRequest(policeForcesAround.get(0).getID().getValue());
-        }*/
 
     }
 
@@ -188,4 +187,13 @@ public class CivilianPlan extends AbstractPlan{
         return (human.getPosition(getAgent().getWorldModel()) instanceof Refuge);
 
     }
+
+    private boolean onRoad(Human human){
+
+        //System.out.println("Civil "+human.getID()+" "+human.getPosition(getAgent().getWorldModel()).getClass());
+
+        return (human.getPosition(getAgent().getWorldModel()) instanceof Road);
+
+    }
+
 }
