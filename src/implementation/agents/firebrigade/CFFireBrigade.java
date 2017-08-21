@@ -2,10 +2,10 @@ package implementation.agents.firebrigade;
 
 import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.*;
+import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.Quadrant;
+import implementation.agents.firebrigade.FireBrigadePlan;
 import implementation.agents.policeforce.LeaderElectionPlan;
-import implementation.agents.policeforce.PolicePlan;
-import implementation.agents.policeforce.RequestReplyPlan;
 import rescuecore2.messages.Command;
 import rescuecore2.misc.Pair;
 import rescuecore2.standard.entities.PoliceForce;
@@ -18,10 +18,18 @@ import java.util.EnumSet;
 
 public class CFFireBrigade extends CinvesAgent<PoliceForce> {
 
+    private static final String	MAX_WATER_KEY			= "fire.tank.maximum";
+    private static final String	MAX_DISTANCE_KEY	= "fire.extinguish.max-distance";
+    private static final String	MAX_POWER_KEY			= "fire.extinguish.max-sum";
+
+    private int									maxWater;
+    private int									maxDistance;
+    private int									maxPower;
+
     //private PolicePlan policePlan;//esto se va y se pone un fireBrigadePlan
     private LeaderElectionPlan leaderElectionPlan;
 
-    private RequestReplyPlan requestReplyPlan;
+    private FireBrigadePlan fireBrigadePlan;
 
     @Override
     protected void postConnect() {
@@ -31,8 +39,11 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
 
         //policePlan = new PolicePlan(this); //NOTE: este cambia por el FireBrigadePlan.
         leaderElectionPlan = new LeaderElectionPlan(this);
-        requestReplyPlan = new RequestReplyPlan(this);
+        fireBrigadePlan = new FireBrigadePlan(this);
 
+        maxWater = config.getIntValue(MAX_WATER_KEY);
+        maxDistance = config.getIntValue(MAX_DISTANCE_KEY);
+        maxPower = config.getIntValue(MAX_POWER_KEY);
 
         Belief removeBlockades = new Belief();
         removeBlockades.setDataBoolean(true);
@@ -49,11 +60,6 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
 
         getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
 
-        /*
-        policePlan.setTime(time);
-        policePlan.createPlan(getBeliefs(),getDesires());
-        */
-
         leaderElectionPlan.setTime(time);
 
         Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires());
@@ -65,78 +71,40 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
              */
 
             if(leaderElectionPlan.imLeader()) {
-
-                if (getBeliefs().getBelief(BeliefType.BUILDINGS_IN_QUADRANT) == null) {
-
-                    EntityListBelief buildingsInQuadrant = new EntityListBelief();
-                    EntityListBelief buildings = (EntityListBelief) getBeliefs().getBelief(BeliefType.BUILDINGS);
-
-                    for (StandardEntity building : buildings.getEntities()) {
-
-                        Pair<Integer, Integer> point = building.getLocation(getWorldModel());
-
-                        int px = point.first();
-                        int py = point.second();
-                        int q = Quadrant.getQuadrant(getWorldModel(), px, py);
-
-                        if (q == quadrant) {
-                            buildingsInQuadrant.addEntity(building);
-                        }
-
-                    }
-                    getBeliefs().addBelief(BeliefType.BUILDINGS_IN_QUADRANT, buildingsInQuadrant);
-                }
-
+                GeneralUtils.updateBuildingsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
             }
 
-            requestReplyPlan.setTime(time);
-            requestReplyPlan.createPlan(getBeliefs(),getDesires());
-
-
-            /*
-                EntityListBelief biq = (EntityListBelief)getBeliefs().getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
-
-                EntityID position = biq.getEntities().get(0).getID();//new EntityID(28953);
-                getDesires().addDesire(DesireType.GOAL_LOCATION, new Desire(position));
-                Desire goalLocation = getDesires().getDesire(DesireType.GOAL_LOCATION);
-                EntityID myposition = ((Human) me()).getPosition();
-
-                if (goalLocation.getEntityID().getValue() == myposition.getValue()) {
-                    biq.getEntities().remove(0);
-                    sendRest(time);
-                } else {
-                    List<EntityID> path = sp.createPlan(getBeliefs(), getDesires());
-                    sendMove(time, path);
-                }*/
-
+            fireBrigadePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
+            fireBrigadePlan.setTime(time);
+            fireBrigadePlan.createPlan(getBeliefs(),getDesires());
         }
-
     }
 
 
-    /*
     @Override
-    protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
-        super.thinking(time, changed, heard);
+    protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+        super.onRegularHealthBehaviour(time, changed, heard);
+        System.out.println("Regular...");
+    }
 
-        for (ACLMessage msg : this.aclMessages) {
-
-            ACLMessage aclMessage = msg;
-
-            switch (aclMessage.getPerformative()){
-                case CFP:
-                    System.out.println(getID()+" get "+aclMessage.getPerformative()+" "+aclMessage.getConversationId());
-                    ACLMessage message = new ACLMessage(time,getID(), ACLPerformative.REJECT_PROPOSAL,new EntityID(aclMessage.getSender()),aclMessage.getConversationId(),0);
-                    addMessage(message);
-                    System.out.println(getID()+" send "+message.getPerformative() +" "+aclMessage.getConversationId());
-                    break;
-            }
-        }
-
-    }*/
+    @Override
+    protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+        super.onLowHealthBehaviour(time, changed, heard);
+        System.out.println("Low...");
+    }
 
     @Override
     protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum() {
         return EnumSet.of(StandardEntityURN.FIRE_BRIGADE);
     }
+
+    public int getMaxWater()
+    {return  maxWater;}
+
+    public int getMaxPower()
+    {return  maxPower;}
+
+    public int getMaxDistance()
+    {return  maxDistance;}
+
 }
