@@ -75,8 +75,8 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         desires = new Desires(this);
 
         channel = 1;
-        listenChannels = new int[]{1};
-
+        //listenChannels = new int[]{1};
+        this.subscribedChannels = new int[]{1};
         setAclMessages(new ArrayList<>());
 
         setQueuedMessages(new HashMap<>());
@@ -94,7 +94,8 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         desires = new Desires(this);
 
         this.channel = channel;
-        this.listenChannels = listenChannels;
+        //this.listenChannels = listenChannels;
+        this.subscribedChannels = listenChannels;
 
         setAclMessages(new ArrayList<>());
 
@@ -224,7 +225,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
         if (time == config.getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)) {
             if (isUsingChannel()) {
                 setMessageChannel(channel);
-                sendSubscribe(time, listenChannels);
+                sendSubscribe(time, this.subscribedChannels);
             }
         }
 

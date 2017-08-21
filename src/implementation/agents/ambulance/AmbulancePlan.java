@@ -272,7 +272,7 @@ public class AmbulancePlan extends AbstractPlan{
         ArrayList<ACLMessage> aclMessages = getAgent().getAclMessages();
 
         for(ACLMessage msg: aclMessages){
-            System.out.println("Ex "+msg.getExtra(0)+" "+msg.getPerformative());
+
             switch (msg.getPerformative()){
                 case REQUEST:
 
@@ -280,9 +280,8 @@ public class AmbulancePlan extends AbstractPlan{
                         sendInform(msg.getSender(),beliefs,desires,msg.getExtra(0));
 
                     }else {
-                        System.out.println("Me pidio el refugio mas cercano");
-                        //int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
-                        //sendRefugeInform(msg.getSender(),closestRefuge);
+                        int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
+                        sendRefugeInform(msg.getSender(),closestRefuge);
                     }
                     break;
                 case INFORM:

@@ -24,6 +24,7 @@ abstract class RCRSCSAgent<E extends StandardEntity> extends StandardAgent<E> {
 	RCRSCSMessageConverter messageConverter;
 	private List<RCRSCSMessage> messageList;
 	protected List<RCRSCSMessage> receivedMessageList;
+	protected int[] subscribedChannels;
 	private int messageChannel;
 
 	/**
@@ -82,6 +83,13 @@ abstract class RCRSCSAgent<E extends StandardEntity> extends StandardAgent<E> {
 				if (speak.getChannel() == this.messageChannel) {
 					this.receivedMessageList.addAll(this.messageConverter
 							.bytesToMessageList(speak.getContent()));
+				}else{
+					for (int i=0; i < subscribedChannels.length; i++){
+						if(speak.getChannel() == subscribedChannels[i]){
+							this.receivedMessageList.addAll(this.messageConverter
+									.bytesToMessageList(speak.getContent()));
+						}
+					}
 				}
 			}
 		}

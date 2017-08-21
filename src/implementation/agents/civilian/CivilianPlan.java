@@ -24,6 +24,8 @@ public class CivilianPlan extends AbstractPlan{
 
     private SearchPlan searchPlan;
     private boolean isVolunteer;
+    private boolean goingToRefuge = false;
+    private boolean onRefuge = false;
 
     public CivilianPlan(CinvesAgent agent){
         super(agent);
@@ -55,29 +57,37 @@ public class CivilianPlan extends AbstractPlan{
 
         stateControl(beliefs,desires);
 
+
         isVolunteer = beliefs.getBelief(BeliefType.VOLUNTEER).isDataBoolean();
+        onRefuge = onRefuge((Human)getAgent().me());
 
-        if(isVolunteer){
+        if(!onRefuge){
+            if(isVolunteer){
 
-            policeAround(beliefs,desires);
+                if(!goingToRefuge) {
+                    policeAround(beliefs, desires);
+                }
 
-            removeBlockades(beliefs,desires);
+                removeBlockades(beliefs,desires);
 
-            List<EntityID> steps = randomDestination(beliefs,desires);
+                List<EntityID> steps = randomDestination(beliefs,desires);
 
-            getAgent().sendMove(time,steps);
+                getAgent().sendMove(time,steps);
 
+            }else{
+
+                if(!goingToRefuge) {
+                    policeAround(beliefs, desires);
+                }
+
+                List<EntityID> steps = randomDestination(beliefs,desires);
+
+                getAgent().sendMove(time,steps);
+
+            }
         }else{
-
-            policeAround(beliefs,desires);
-
-            List<EntityID> steps = randomDestination(beliefs,desires);
-
-            getAgent().sendMove(time,steps);
-
+            getAgent().sendRest(time);
         }
-
-
 
         return null;
     }
@@ -96,6 +106,7 @@ public class CivilianPlan extends AbstractPlan{
                 case INFORM:
                     if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
                         System.out.println("ir a refugio");
+                        goingToRefuge = true;
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
                     }
                     break;
@@ -170,5 +181,11 @@ public class CivilianPlan extends AbstractPlan{
         List<EntityID> path = searchPlan.createPlan(beliefs,desires);
 
         return path;
+    }
+
+    private boolean onRefuge(Human human){
+
+        return (human.getPosition(getAgent().getWorldModel()) instanceof Refuge);
+
     }
 }
