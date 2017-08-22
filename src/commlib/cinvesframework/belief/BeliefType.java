@@ -16,7 +16,8 @@ public enum BeliefType {
     REPORTED_FIRES,
     QUADRANT,
     BUILDINGS_IN_QUADRANT,
-    IM_LEADER
+    IM_LEADER,
+    POLICE_CENTRE
     ;
 
 }

@@ -20,6 +20,7 @@ public class Beliefs {
     private EntityMapBelief buildingsOnFire;
     private EntityListBelief areas;
     private EntityListBelief refuges;
+    private EntityListBelief policeCentre;
 
     public Beliefs(CinvesAgent agent){
 
@@ -29,6 +30,7 @@ public class Beliefs {
         refuges = new EntityListBelief();
         buildingsOnFire = new EntityMapBelief();
         areas = new EntityListBelief();
+        policeCentre = new EntityListBelief();
 
     }
 
@@ -47,12 +49,16 @@ public class Beliefs {
             if(next instanceof Area){
                 areas.addEntity(next);
             }
+            if(next instanceof PoliceOffice){
+                policeCentre.addEntity(next);
+            }
         }
 
         beliefs.put(BeliefType.BUILDINGS,buildings);
         beliefs.put(BeliefType.AREAS,areas);
         beliefs.put(BeliefType.REFUGE,refuges);
         beliefs.put(BeliefType.BUILDINGS_ON_FIRE,buildingsOnFire);
+        beliefs.put(BeliefType.POLICE_CENTRE,policeCentre);
 
     }
 

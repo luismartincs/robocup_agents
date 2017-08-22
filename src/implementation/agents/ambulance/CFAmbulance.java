@@ -24,7 +24,7 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
     private AmbulancePlan ambulancePlan;
 
     public CFAmbulance(){
-        super(2,new int[]{1,2});
+        super(2,new int[]{1,2,4});
     }
 
     @Override
