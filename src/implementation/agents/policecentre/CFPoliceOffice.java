@@ -22,6 +22,7 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
     BlockadeList blockadeList;
 
     private HashMap<Integer,ArrayList<PoliceForce>> policesByQuadrant;
+    private HashMap<Integer,Integer> availableByQuadrant;
 
     public CFPoliceOffice(){
         super(4,new int[]{2,3,4});
@@ -34,6 +35,7 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
         blockadeList=new BlockadeList();
 
         policesByQuadrant = new HashMap<>();
+        availableByQuadrant = new HashMap<>();
 
         loadPolices();
 
@@ -59,6 +61,7 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
                 ArrayList<PoliceForce> pfbq = new ArrayList<>();
                 pfbq.add(policeForce);
                 policesByQuadrant.put(quadrant,pfbq);
+                availableByQuadrant.put(quadrant,0);
             }else{
                 ArrayList<PoliceForce> pfbq = policesByQuadrant.get(quadrant);
                 pfbq.add(policeForce);
@@ -69,6 +72,35 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
         }
     }
 
+    private void asignar(int quadrant,int location, int time){
+
+        ArrayList<PoliceForce> polices = policesByQuadrant.get(quadrant);
+        int available = availableByQuadrant.get(quadrant);
+
+        if(available >= polices.size()){
+            available = 0;
+        }
+
+        PoliceForce pf = polices.get(available);
+
+        available++;
+
+        int conversationId = nextConversationId();
+
+        ACLMessage leaderCFP = new ACLMessage(time,
+                getID(),
+                ACLPerformative.INFORM,
+                pf.getID(),
+                conversationId,
+                ActionConstants.INFORM_BLOCKADE,
+                location);
+
+        addACLMessage(leaderCFP);
+
+
+        availableByQuadrant.put(quadrant,available);
+
+    }
 
     @Override
     protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
@@ -79,7 +111,8 @@ public class CFPoliceOffice extends CinvesAgent<PoliceOffice> {
                 case INFORM:
 
                     if(msg.getContent() == ActionConstants.REPORT_BLOCKADE){
-                        System.out.println("El usario "+msg.getSender()+" me reporta un bloqueo en "+msg.getExtra(0)+" en cuadrante "+msg.getExtra(1));
+                       // System.out.println("El usario "+msg.getSender()+" me reporta un bloqueo en "+msg.getExtra(0)+" en cuadrante "+msg.getExtra(1));
+                        asignar(msg.getExtra(1),msg.getExtra(0),time);
                     }
 
                     break;

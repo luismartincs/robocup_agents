@@ -11,6 +11,7 @@ import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.ActionConstants;
+import implementation.agents.ambulance.AmbulancePlan;
 import rescuecore2.log.Logger;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
@@ -75,7 +76,7 @@ public class CivilianPlan extends AbstractPlan{
                 if(steps != null){
                     getAgent().sendMove(time,steps);
                 }else {
-                    System.out.println("El civil "+getAgent().getID()+" v");
+                   // System.out.println("El civil "+getAgent().getID()+" v");
                 }
 
             }else{
@@ -89,7 +90,7 @@ public class CivilianPlan extends AbstractPlan{
                 if(steps != null){
                     getAgent().sendMove(time,steps);
                 }else {
-                    System.out.println("El civil "+getAgent().getID()+" no volunteer");
+                    //System.out.println("El civil "+getAgent().getID()+" no volunteer");
                 }
 
 
@@ -135,12 +136,21 @@ public class CivilianPlan extends AbstractPlan{
         ChangeSet changeSet = environmentBelief.getChangeSet();
 
         ArrayList<Human> humans = GeneralUtils.getHumanTargets(getAgent(),changeSet);
+        Human yoMerengues = (Human)getAgent().me();
 
         for (Human human:humans) {
-            if(human instanceof PoliceForce || human instanceof AmbulanceTeam && (onRoad((Human) getAgent().me()))){
+
+            if(onRoad(yoMerengues)){
+                if(human instanceof PoliceForce || human instanceof AmbulanceTeam){
+                    sendRequest(human.getID().getValue());
+                    return;
+                }
+            }
+
+            /*if(human instanceof PoliceForce){// || human instanceof AmbulanceTeam && (onRoad((Human) getAgent().me()))){
                 sendRequest(human.getID().getValue());
                 return;
-            }
+            }*/
         }
 
     }

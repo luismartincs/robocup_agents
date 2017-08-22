@@ -28,7 +28,7 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
     private RequestReplyPlan requestReplyPlan;
 
     public CFPoliceForce(){
-        super(3,new int[]{1,3});
+        super(3,new int[]{1,3,4});
     }
 
     @Override
@@ -97,47 +97,10 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
             requestReplyPlan.createPlan(getBeliefs(),getDesires());
 
 
-            /*
-                EntityListBelief biq = (EntityListBelief)getBeliefs().getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
-
-                EntityID position = biq.getEntities().get(0).getID();//new EntityID(28953);
-                getDesires().addDesire(DesireType.GOAL_LOCATION, new Desire(position));
-                Desire goalLocation = getDesires().getDesire(DesireType.GOAL_LOCATION);
-                EntityID myposition = ((Human) me()).getPosition();
-
-                if (goalLocation.getEntityID().getValue() == myposition.getValue()) {
-                    biq.getEntities().remove(0);
-                    sendRest(time);
-                } else {
-                    List<EntityID> path = sp.createPlan(getBeliefs(), getDesires());
-                    sendMove(time, path);
-                }*/
-
         }
 
     }
 
-
-    /*
-    @Override
-    protected void thinking(int time, ChangeSet changed, Collection<Command> heard) {
-        super.thinking(time, changed, heard);
-
-        for (ACLMessage msg : this.aclMessages) {
-
-            ACLMessage aclMessage = msg;
-
-            switch (aclMessage.getPerformative()){
-                case CFP:
-                    System.out.println(getID()+" get "+aclMessage.getPerformative()+" "+aclMessage.getConversationId());
-                    ACLMessage message = new ACLMessage(time,getID(), ACLPerformative.REJECT_PROPOSAL,new EntityID(aclMessage.getSender()),aclMessage.getConversationId(),0);
-                    addMessage(message);
-                    System.out.println(getID()+" send "+message.getPerformative() +" "+aclMessage.getConversationId());
-                    break;
-            }
-        }
-
-    }*/
 
     @Override
     protected EnumSet<StandardEntityURN> getRequestedEntityURNsEnum() {

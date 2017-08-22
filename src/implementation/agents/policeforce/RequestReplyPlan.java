@@ -5,16 +5,14 @@ import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
+import commlib.cinvesframework.desire.EntityListDesire;
 import commlib.cinvesframework.intention.AbstractPlan;
 import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.ActionConstants;
-import rescuecore2.standard.entities.Blockade;
-import rescuecore2.standard.entities.Human;
-import rescuecore2.standard.entities.Refuge;
-import rescuecore2.standard.entities.StandardEntity;
+import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -26,12 +24,17 @@ public class RequestReplyPlan extends AbstractPlan{
     private SearchPlan searchPlan;
     private int targetBuilding = 0;
 
+    private ArrayList<Integer> nextGoals;
+
     public RequestReplyPlan(CinvesAgent agent){
         super(agent);
         searchPlan = new SearchPlan(agent);
+        nextGoals = new ArrayList<>();
     }
 
     private void sendRequest(int leader){
+
+        Human human = (Human) getAgent().me();
 
         int conversationId = getAgent().nextConversationId();
 
@@ -41,26 +44,37 @@ public class RequestReplyPlan extends AbstractPlan{
                 new EntityID(leader),
                 conversationId,
                 ActionConstants.REQUEST_LOCATION,
-                0);
+                human.getPosition().getValue());
 
         getAgent().addACLMessageToQueue(conversationId, leaderCFP);
         getAgent().addACLMessage(leaderCFP);
 
     }
 
-    private void sendInform(int receiver,Beliefs beliefs){
+    private void sendInform(int receiver,Beliefs beliefs,Desires desires,int position){
 
         int conversationId = getAgent().nextConversationId();
 
         EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
 
+        /*
         EntityID position = biq.getEntities().get(targetBuilding).getID();
-        //biq.getEntities().remove(targetBuilding);
 
         targetBuilding++;
 
         if(targetBuilding >= biq.getEntities().size()){
             targetBuilding = 0;
+        }
+        */
+
+        //
+
+        StandardEntity closestBuilding = getClosestBuilding(beliefs,desires,position);
+        int value = 0;
+
+        if(closestBuilding!=null) {
+            biq.getEntities().remove(closestBuilding);
+            value = closestBuilding.getID().getValue();
         }
 
         ACLMessage leaderCFP = new ACLMessage(time,
@@ -69,7 +83,7 @@ public class RequestReplyPlan extends AbstractPlan{
                 new EntityID(receiver),
                 conversationId,
                 ActionConstants.REQUEST_LOCATION,
-                position.getValue());
+                value);
 
         getAgent().addACLMessageToQueue(conversationId, leaderCFP);
         getAgent().addACLMessage(leaderCFP);
@@ -115,27 +129,41 @@ public class RequestReplyPlan extends AbstractPlan{
         if(goalLocation == null){
             if(imLeader){
 
-                EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
+                if(nextGoals.size()>0){
+                    desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(nextGoals.get(0))));
+                    nextGoals.remove(0);
+                }else {
 
-                EntityID position = biq.getEntities().get(targetBuilding).getID();
-                //biq.getEntities().remove(targetBuilding);
-                targetBuilding++;
+                    EntityListBelief biq = (EntityListBelief) beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
 
-                if(targetBuilding >= biq.getEntities().size()){
-                    targetBuilding = 0;
+                    EntityID position = biq.getEntities().get(targetBuilding).getID();
+                    targetBuilding++;
+
+                    if (targetBuilding >= biq.getEntities().size()) {
+                        targetBuilding = 0;
+                    }
+
+
+                    goalLocation = new Desire(position);
+
+                    desires.addDesire(DesireType.GOAL_LOCATION, goalLocation);
                 }
-
-
-                goalLocation = new Desire(position);
-
-                desires.addDesire(DesireType.GOAL_LOCATION, goalLocation);
 
                 doMove(beliefs,desires);
 
             }else{
 
                 //Solicitarle al lider a donde ir
-                sendRequest(leaderId);
+
+                if(nextGoals.size()>0){
+                    desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(nextGoals.get(0))));
+                    nextGoals.remove(0);
+
+                }else {
+                    sendRequest(leaderId);
+                }
+
+
             }
 
         }else{
@@ -161,7 +189,7 @@ public class RequestReplyPlan extends AbstractPlan{
                 case REQUEST:
 
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION){
-                        sendInform(msg.getSender(),beliefs);
+                        sendInform(msg.getSender(),beliefs,desires,msg.getExtra(0));
                     }else if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
 
                         int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
@@ -169,9 +197,27 @@ public class RequestReplyPlan extends AbstractPlan{
                     }
 
                     break;
+
                 case INFORM:
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION){
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
+                    }else if(msg.getContent() == ActionConstants.INFORM_BLOCKADE){
+
+
+                        if(desires.getDesire(DesireType.GOAL_LOCATION) != null){//Si hay un objetivo
+                            if(nextGoals.size() == 0) {//Y no hay alguno encolado
+                                //Entonces es la primera solicitud de apoyo, se remueve el anterior que tiene menos prioridad
+                               // System.out.println("Nuevo objetivo con prioridad");
+                                desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
+                                nextGoals.add(msg.getExtra(0));
+                            }else{
+                                //System.out.println("Encolando nuevo objetivo");
+                                nextGoals.add(msg.getExtra(0));
+                            }
+                        }else {
+                            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
+                        }
+
                     }
                     break;
             }
@@ -243,5 +289,40 @@ public class RequestReplyPlan extends AbstractPlan{
             List<EntityID> path = searchPlan.createPlan(beliefs, desires);
             getAgent().sendMove(time, path);
         }
+    }
+
+
+    private StandardEntity getClosestBuilding(Beliefs beliefs, Desires desires, int target){
+
+        Desire originalGoal = desires.getDesire(DesireType.GOAL_LOCATION);
+
+        EntityListBelief buildingList = (EntityListBelief) beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
+        ArrayList<StandardEntity> buildings = buildingList.getEntities();
+
+
+        int minSteps = Integer.MAX_VALUE;
+        int pathSize = 0;
+        StandardEntity closestBuilding = null;
+        List<EntityID> path = null;
+
+        for (StandardEntity entity : buildings) {
+
+            Building building = (Building) entity;
+            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(building.getID()));
+            path = searchPlan.createPlan(beliefs, desires,new EntityID(target));
+
+            if (path != null) {
+                pathSize = path.size();
+                if (pathSize < minSteps) {
+                    minSteps = pathSize;
+                    closestBuilding = building;
+                }
+            }
+
+        }
+
+        desires.addDesire(DesireType.GOAL_LOCATION, originalGoal);
+
+        return closestBuilding;
     }
 }

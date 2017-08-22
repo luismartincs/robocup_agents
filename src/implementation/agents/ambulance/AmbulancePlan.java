@@ -35,6 +35,8 @@ public class AmbulancePlan extends AbstractPlan{
 
     private boolean helping = false;
 
+    private int tiempoAtorado = 0;
+
     public AmbulancePlan(CinvesAgent agent){
         super(agent);
         searchPlan = new SearchPlan(agent);
@@ -63,7 +65,7 @@ public class AmbulancePlan extends AbstractPlan{
 
         getAgent().addACLMessageToQueue(conversationId, leaderCFP);
         getAgent().addACLMessage(leaderCFP);
-
+        //System.out.println("request to ambulance leader");
     }
 
     private void sendInform(int receiver,Beliefs beliefs,Desires desires,int position){
@@ -128,7 +130,6 @@ public class AmbulancePlan extends AbstractPlan{
 
         getAgent().addACLMessage(leaderCFP);
 
-        System.out.println("Reportando bloqueo a "+policeOffice);
     }
 
     @Override
@@ -309,6 +310,7 @@ public class AmbulancePlan extends AbstractPlan{
                     }else if(msg.getContent() == ActionConstants.REQUEST_POLICE_INSTRUCTION){
                         int closestRefuge = getClosestRefuge(beliefs,desires,msg.getSender());
                         sendRefugeInform(msg.getSender(),closestRefuge);
+
                     }
                     break;
                 case INFORM:
@@ -367,97 +369,32 @@ public class AmbulancePlan extends AbstractPlan{
                 helping = false;
             }
 
-
         } else {
             List<EntityID> path = searchPlan.createPlan(beliefs, desires);
+
             if(path != null) {
 
-                StandardEntity entityLocation = getAgent().getWorldModel().getEntity(myPosition);
-                StandardEntity nextLocation = getAgent().getWorldModel().getEntity(path.get(0));
+                EntityListBelief pc = (EntityListBelief)beliefs.getBelief(BeliefType.POLICE_CENTRE);
 
-                Building myLocBuilding = null;
-                Road myLocRoad = null;
-
-                boolean myPosBlocked = false;
-                boolean nextPosBlocked = false;
-
-                int blockadeLocation = 0;
-                int myLocation = 0;
+                PoliceOffice po = (PoliceOffice)pc.getEntities().get(0);
 
                 Human human = (Human)getAgent().me();
 
                 if(prevPosition != human.getPosition().getValue()){
-                    System.out.println("Me movi");
+                    tiempoAtorado = 0;
                     prevPosition = human.getPosition().getValue();
                 }else{
-                    System.out.println("Vale mae, estoy atorado "+getAgent().getID());
-                }
 
+                    tiempoAtorado++;
 
-                /**
-                 * Si mi ubicacion esta bloqueada o si mi siguiente posicion esta bloqueda reporto
-                 */
-/*
-                if(entityLocation instanceof Road){
-
-                    myLocRoad = (Road)entityLocation;
-
-                    if(myLocRoad.isBlockadesDefined()){
-                        myPosBlocked = true;
-                        blockadeLocation = myLocRoad.getID().getValue();
-                    }
-
-                }else if(entityLocation instanceof Building){
-                    myLocBuilding = (Building)entityLocation;
-
-                    if(myLocBuilding.isBlockadesDefined()){
-                        myPosBlocked = true;
-                        blockadeLocation = myLocBuilding.getID().getValue();
-                    }
-                }
-
-                myLocation = blockadeLocation;
-*/
-                /**
-                 * Si mi posicion no esta bloqueda, reviso mi siguiente paso
-                 */
-                /*
-                if(!myPosBlocked) {
-                    if (nextLocation instanceof Road) {
-
-                        myLocRoad = (Road) nextLocation;
-
-                        if (myLocRoad.isBlockadesDefined()) {
-                            nextPosBlocked = true;
-                            blockadeLocation = myLocRoad.getID().getValue();
-                        }
-
-                    } else if (nextLocation instanceof Building) {
-                        myLocBuilding = (Building) nextLocation;
-
-                        if (myLocBuilding.isBlockadesDefined()) {
-                            nextPosBlocked = true;
-                            blockadeLocation = myLocBuilding.getID().getValue();
+                    if(tiempoAtorado > 10){
+                        if(!reportedBlockades.contains(prevPosition)){
+                            reportedBlockades.add(prevPosition);
+                            //System.out.println(prevPosition+" atorado durante "+tiempoAtorado);
+                            sendReportBlockade(po.getID().getValue());
                         }
                     }
                 }
-
-                if(myPosBlocked || nextPosBlocked){
-
-                    if(!reportedBlockades.contains(myLocation)){
-                        reportedBlockades.add(myLocation);
-
-                        EntityListBelief pc = (EntityListBelief)beliefs.getBelief(BeliefType.POLICE_CENTRE);
-
-                        PoliceOffice po = (PoliceOffice)pc.getEntities().get(0);
-
-                        sendReportBlockade(po.getID().getValue());
-                        System.out.println("Camino bloqueado, reportar el bloqueo en: "+blockadeLocation);
-                    }
-
-                }*/
-
-
                 getAgent().sendMove(time, path);
             }
         }
