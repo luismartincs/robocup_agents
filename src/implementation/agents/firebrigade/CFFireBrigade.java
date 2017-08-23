@@ -37,13 +37,17 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
 
         System.out.println("conectado Fire Brigade "+this.getID()+"     "+"[quadrant : "+quadrant+"]");
 
+        maxWater = config.getIntValue(MAX_WATER_KEY);
+        maxDistance = config.getIntValue(MAX_DISTANCE_KEY);
+        maxPower = config.getIntValue(MAX_POWER_KEY);
+
+        System.out.println("los max Water, power y distances de los bomberos en CFFIREBRIGADE son: " + maxWater + ", " + maxPower + ", " +  maxDistance );
+
+
         //policePlan = new PolicePlan(this); //NOTE: este cambia por el FireBrigadePlan.
         leaderElectionPlan = new LeaderElectionPlan(this);
         fireBrigadePlan = new FireBrigadePlan(this);
 
-        maxWater = config.getIntValue(MAX_WATER_KEY);
-        maxDistance = config.getIntValue(MAX_DISTANCE_KEY);
-        maxPower = config.getIntValue(MAX_POWER_KEY);
 
         Belief removeBlockades = new Belief();
         removeBlockades.setDataBoolean(true);

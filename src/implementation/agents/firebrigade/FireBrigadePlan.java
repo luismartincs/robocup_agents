@@ -45,6 +45,7 @@ public class FireBrigadePlan extends AbstractPlan{
         maxWater = ((CFFireBrigade)agent).getMaxWater();
         maxPower = ((CFFireBrigade)agent).getMaxPower();
         maxDistance = ((CFFireBrigade)agent).getMaxDistance();
+        System.out.println("los max Water, power y distances de los bomberos son: " + maxWater + ", " + maxPower + ", " +  maxDistance );
         nextQuadrantLeaders = new ArrayList<>();
         extinguishedFires = new ArrayList<>();
         informedFires = new ArrayList<>();
@@ -234,6 +235,7 @@ public class FireBrigadePlan extends AbstractPlan{
 
         int tmpWaterLevel = ((FireBrigade)(getAgent().me())).getWater(); //Cast it to FireBrigade, so we can access the getWater method.
 
+        //System.out.println("El Bombero: " + getAgent().getID() + " tiene de agua: " +  tmpWaterLevel);
         // Are we currently filling with water?
         if( onRefuge && tmpWaterLevel < maxWater )
         {
@@ -254,7 +256,7 @@ public class FireBrigadePlan extends AbstractPlan{
         }
 
         //revisamos si ya se apagó el fuego que queríamos apagar.
-        if(checkExtinguished(targetBuilding, targetBuildings) )
+        if(checkExtinguished(targetBuilding, targetBuildings) && targetBuilding != -1)
         {
             System.out.println("El bombero " + getAgent().getID() + " ya extinguió su fuego objetivo. Puede tener otro distinto.");
             targetBuilding = -1;//Si, sí, entonces ya es posible asignar uno nuevo a extinguir.
@@ -263,12 +265,20 @@ public class FireBrigadePlan extends AbstractPlan{
         // Find all buildings that are on fire
         for (Building building:targetBuildings){
             if (extinguishedFires.contains(building.getID().getValue()) ){
-                continue;
+                if(!building.isOnFire()){
+                    System.out.println("El bombero " + getAgent().getID() + " ya extinguió el fuego del edificio: "  + building.getID().getValue());
+                    continue;
+                }
             }
-            if (getAgent().getWorldModel().getDistance(getAgent().getID(), building.getID()) <= maxDistance ) {
 
+            int DistanceToFire = getAgent().getWorldModel().getDistance(getAgent().getID(), building.getID());
+            System.out.println("El Bombero: " + getAgent().getID() + " está a esta distnacia de su objetivo_:  " + DistanceToFire);
+            if (DistanceToFire <= maxDistance ) {
+
+                System.out.println("El Bombero: " + getAgent().getID() + " está en distancia para exitinguir.");
                 if(targetBuilding == -1)
                 {
+                    System.out.println("El bombero " + getAgent().getID() + " ya tiene un nuevo edificio objetivo: " + building.getID().getValue() );
                     targetBuilding = building.getID().getValue();
                 }
                 else if(targetBuilding != building.getID().getValue())
@@ -284,7 +294,7 @@ public class FireBrigadePlan extends AbstractPlan{
                 /**DUDA!!!!!!!!!*/
                 System.out.println("el bombero " + getAgent().getID() + " tiene como objetivo: " + building.getID());
                 //new EntityID( (int)building.getLocation(getAgent().getWorldModel()) )
-                desires.addDesire(DesireType.GOAL_LOCATION, new Desire( building.getID()/*es la posición?*/ ));
+                desires.addDesire(DesireType.GOAL_LOCATION, new Desire( new EntityID(building.getID().getValue())/*es la posición?*/ ));
                 return true;
             }
         }
@@ -375,6 +385,7 @@ public class FireBrigadePlan extends AbstractPlan{
         /**
          * Move
          */
+        //System.out.println("Entró al doMove del Bombero: " + getAgent().getID()  );
 
         EntityID myPosition = ((Human) getAgent().me()).getPosition();
 
@@ -384,6 +395,7 @@ public class FireBrigadePlan extends AbstractPlan{
 
             desires.addDesire(DesireType.GOAL_LOCATION,null);
 
+            //System.out.println("El Bombero: " + getAgent().getID() + " YA llegó a su GOAL_LOCATION"  );
             /*if(someoneOnBoard()){
                 getAgent().sendUnload(time);
                 helping = false;
@@ -393,6 +405,7 @@ public class FireBrigadePlan extends AbstractPlan{
         } else {
             List<EntityID> path = searchPlan.createPlan(beliefs, desires);
             if(path != null) {
+                //System.out.println("El Bombero: " + getAgent().getID() + " está caminando hacia su Goal_location.");
                 getAgent().sendMove(time, path);
             }
         }
