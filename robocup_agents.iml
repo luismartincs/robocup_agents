@@ -48,5 +48,11 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="jdom-2.0.6" level="project" />
+    <orderEntry type="library" name="jdom-2.0.6-contrib" level="project" />
+    <orderEntry type="library" name="jdom-2.0.6-sources" level="project" />
+    <orderEntry type="library" name="jaxen-1.1.6" level="project" />
+    <orderEntry type="library" name="serializer-2.7.2" level="project" />
+    <orderEntry type="library" name="jdom-2.0.6-javadoc" level="project" />
   </component>
 </module>

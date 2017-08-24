@@ -311,8 +311,6 @@ public class RequestReplyPlan extends AbstractPlan{
                 sendRefugeInform(civilian.getID().getValue(), closestRefuge);
             }
         }
-
-
     }
 
 

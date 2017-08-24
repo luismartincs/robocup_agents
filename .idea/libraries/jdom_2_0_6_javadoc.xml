@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="jdom-2.0.6-javadoc">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/jdom-2.0.6-junit.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/libs/jdom-2.0.6-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
