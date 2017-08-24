@@ -22,6 +22,7 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
     private LeaderElectionPlan leaderElectionPlan;
     private AmbulancePlan ambulancePlan;
+    private AmbulancePlanNoLeader ambulancePlanNoLeader;
 
     public CFAmbulance(){
         super(2,new int[]{1,2});
@@ -35,6 +36,7 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
         leaderElectionPlan = new LeaderElectionPlan(this);
         ambulancePlan = new AmbulancePlan(this);
+        ambulancePlanNoLeader = new AmbulancePlanNoLeader(this);
 
         Belief isVolunteer = new Belief();
         isVolunteer.setDataBoolean(false);
@@ -75,10 +77,17 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
             if(leaderElectionPlan.imLeader()) {
                 GeneralUtils.updateBuildingsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
             }
+
             ambulancePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
             ambulancePlan.setTime(time);
             ambulancePlan.createPlan(getBeliefs(),getDesires());
+        }else{
+            GeneralUtils.updateBuildingsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
+            ambulancePlanNoLeader.setTime(time);
+            ambulancePlanNoLeader.createPlan(getBeliefs(),getDesires());
         }
+
+
     }
 
     @Override
