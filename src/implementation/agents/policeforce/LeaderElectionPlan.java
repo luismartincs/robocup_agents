@@ -48,7 +48,7 @@ public class LeaderElectionPlan extends AbstractPlan{
     }
 
     private void sendPropose(int receiver,int conversationId,int action){
-
+        System.out.println("Propose "+getAgent().getID()+"to "+receiver+" ["+time+"]");
         ACLMessage propose = new ACLMessage(time,
                 getAgent().getID(),
                 ACLPerformative.PROPOSE,
@@ -63,7 +63,7 @@ public class LeaderElectionPlan extends AbstractPlan{
 
 
     private void sendReject(int receiver,int conversationId,int action){
-
+        System.out.println("Reject "+getAgent().getID());
         ACLMessage propose = new ACLMessage(time,
                 getAgent().getID(),
                 ACLPerformative.REJECT_PROPOSAL,
@@ -76,7 +76,7 @@ public class LeaderElectionPlan extends AbstractPlan{
 
 
     private void sendAccept(int receiver,int conversationId,int action){
-
+        System.out.println("Accept "+getAgent().getID());
         ACLMessage propose = new ACLMessage(time,
                 getAgent().getID(),
                 ACLPerformative.ACCEPT_PROPOSAL,
@@ -88,7 +88,7 @@ public class LeaderElectionPlan extends AbstractPlan{
     }
 
     private void sendInform(int receiver,int conversationId){
-
+        System.out.println("Inform "+getAgent().getID());
         EntityID position = ((Human) getAgent().me()).getPosition();
 
         ACLMessage propose = new ACLMessage(time,getAgent().getID(),
@@ -103,7 +103,7 @@ public class LeaderElectionPlan extends AbstractPlan{
     }
 
     private void sendCFP(int quadrant){
-
+        System.out.println("CFP "+getAgent().getID()+" ["+time+"]");
         int conversationId = getAgent().nextConversationId();
 
         ACLMessage leaderCFP = new ACLMessage(time, getAgent().getID(), ACLPerformative.CFP, new EntityID(0), conversationId, ActionConstants.LEADER_ELECTION, quadrant);
@@ -123,6 +123,7 @@ public class LeaderElectionPlan extends AbstractPlan{
         stateControl(beliefs,desires);
 
 
+        /*
        if(getAgent().getQueuedMessages().size() == 0){
 
             if(!leaderElected){
@@ -155,10 +156,6 @@ public class LeaderElectionPlan extends AbstractPlan{
 
                     sendInform(0,getAgent().nextConversationId()); //Notifica a todos quien es el lider la escuadra X
 
-                    /*
-                    for(Integer ent:knownEntities){
-                        sendInform(ent,getAgent().nextConversationId());
-                    }*/
 
 
                  }
@@ -168,7 +165,7 @@ public class LeaderElectionPlan extends AbstractPlan{
 
           }
 
-       }
+       }*/
 
         return null;
     }
@@ -179,6 +176,7 @@ public class LeaderElectionPlan extends AbstractPlan{
      */
 
     private void stateControl(Beliefs beliefs, Desires desires){
+
 
         int quadrant = beliefs.getBelief(BeliefType.QUADRANT).getDataInt();
 
@@ -262,7 +260,25 @@ public class LeaderElectionPlan extends AbstractPlan{
 
                     if (msg.getContent() == ActionConstants.LEADER_ELECTION){
 
-                        if(msg.getExtra(0) == getAgent().getCurrentQuadrant()){
+                        if(msg.getExtra(1) == getAgent().getCurrentQuadrant()){
+
+                            //System.out.println(getAgent().getID()+" el lider de mi cuadrante es "+msg.getExtra(0));
+
+                            leaderElected = true;
+                            leaderID = msg.getExtra(0);
+
+                            getAgent().getQueuedMessages().clear();
+
+                            imLeader = (msg.getExtra(0) == getAgent().getID().getValue());
+
+                            Belief lb = new Belief();
+                            lb.setDataBoolean(imLeader);
+                            lb.setDataInt(leaderID);
+
+                            beliefs.addBelief(BeliefType.IM_LEADER,lb);
+
+
+                            /*
                             leaderElected = true;
 
                             leaderID = msg.getSender();
@@ -273,9 +289,11 @@ public class LeaderElectionPlan extends AbstractPlan{
                             lb.setDataBoolean(false);
                             lb.setDataInt(leaderID);
 
-                            beliefs.addBelief(BeliefType.IM_LEADER,lb);
+                            beliefs.addBelief(BeliefType.IM_LEADER,lb);*/
+
                         }else {
-                            getNextQuadrantLeaders().add(new int[]{msg.getExtra(0),msg.getSender()});
+                            //System.out.println(getAgent().getID()+" el lider del cuadrante "+msg.getExtra(1)+" es "+msg.getExtra(0));
+                            getNextQuadrantLeaders().add(new int[]{msg.getExtra(1),msg.getExtra(0)});
                         }
 
 

@@ -17,14 +17,14 @@ import rescuecore2.worldmodel.ChangeSet;
 
 import java.util.Collection;
 import java.util.EnumSet;
-
+@SuppressWarnings("Duplicates")
 public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
     private LeaderElectionPlan leaderElectionPlan;
     private AmbulancePlan ambulancePlan;
 
     public CFAmbulance(){
-        super(2,new int[]{1,2,4});
+        super(2,new int[]{1,2});
     }
 
     @Override
@@ -61,6 +61,7 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
     private void generalBehaviour(int time,ChangeSet changed, Collection<Command> heard){
 
+
         getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
 
 
@@ -68,12 +69,12 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
         Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires());
 
+
         if(leaderElected != null){
 
             if(leaderElectionPlan.imLeader()) {
                 GeneralUtils.updateBuildingsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
             }
-
             ambulancePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
             ambulancePlan.setTime(time);
             ambulancePlan.createPlan(getBeliefs(),getDesires());

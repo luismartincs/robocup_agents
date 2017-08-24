@@ -2,6 +2,7 @@ import java.awt.*;
 import java.io.IOException;
 
 import implementation.agents.ambulance.CFAmbulance;
+import implementation.agents.ambulancecentre.CFAmbulanceCentre;
 import implementation.agents.civilian.CFCivilian;
 import implementation.agents.policecentre.CFPoliceOffice;
 import implementation.agents.policeforce.CFPoliceForce;
@@ -123,6 +124,19 @@ public final class LaunchSampleRCRSCSAgents{
 		}catch(ComponentConnectionException e){
 			Logger.info("failed: " + e.getMessage());
 		}*/
+
+		int ac = 1;
+
+		try{
+			while(ac-- != 0){
+				Logger.info("Connecting ambulance centre...");
+				launcher.connect(new CFAmbulanceCentre());
+				Logger.info("success");
+			}
+		}catch(ComponentConnectionException e){
+			Logger.info("failed: " + e.getMessage());
+		}
+
 
 		int po = 1;
 
