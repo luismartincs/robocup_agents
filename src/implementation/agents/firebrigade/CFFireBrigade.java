@@ -41,7 +41,7 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
         maxDistance = config.getIntValue(MAX_DISTANCE_KEY);
         maxPower = config.getIntValue(MAX_POWER_KEY);
 
-        System.out.println("los max Water, power y distances de los bomberos en CFFIREBRIGADE son: " + maxWater + ", " + maxPower + ", " +  maxDistance );
+        //System.out.println("los max Water, power y distances de los bomberos en CFFIREBRIGADE son: " + maxWater + ", " + maxPower + ", " +  maxDistance );
 
 
         //policePlan = new PolicePlan(this); //NOTE: este cambia por el FireBrigadePlan.
