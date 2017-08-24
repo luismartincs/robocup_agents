@@ -21,6 +21,7 @@ import java.util.*;
 
 public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCSAgent<E>{
     public HashSet<EntityID> targetRoads;
+    public HashSet<EntityID> informedCivilians;
     private boolean usingChannel;
     private int channel;
     private int listenChannels[];
@@ -65,6 +66,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     protected CinvesAgent(){
         targetRoads=new HashSet<>();
+        informedCivilians=new HashSet<>();
         reportFirePlan = new ReportFirePlan(this);
         refugePlan = new GoToRefugePlan(this);
 
@@ -84,6 +86,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     protected CinvesAgent(int channel,int listenChannels[]){
         targetRoads=new HashSet<>();
+        informedCivilians=new HashSet<>();
         reportFirePlan = new ReportFirePlan(this);
         refugePlan = new GoToRefugePlan(this);
 

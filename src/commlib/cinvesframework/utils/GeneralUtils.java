@@ -189,8 +189,12 @@ public class GeneralUtils {
         return null;
     }
 
-    public static Road getRoad( int distance, CinvesAgent agent){
-        // int distance = config.getIntValue("clear.repair.distance");
+    /**
+     * Get the nearest road, if the road is not visited and is the nearest, this will be the road
+     * @param agent
+     * @return the nearest road to the agent
+     */
+    public static Road getRoad(  CinvesAgent agent){
         try {
             Road road = null;
             Human human = ((Human) agent.me());
@@ -217,6 +221,14 @@ public class GeneralUtils {
         }
     }
 
+    /**
+     * Calculate the euclidian distance between 2 points
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     * @return
+     */
     private static double euclidianDistance(int x1, int y1, int x2, int y2){
         return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
     }

@@ -11,8 +11,10 @@ import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
+import commlib.information.WorldInformation;
 import implementation.agents.ActionConstants;
 import rescuecore2.standard.entities.*;
+import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
@@ -292,10 +294,23 @@ public class RequestReplyPlan extends AbstractPlan{
         }
     }
 
-    public void plan0(Beliefs beliefs,Desires desires){
+    /**
+     * THis plan is executed when the police force has no leader
+     * @param beliefs
+     * @param desires
+     * @param changed
+     */
+    public void OfflinePlan(Beliefs beliefs, Desires desires, ChangeSet changed){
         doMove(beliefs, desires);
         this.getAgent().getWorldModel().getEntitiesOfType(StandardEntityURN.ROAD);
-        //Collection<Civilians>=
+
+        ArrayList<Human> civilians=GeneralUtils.getHumanTargets(this.getAgent(),  changed);
+        for(Human civilian:civilians){
+            if(this.getAgent().informedCivilians.add(civilian)) {
+                int closestRefuge = getClosestRefuge(beliefs, desires, civilian.getID().getValue());
+                sendRefugeInform(civilian.getID().getValue(), closestRefuge);
+            }
+        }
 
 
     }

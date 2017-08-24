@@ -98,12 +98,14 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
         }
         else{
-            //System.out.println(getDesires().getDesires().size()+"       ---");
-            Road road=GeneralUtils.getRoad(500000,this);
+            /**
+             * The police force will move to the nearest road, and if it is blocked, the agent will remove it
+             */
+            Road road=GeneralUtils.getRoad(this);
             if(road!=null) {
                 getDesires().addDesire(DesireType.GOAL_LOCATION, new Desire(road.getID()));
                 requestReplyPlan.setTime(time);
-                requestReplyPlan.plan0(getBeliefs(), getDesires());
+                requestReplyPlan.OfflinePlan(getBeliefs(), getDesires(),changed);
             }
         }
 
