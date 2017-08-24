@@ -255,12 +255,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         if(me() instanceof Human){
 
-            //senseBuildingsOnFire();
-            /**
-             * Se ejecutan las interacciones despues de 3 tiempos debido a que hay un bug en la plataforma que no procesa los mensajes en los tiempos
-             * inferiores
-             */
-            if(time > 3) {
+            if(time > config.getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)) {
 
                 if (canHelp()) {
                     onFullHealthBehaviour(time, changed, heard);
@@ -269,6 +264,12 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
                 } else {
                     onLowHealthBehaviour(time, changed, heard);
                 }
+            }
+
+        }else{
+
+            if(time > config.getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)) {
+                doCentreAction(time, changed, heard);
             }
 
         }
@@ -300,6 +301,10 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     public void onBlockadeDetected(int time,EntityID entityID){
         //sendClear(time,entityID);
+    }
+
+    protected void doCentreAction(int time, ChangeSet changed, Collection<Command> heard){
+
     }
 
     protected void onFullHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard){
