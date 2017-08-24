@@ -203,12 +203,25 @@ public class GeneralUtils {
             double minDist = Double.MAX_VALUE;
             HashSet<StandardEntity> ids = (HashSet) agent.getWorldModel().getEntitiesOfType(StandardEntityURN.ROAD);
             for (StandardEntity se : ids) {
-                    if (((Road) se).getID() != agent.location().getID()) {
+                Road road1=(Road) se;
+                    if (road1.getID() != agent.location().getID()) {
                         if (!agent.targetRoads.contains(se.getID())) {
-                            double dist = euclidianDistance(x, y, ((Road) se).getX(), ((Road) se).getY());
+                            //get the euclidian distance
+                            double dist = euclidianDistance(x, y, road1.getX(), road1.getY());
+                            /*
+                            The distance is modofied, the blocks with ore area will have more priority
+                             */
+                            dist=dist/(road1.getShape().getBounds2D().getWidth()*road1.getShape().getBounds2D().getHeight());
+                            /*
+                            If the road doesn have blockades, the distance will be higher, and the roads with
+                            blockades will have a near distance priority
+                             */
+                            if(road1.getBlockades()==null){
+                                dist=100000+dist;
+                            }
                             if (dist < minDist) {
                                minDist = dist;
-                               road= (Road) se;
+                               road= road1;
                             }
                         }
 
@@ -217,6 +230,7 @@ public class GeneralUtils {
             agent.targetRoads.add(road.getID());
             return road;
         }catch(Exception ex){
+            System.out.println("excepcion");
             return null;
         }
     }
