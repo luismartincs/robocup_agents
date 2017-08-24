@@ -199,6 +199,7 @@ public class PolicePlan extends AbstractPlan {
         }
     }
 
+
     public boolean isVolunteer() {
         return isVolunteer;
     }

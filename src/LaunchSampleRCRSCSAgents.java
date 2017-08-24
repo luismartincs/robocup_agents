@@ -4,6 +4,7 @@ import java.io.IOException;
 import implementation.agents.ambulance.CFAmbulance;
 import implementation.agents.ambulancecentre.CFAmbulanceCentre;
 import implementation.agents.civilian.CFCivilian;
+import implementation.agents.firebrigade.CFFireBrigade;
 import implementation.agents.policecentre.CFPoliceOffice;
 import implementation.agents.policeforce.CFPoliceForce;
 import rescuecore2.components.ComponentLauncher;
@@ -184,6 +185,20 @@ public final class LaunchSampleRCRSCSAgents{
 				Logger.info("Connecting dummy agent...");
 				System.out.println("conectado ambulancia"+amb);
 				launcher.connect(new CFAmbulance());
+				Logger.info("success");
+			}
+		}catch(ComponentConnectionException e){
+			System.out.println(e.getMessage());
+			Logger.info("failed: " + e.getMessage());
+		}
+
+		int fireBgds = 200;
+
+		try{
+			while(fireBgds-- != 0){
+				Logger.info("Connecting fireBgds agent...");
+				System.out.println("conectado Bombero "+fireBgds);
+				launcher.connect(new CFFireBrigade());
 				Logger.info("success");
 			}
 		}catch(ComponentConnectionException e){
