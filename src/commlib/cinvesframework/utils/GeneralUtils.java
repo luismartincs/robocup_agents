@@ -15,10 +15,7 @@ import rescuecore2.worldmodel.EntityID;
 import rescuecore2.worldmodel.WorldModel;
 import sample.DistanceSorter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("Duplicates")
 public class GeneralUtils {
@@ -190,6 +187,38 @@ public class GeneralUtils {
         }
 
         return null;
+    }
+
+    public static Road getRoad( int distance, CinvesAgent agent){
+        // int distance = config.getIntValue("clear.repair.distance");
+        try {
+            Road road = null;
+            Human human = ((Human) agent.me());
+            int x = human.getX();
+            int y = human.getY();
+            double minDist = Double.MAX_VALUE;
+            HashSet<StandardEntity> ids = (HashSet) agent.getWorldModel().getEntitiesOfType(StandardEntityURN.ROAD);
+            for (StandardEntity se : ids) {
+                    if (((Road) se).getID() != agent.location().getID()) {
+                        if (!agent.targetRoads.contains(se.getID())) {
+                            double dist = euclidianDistance(x, y, ((Road) se).getX(), ((Road) se).getY());
+                            if (dist < minDist) {
+                               minDist = dist;
+                               road= (Road) se;
+                            }
+                        }
+
+                    }
+            }
+            agent.targetRoads.add(road.getID());
+            return road;
+        }catch(Exception ex){
+            return null;
+        }
+    }
+
+    private static double euclidianDistance(int x1, int y1, int x2, int y2){
+        return Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
     }
 
     private static Blockade getTargetBlockade(CinvesAgent agent,Area area, int maxDistance){

@@ -5,13 +5,12 @@ import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.intention.SearchPlan;
+import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.Quadrant;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import rescuecore2.messages.Command;
 import rescuecore2.misc.Pair;
-import rescuecore2.standard.entities.Human;
-import rescuecore2.standard.entities.PoliceForce;
-import rescuecore2.standard.entities.StandardEntity;
-import rescuecore2.standard.entities.StandardEntityURN;
+import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
@@ -97,6 +96,15 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
             requestReplyPlan.createPlan(getBeliefs(),getDesires());
 
 
+        }
+        else{
+            //System.out.println(getDesires().getDesires().size()+"       ---");
+            Road road=GeneralUtils.getRoad(500000,this);
+            if(road!=null) {
+                getDesires().addDesire(DesireType.GOAL_LOCATION, new Desire(road.getID()));
+                requestReplyPlan.setTime(time);
+                requestReplyPlan.plan0(getBeliefs(), getDesires());
+            }
         }
 
     }

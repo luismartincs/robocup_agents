@@ -16,6 +16,7 @@ import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.EntityID;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
@@ -289,6 +290,14 @@ public class RequestReplyPlan extends AbstractPlan{
             List<EntityID> path = searchPlan.createPlan(beliefs, desires);
             getAgent().sendMove(time, path);
         }
+    }
+
+    public void plan0(Beliefs beliefs,Desires desires){
+        doMove(beliefs, desires);
+        this.getAgent().getWorldModel().getEntitiesOfType(StandardEntityURN.ROAD);
+        //Collection<Civilians>=
+
+
     }
 
 
