@@ -5,6 +5,7 @@ import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.Beliefs;
 import commlib.cinvesframework.belief.EntityListBelief;
 import implementation.agents.Quadrant;
+import rescuecore2.components.Simulator;
 import rescuecore2.misc.Pair;
 import rescuecore2.misc.geometry.GeometryTools2D;
 import rescuecore2.misc.geometry.Line2D;
@@ -25,6 +26,7 @@ public class GeneralUtils {
     /**
      * Check Civilians Around
      */
+
 
     public static ArrayList<Human> getHumanTargets(CinvesAgent agent,ChangeSet changeSet){
 
