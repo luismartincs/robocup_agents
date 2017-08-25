@@ -10,4 +10,5 @@ public class ActionConstants {
     public static final int REQUEST_FIRE = 15;
     public static final int REPORT_BLOCKADE = 16;
     public static final int INFORM_BLOCKADE = 17;
+    public static final int INFORM_FIRE = 18;
 }

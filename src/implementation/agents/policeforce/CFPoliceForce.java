@@ -59,7 +59,7 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
 
         leaderElectionPlan.setTime(time);
 
-        Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires());
+        Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires(),intentions);
 
         if(leaderElected != null){
 
@@ -93,7 +93,7 @@ public class CFPoliceForce extends CinvesAgent<PoliceForce> {
             }
 
             requestReplyPlan.setTime(time);
-            requestReplyPlan.createPlan(getBeliefs(),getDesires());
+            requestReplyPlan.createPlan(getBeliefs(),getDesires(),intentions);
 
 
         }

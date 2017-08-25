@@ -6,6 +6,7 @@ import commlib.cinvesframework.belief.BeliefType;
 import commlib.cinvesframework.belief.Beliefs;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.intention.AbstractPlan;
+import commlib.cinvesframework.intention.Intentions;
 import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.interaction.ContractNet;
 import commlib.cinvesframework.messages.ACLMessage;
@@ -116,7 +117,7 @@ public class LeaderElectionPlan extends AbstractPlan{
     }
 
     @Override
-    public Object createPlan(Beliefs beliefs, Desires desires) {
+    public Object createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
 
         if(leaderElected)return new Boolean(true);
 

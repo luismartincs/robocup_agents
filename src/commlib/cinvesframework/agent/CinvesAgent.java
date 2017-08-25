@@ -2,6 +2,7 @@ package commlib.cinvesframework.agent;
 
 import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.intention.GoToRefugePlan;
+import commlib.cinvesframework.intention.Intentions;
 import commlib.cinvesframework.intention.ReportFirePlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.desire.Desires;
@@ -27,8 +28,9 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     private int listenChannels[];
     public int quadrant;
 
-    private Beliefs beliefs;
-    private Desires desires;
+    protected Beliefs beliefs;
+    protected Desires desires;
+    protected Intentions intentions;
 
     private boolean filterACLMessages = true;
     private ArrayList<ACLMessage> aclMessages;
@@ -72,6 +74,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         beliefs = new Beliefs(this);
         desires = new Desires(this);
+        intentions = new Intentions(this);
 
         channel = 1;
         //listenChannels = new int[]{1};
@@ -92,6 +95,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         beliefs = new Beliefs(this);
         desires = new Desires(this);
+        intentions = new Intentions(this);
 
         this.channel = channel;
         //this.listenChannels = listenChannels;
@@ -317,7 +321,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         refugePlan.setTime(time);
         refugePlan.setVolunteer(false);
-        refugePlan.createPlan(getBeliefs(),getDesires());
+        refugePlan.createPlan(getBeliefs(),getDesires(),intentions);
 
     }
 
@@ -330,7 +334,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
 
     protected void senseBuildingsOnFire(){
-        reportFirePlan.createPlan(getBeliefs(),getDesires());
+        reportFirePlan.createPlan(getBeliefs(),getDesires(),intentions);
     }
 
 
@@ -361,6 +365,10 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
     public Desires getDesires(){
         return desires;
+    }
+
+    public Intentions getIntentions() {
+        return intentions;
     }
 
     public boolean isFilterACLMessages() {

@@ -50,7 +50,7 @@ public class CFCivilian extends CinvesAgent<Civilian>{
         getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
 
         plan.setTime(time);
-        plan.createPlan(getBeliefs(),getDesires());
+        plan.createPlan(getBeliefs(),getDesires(),intentions);
 
     }
 

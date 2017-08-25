@@ -43,7 +43,19 @@ public class SearchPlan extends AbstractPlan {
 
     }
 
+
     @Override
+    public List<EntityID> createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
+
+        Desire goal = desires.getDesire(DesireType.GOAL_LOCATION);
+
+        EntityID position = ((Human)getAgent().me()).getPosition();
+
+        List<EntityID> steps = breadthFirstSearch(beliefs,desires,position,goal.getEntityID());
+
+        return steps;
+    }
+
     public List<EntityID> createPlan(Beliefs beliefs, Desires desires) {
 
         Desire goal = desires.getDesire(DesireType.GOAL_LOCATION);

@@ -4,6 +4,7 @@ import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.desire.*;
 import commlib.cinvesframework.intention.AbstractPlan;
+import commlib.cinvesframework.intention.Intentions;
 import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.interaction.ContractNet;
 import commlib.cinvesframework.messages.ACLMessage;
@@ -35,7 +36,7 @@ public class PolicePlan extends AbstractPlan {
     }
 
     @Override
-    public Object createPlan(Beliefs beliefs, Desires desires) {
+    public Object createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
 
         SearchPlan sp = new SearchPlan(getAgent());
 

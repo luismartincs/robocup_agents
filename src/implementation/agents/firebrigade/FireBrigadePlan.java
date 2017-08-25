@@ -6,19 +6,20 @@ import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.intention.AbstractPlan;
+import commlib.cinvesframework.intention.Intentions;
 import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
 import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.ActionConstants;
+import implementation.agents.config.BeliefsName;
 import implementation.agents.firebrigade.CFFireBrigade;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
+import sample.DistanceSorter;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @SuppressWarnings("Duplicates")
 public class FireBrigadePlan extends AbstractPlan{
@@ -78,9 +79,11 @@ public class FireBrigadePlan extends AbstractPlan{
 
     private void sendInform(int receiver,Beliefs beliefs,Desires desires,int position){
 
+        GeneralUtils.updateRoadsInQuadrant(beliefs,getAgent().getWorldModel(),getAgent().getCurrentQuadrant());
+
         int conversationId = getAgent().nextConversationId();
 
-        EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
+        EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.ROADS_IN_QUADRANT);
 
         StandardEntity closestBuilding = getClosestBuilding(beliefs,desires,position);
 
@@ -88,9 +91,11 @@ public class FireBrigadePlan extends AbstractPlan{
         int value = 0;
 
         if(closestBuilding!=null) {
+
             biq.getEntities().remove(closestBuilding);
             value = closestBuilding.getID().getValue();
-        }else{
+
+        }else{ //Aqui ya no deberia entrar, ya que se actualiza la lista al estar vacia
             actionToInform = ActionConstants.CHANGE_QUADRANT;
         }
 
@@ -123,8 +128,26 @@ public class FireBrigadePlan extends AbstractPlan{
     }
 
 
+    private void sendReportFire(int fireLocation,int fireIny){
+
+        int conversationId = getAgent().nextConversationId();
+
+        ACLMessage inform = new ACLMessage(time,
+                getAgent().getID(),
+                ACLPerformative.INFORM,
+                new EntityID(0),
+                conversationId,
+                ActionConstants.INFORM_FIRE,
+                getAgent().getCurrentQuadrant(),
+                fireLocation,
+                fireIny);
+
+        getAgent().addACLMessage(inform);
+    }
+
+
     @Override
-    public Object createPlan(Beliefs beliefs, Desires desires) {
+    public Object createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
 
         /**
          * Message control
@@ -147,12 +170,14 @@ public class FireBrigadePlan extends AbstractPlan{
 
         int leaderId = lb.getDataInt();
 
+
         if(goalLocation == null){
 
-            if(!doAction(beliefs,desires)){
+            if(!doAction(beliefs,desires,intentions)){
 
                 if(imLeader){
-                    //System.out.println("Lider bombero activo.");
+
+                    GeneralUtils.updateRoadsInQuadrant(beliefs,getAgent().getWorldModel(),getAgent().getCurrentQuadrant());
 
                     Human human = (Human) getAgent().me();
 
@@ -162,7 +187,7 @@ public class FireBrigadePlan extends AbstractPlan{
 
                     if(building != null){
 
-                        EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
+                        EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.ROADS_IN_QUADRANT);
                         biq.getEntities().remove(building);
 
                         position = building.getID();
@@ -171,48 +196,31 @@ public class FireBrigadePlan extends AbstractPlan{
 
                         desires.addDesire(DesireType.GOAL_LOCATION, goalLocation);
 
-                        doMove(beliefs,desires);
-
-                    }else {
-
-                        if(nextQuadrantIndex < nextQuadrantLeaders.size()){
-
-                            imLeader = false;
-
-                            int qd[] = nextQuadrantLeaders.get(nextQuadrantIndex);
-
-                            getAgent().setQuadrant(qd[0]);
-                            leaderId = qd[1];
-
-                            lb.setDataInt(leaderId);
-                            lb.setDataBoolean(false);
-
-                            nextQuadrantIndex++;
-
-                            sendRequest(leaderId);
-
-
-                        }else{
-                            nextQuadrantIndex = 0;
-                            int closestRefuge = getClosestRefuge(beliefs,desires,getAgent().getID().getValue());
-                            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(closestRefuge)));
-                        }
+                        doMove(beliefs,desires,intentions);
 
                     }
-
-
 
                 }else {
                     sendRequest(leaderId);
                 }
+
             }else {
-                if(!helping) { //Si esta ayudando a alguien no solicita una nueva ubicacion hasta que lo cure y lleve al refugio
-                    sendRequest(leaderId);
+
+                boolean reloading = (boolean) intentions.getIntention(CFFireBrigade.RELOAD);
+                boolean returnToGoal = (boolean) intentions.getIntention(CFFireBrigade.RETURN);
+
+                if(!reloading) {
+                    if(!returnToGoal) {
+                        sendRequest(leaderId);
+                    }else {
+                        doMove(beliefs,desires,intentions);
+                    }
                 }
             }
 
         }else{
-            doMove(beliefs,desires);
+
+            doMove(beliefs,desires,intentions);
         }
 
 
@@ -224,89 +232,95 @@ public class FireBrigadePlan extends AbstractPlan{
      *
      */
 
-    private boolean doAction(Beliefs beliefs,Desires desires){
+    private boolean doAction(Beliefs beliefs,Desires desires,Intentions intentions){
 
         EnvironmentBelief environmentBelief = (EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT);
 
         ChangeSet changeSet = environmentBelief.getChangeSet();
 
-        EntityID myPosition = ((Human) getAgent().me()).getPosition();
+        StandardEntity myPosition = ((Human) getAgent().me()).getPosition(getAgent().getWorldModel());
 
-        Collection<Building> targetBuildings = GeneralUtils.getBurningBuildings(getAgent(),changeSet);
+        ArrayList<Building> targetBuildings = GeneralUtils.getBurningBuildings(getAgent(),changeSet);
+        sortByFieryness(targetBuildings);
 
-        boolean onRefuge = onRefuge((Human) getAgent().me());
-
-        int tmpWaterLevel = ((FireBrigade)(getAgent().me())).getWater(); //Cast it to FireBrigade, so we can access the getWater method.
+        FireBrigade fireBrigade = (FireBrigade)getAgent().me();
 
 
-        // Are we currently filling with water?
-        if( onRefuge && tmpWaterLevel < maxWater )
-        {
-            System.out.println("El Bombero: " + getAgent().getID() + " está Cargando agua en: " + myPosition);
-            getAgent().sendRest(time);//rest while it charges water.
+        boolean reloading = (boolean) intentions.getIntention(CFFireBrigade.RELOAD);
+        boolean hasWater = (boolean) beliefs.getBelief(CFFireBrigade.HAS_WATER);
+        int currentWater = fireBrigade.getWater();
+        int requiredWater = (Integer)beliefs.getBelief(BeliefsName.REQUIRED_WATER);
+
+
+        if(!hasWater && (myPosition instanceof Hydrant)){
+
+            if(currentWater >= maxWater){
+
+                System.out.println("Full, regresando");
+
+                intentions.addIntention(CFFireBrigade.RELOAD,false);
+                intentions.addIntention(CFFireBrigade.RETURN,true);
+
+                beliefs.addBelief(CFFireBrigade.HAS_WATER,true);
+                desires.addDesire(DesireType.GOAL_LOCATION, (Desire) intentions.getIntention(CFFireBrigade.OLD_GOAL));
+
+            }else {
+                intentions.addIntention(CFFireBrigade.RELOAD,true);
+                getAgent().sendRest(time);
+                //System.out.println("Reloading..."+currentWater);
+
+            }
+
             return true;
         }
 
-        // Are we out of water?
-        if(tmpWaterLevel < 10 /*water threshold*/)
+        /**
+         * Tengo suficiente agua?
+         */
+
+        if(currentWater < requiredWater)
         {
             System.out.println("Este bombero necesita recargar Agua.");
-            // Head for a refuge
-            //then we charge the water tank.
-            int closestRefuge = getClosestRefuge(beliefs,desires,getAgent().getID().getValue());
-            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(closestRefuge)));
-            targetBuilding = -1;
+
+            ArrayList<StandardEntity> hydrants = (ArrayList<StandardEntity>) beliefs.getBelief(BeliefsName.HYDRANTS);
+
+            Collections.sort(hydrants, new DistanceSorter(myPosition, getAgent().getWorldModel()));
+
+            Desire oldGoal = new Desire(myPosition.getID());
+
+            intentions.addIntention(CFFireBrigade.OLD_GOAL,oldGoal);
+
+            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(hydrants.get(0).getID()));
+
+            beliefs.addBelief(CFFireBrigade.HAS_WATER,false);
+
             return true;
         }
 
-        //revisamos si ya se apagó el fuego que queríamos apagar.
-        if(checkExtinguished(targetBuilding, targetBuildings) && targetBuilding != -1)
-        {
-            //System.out.println("El bombero " + getAgent().getID() + " ya extinguió su fuego objetivo. Puede tener otro distinto.");
-            targetBuilding = -1;//Si, sí, entonces ya es posible asignar uno nuevo a extinguir.
-        }
-        //if we have enough water,
-        // Find all buildings that are on fire
+        /**
+         * Checo los edificios en llamas e intento apagar el que este mas incendiado
+         */
+
         for (Building building:targetBuildings){
-            if (extinguishedFires.contains(building.getID().getValue()) ){
-                if(!building.isOnFire()){
-                    //System.out.println("El bombero " + getAgent().getID() + " ya extinguió el fuego del edificio: "  + building.getID().getValue());
-                    continue;
-                }
-            }
+            if (getAgent().getWorldModel().getDistance(getAgent().getID(), building.getID()) <= maxDistance) {
 
-            int DistanceToFire = getAgent().getWorldModel().getDistance(getAgent().getID(), building.getID());
-            //System.out.println("El Bombero: " + getAgent().getID() + " está a esta distnacia de su objetivo_:  " + DistanceToFire);
-            if (DistanceToFire <= maxDistance ) {
+                beliefs.addBelief(CFFireBrigade.FIRE_INY,building.getFieryness()); //Se guarda la intensidad del fuego que estas apagando
 
-                //System.out.println("El Bombero: " + getAgent().getID() + " está en distancia para exitinguir.");
-                if(targetBuilding == -1)
-                {
-                    System.out.println("El bombero " + getAgent().getID() + " ya tiene un nuevo edificio objetivo: " + building.getID().getValue() );
-                    targetBuilding = building.getID().getValue();
-                }
-                else if(targetBuilding != building.getID().getValue())
-                {
-                   continue;//para que solamente el targetbuilding entre al extinguish.
-                }
-                System.out.println("El bombero " + getAgent().getID() +" está Extinguiendo el edificio: " + building.getID());
+                sendReportFire(myPosition.getID().getValue(),building.getFieryness());
                 getAgent().sendExtinguish(time, building.getID(), maxPower);
-                //sendSpeak(time, 1, ("Extinguishing " + next).getBytes());
-                return true;
-            }
-            else{
-                /**DUDA!!!!!!!!!*/
-                //System.out.println("el bombero " + getAgent().getID() + " tiene como objetivo: " + building.getID());
-                //new EntityID( (int)building.getLocation(getAgent().getWorldModel()) )
-                desires.addDesire(DesireType.GOAL_LOCATION, new Desire( new EntityID(building.getID().getValue())/*es la posición?*/ ));
+
+                System.out.println("Agua: "+fireBrigade.getWater()+" Building "+building.getFieryness());
+
                 return true;
             }
         }
-
 
         return false;
 
     }
+
+
+
 
     /**
      * ContractNet se revisan los mensajes de solicitud antes de hacer algun movimiento
@@ -355,7 +369,14 @@ public class FireBrigadePlan extends AbstractPlan{
                             desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(closestRefuge)));
                         }
 
+                    }else if(msg.getContent() == ActionConstants.INFORM_FIRE && msg.getExtra(0) == getAgent().getCurrentQuadrant()){
+
+                        if(msg.getExtra(2) > (int)beliefs.getBelief(CFFireBrigade.FIRE_INY)){ //Si esta mas denso que el que apagaba
+                            desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(1))));
+                        }
+
                     }
+
                     break;
             }
 
@@ -383,14 +404,70 @@ public class FireBrigadePlan extends AbstractPlan{
     }
 
 
-    private void doMove(Beliefs beliefs,Desires desires){
-
+    private void doMove(Beliefs beliefs,Desires desires, Intentions intentions){
 
         /**
          * Move
          */
+
+        boolean hasWater = (boolean) beliefs.getBelief(CFFireBrigade.HAS_WATER);
+
+        FireBrigade fireBrigade = (FireBrigade)getAgent().me();
+        StandardEntity myPosition = ((Human) getAgent().me()).getPosition(getAgent().getWorldModel());
+
         Desire goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
+        int currentWater = fireBrigade.getWater();
+        int requiredWater = (Integer)beliefs.getBelief(BeliefsName.REQUIRED_WATER);
+
+        if(hasWater){
+
+            if(currentWater < requiredWater)
+            {
+                System.out.println("Este bombero necesita recargar Agua.");
+
+                ArrayList<StandardEntity> hydrants = (ArrayList<StandardEntity>) beliefs.getBelief(BeliefsName.HYDRANTS);
+
+                Collections.sort(hydrants, new DistanceSorter(myPosition, getAgent().getWorldModel()));
+
+                Desire oldGoal = new Desire(myPosition.getID());
+
+                intentions.addIntention(CFFireBrigade.OLD_GOAL,oldGoal);
+
+                desires.addDesire(DesireType.GOAL_LOCATION, new Desire(hydrants.get(0).getID()));
+
+                beliefs.addBelief(CFFireBrigade.HAS_WATER,false);
+
+                return;
+            }
+
+            EnvironmentBelief environmentBelief = (EnvironmentBelief)beliefs.getBelief(BeliefType.CHANGED_ENVIRONMENT);
+
+            ChangeSet changeSet = environmentBelief.getChangeSet();
+            ArrayList<Building> targetBuildings = GeneralUtils.getBurningBuildings(getAgent(),changeSet);
+            sortByFieryness(targetBuildings);
+
+            int lastFireIny = (int) beliefs.getBelief(CFFireBrigade.FIRE_INY);
+
+            for (Building building:targetBuildings){
+                if (getAgent().getWorldModel().getDistance(getAgent().getID(), building.getID()) <= maxDistance && (building.getFieryness() >= lastFireIny)) {
+
+                    beliefs.addBelief(CFFireBrigade.FIRE_INY,building.getFieryness());
+
+                    sendReportFire(myPosition.getID().getValue(),building.getFieryness());
+                    getAgent().sendExtinguish(time, building.getID(), maxPower);
+
+                    System.out.println("Agua: "+fireBrigade.getWater()+" Building "+building.getFieryness());
+                    return;
+                }
+            }
+
+        }
+
+
+
+        /*
         StandardEntity tmpSE = getAgent().getWorldModel().getEntity(goalLocation.getEntityID());
+
         if( ! tmpSE.getStandardURN().equals(StandardEntityURN.REFUGE)) //Si no se dirige a un refugio.
         {
             //System.out.println("Entró el Bombero: " + getAgent().getID() + " a un fuego más cercano que su objetivo actual." );
@@ -398,39 +475,36 @@ public class FireBrigadePlan extends AbstractPlan{
 
             ChangeSet changeSet = environmentBelief.getChangeSet();
             ArrayList<Building> targetBuildings = GeneralUtils.getBurningBuildings(getAgent(),changeSet);
+            sortByFieryness(targetBuildings);
 
-            if(!targetBuildings.isEmpty() && targetBuildings.get(0).getID().getValue() != goalLocation.getEntityID().getValue())
-            {
-                //Then this is closer than the other goal., so we change the goal.
-                desires.addDesire(DesireType.GOAL_LOCATION,new Desire( new EntityID(targetBuildings.get(0).getID().getValue() ) ) );
-                goalLocation = desires.getDesire(DesireType.GOAL_LOCATION);
+            for (Building building:targetBuildings){
+                if (getAgent().getWorldModel().getDistance(getAgent().getID(), building.getID()) <= maxDistance) {
+                    getAgent().sendExtinguish(time, building.getID(), maxPower);
+                    System.out.println("Agua: "+fireBrigade.getWater()+" Building "+building.getFieryness());
+                    return;
+                }
             }
-        }
-        else //entonces sí se dirige a un refugio.
-        {
+
+        }else{
             //System.out.println("El Bombero: " + getAgent().getID() + " se dirige a un refugio.");
-        }
+        }*/
 
-        EntityID myPosition = ((Human) getAgent().me()).getPosition();
+        boolean returnToGoal = (boolean) intentions.getIntention(CFFireBrigade.RETURN);
 
-        if (goalLocation.getEntityID().getValue() == myPosition.getValue()) {
+        if (goalLocation.getEntityID().getValue() == myPosition.getID().getValue()) {
 
+            if(returnToGoal){
+                intentions.addIntention(CFFireBrigade.RETURN,false);
+            }
             desires.addDesire(DesireType.GOAL_LOCATION,null);
-
-            //System.out.println("El Bombero: " + getAgent().getID() + " YA llegó a su GOAL_LOCATION"  );
-            /*if(someoneOnBoard()){
-                getAgent().sendUnload(time);
-                helping = false;
-            } Creo que ya no es necesario. */
-
 
         } else {
             List<EntityID> path = searchPlan.createPlan(beliefs, desires);
             if(path != null) {
-                //System.out.println("El Bombero: " + getAgent().getID() + " está caminando hacia su Goal_location.");
                 getAgent().sendMove(time, path);
             }
         }
+
     }
 
 
@@ -443,24 +517,24 @@ public class FireBrigadePlan extends AbstractPlan{
 
         Desire originalGoal = desires.getDesire(DesireType.GOAL_LOCATION);
 
-        EntityListBelief buildingList = (EntityListBelief) beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
+        EntityListBelief buildingList = (EntityListBelief) beliefs.getBelief(BeliefType.ROADS_IN_QUADRANT);
         ArrayList<StandardEntity> buildings = buildingList.getEntities();
 
 
-        int minSteps = Integer.MAX_VALUE;
+        int minSteps = 0;
         int pathSize = 0;
         StandardEntity closestBuilding = null;
         List<EntityID> path = null;
 
         for (StandardEntity entity : buildings) {
 
-            Building building = (Building) entity;
+            Road building = (Road) entity;
             desires.addDesire(DesireType.GOAL_LOCATION, new Desire(building.getID()));
             path = searchPlan.createPlan(beliefs, desires,new EntityID(target));
 
             if (path != null) {
                 pathSize = path.size();
-                if (pathSize < minSteps) {
+                if (pathSize > minSteps) {
                     minSteps = pathSize;
                     closestBuilding = building;
                 }
@@ -509,10 +583,13 @@ public class FireBrigadePlan extends AbstractPlan{
     }
 
 
-    private boolean onRefuge(Human human){
-
-        return (human.getPosition(getAgent().getWorldModel()) instanceof Refuge);
-
+    private void sortByFieryness(ArrayList<Building> buildings){
+        Collections.sort(buildings, new Comparator<Building>() {
+            @Override
+            public int compare(Building o1, Building o2) {
+                return o2.getFieryness() - o1.getFieryness();
+            }
+        });
     }
 
     public ArrayList<int[]> getNextQuadrantLeaders() {

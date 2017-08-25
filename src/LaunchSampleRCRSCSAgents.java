@@ -5,6 +5,7 @@ import implementation.agents.ambulance.CFAmbulance;
 import implementation.agents.ambulancecentre.CFAmbulanceCentre;
 import implementation.agents.civilian.CFCivilian;
 import implementation.agents.firebrigade.CFFireBrigade;
+import implementation.agents.firestation.CFFireStation;
 import implementation.agents.policecentre.CFPoliceOffice;
 import implementation.agents.policeforce.CFPoliceForce;
 import rescuecore2.components.ComponentLauncher;
@@ -96,36 +97,7 @@ public final class LaunchSampleRCRSCSAgents{
 	private static void connect(ComponentLauncher launcher, int fb, int pf,
 			int at, Config config) throws InterruptedException, ConnectionException{
 
-		/*int i = 0;
-		try{
-			while(fb-- != 0){
-				Logger.info("Connecting fire brigade " + (i++) + "...");
-				launcher.connect(new SampleRCRSCSFireBrigade());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			Logger.info("failed: " + e.getMessage());
-		}
-		try{
-			while(pf-- != 0){
-				Logger.info("Connecting police force " + (i++) + "...");
-				System.out.println("conectado pf");
-				launcher.connect(new SampleRCRSCSPoliceForce());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			Logger.info("failed: " + e.getMessage());
-		}
-		try{
-			while(at-- != 0){
-				Logger.info("Connecting ambulance team " + (i++) + "...");
-				launcher.connect(new SampleRCRSCSAmbulanceTeam());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			Logger.info("failed: " + e.getMessage());
-		}*/
-
+		/*
 		int ac = 1;
 
 		try{
@@ -189,6 +161,20 @@ public final class LaunchSampleRCRSCSAgents{
 			}
 		}catch(ComponentConnectionException e){
 			System.out.println(e.getMessage());
+			Logger.info("failed: " + e.getMessage());
+		}
+		*/
+
+
+		int fs = 1;
+
+		try{
+			while(fs-- != 0){
+				Logger.info("Connecting fire station...");
+				launcher.connect(new CFFireStation());
+				Logger.info("success");
+			}
+		}catch(ComponentConnectionException e){
 			Logger.info("failed: " + e.getMessage());
 		}
 

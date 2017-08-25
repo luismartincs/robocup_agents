@@ -16,7 +16,7 @@ public abstract  class AbstractPlan {
 
     public CinvesAgent getAgent(){return agent;}
 
-    public abstract Object createPlan(Beliefs beliefs,Desires desires);
+    public abstract Object createPlan(Beliefs beliefs,Desires desires,Intentions intentions);
 
 
     public int getTime() {

@@ -9,6 +9,7 @@ import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.intention.AbstractPlan;
+import commlib.cinvesframework.intention.Intentions;
 import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
@@ -56,7 +57,7 @@ public class AmbulancePlanNoLeader extends AbstractPlan{
 
 
     @Override
-    public Object createPlan(Beliefs beliefs, Desires desires) {
+    public Object createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
 
         if(desires.getDesire(DesireType.GOAL_LOCATION) == null){
             if(!doAction(beliefs,desires)){

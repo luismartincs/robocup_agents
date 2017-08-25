@@ -6,6 +6,7 @@ import commlib.cinvesframework.desire.Desire;
 import commlib.cinvesframework.desire.DesireType;
 import commlib.cinvesframework.desire.Desires;
 import commlib.cinvesframework.intention.AbstractPlan;
+import commlib.cinvesframework.intention.Intentions;
 import commlib.cinvesframework.intention.SearchPlan;
 import commlib.cinvesframework.messages.ACLMessage;
 import commlib.cinvesframework.messages.ACLPerformative;
@@ -54,7 +55,7 @@ public class CivilianPlan extends AbstractPlan{
 
 
     @Override
-    public List<EntityID> createPlan(Beliefs beliefs, Desires desires) {
+    public List<EntityID> createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
 
         stateControl(beliefs,desires);
 

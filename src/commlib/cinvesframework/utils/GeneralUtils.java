@@ -115,6 +115,29 @@ public class GeneralUtils {
         }
     }
 
+    public static void updateRoadsInQuadrant(Beliefs beliefs,StandardWorldModel model,int quadrant){
+        if (beliefs.getBelief(BeliefType.ROADS_IN_QUADRANT) == null) {
+
+            EntityListBelief buildingsInQuadrant = new EntityListBelief();
+            EntityListBelief buildings = (EntityListBelief) beliefs.getBelief(BeliefType.ROADS);
+
+            for (StandardEntity building : buildings.getEntities()) {
+
+                Pair<Integer, Integer> point = building.getLocation(model);
+
+                int px = point.first();
+                int py = point.second();
+                int q = Quadrant.getQuadrant(model, px, py);
+
+                if (q == quadrant) {
+                    buildingsInQuadrant.addEntity(building);
+                }
+
+            }
+            beliefs.addBelief(BeliefType.ROADS_IN_QUADRANT, buildingsInQuadrant);
+        }
+    }
+
     /**
      * Check Civilians Around
      */

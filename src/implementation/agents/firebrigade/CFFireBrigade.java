@@ -4,19 +4,19 @@ import commlib.cinvesframework.agent.CinvesAgent;
 import commlib.cinvesframework.belief.*;
 import commlib.cinvesframework.utils.GeneralUtils;
 import implementation.agents.Quadrant;
+import implementation.agents.config.BeliefsName;
 import implementation.agents.firebrigade.FireBrigadePlan;
 import implementation.agents.policeforce.LeaderElectionPlan;
 import rescuecore2.messages.Command;
 import rescuecore2.misc.Pair;
-import rescuecore2.standard.entities.PoliceForce;
-import rescuecore2.standard.entities.StandardEntity;
-import rescuecore2.standard.entities.StandardEntityURN;
+import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumSet;
 
-public class CFFireBrigade extends CinvesAgent<PoliceForce> {
+public class CFFireBrigade extends CinvesAgent<FireBrigade> {
 
     private static final String	MAX_WATER_KEY			= "fire.tank.maximum";
     private static final String	MAX_DISTANCE_KEY	= "fire.extinguish.max-distance";
@@ -31,6 +31,20 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
 
     private FireBrigadePlan fireBrigadePlan;
 
+    /**
+     * Local keys
+     */
+
+    public static final String HAS_WATER = "HAS_WATER";
+    public static final String RELOAD = "RELOAD";
+    public static final String OLD_GOAL = "OLD_GOAL";
+    public static final String RETURN = "RETURN";
+    public static final String FIRE_INY = "FIRE_INY";
+
+    public CFFireBrigade(){
+        super(5,new int[]{1,5});
+    }
+
     @Override
     protected void postConnect() {
         super.postConnect();
@@ -44,7 +58,6 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
         //System.out.println("los max Water, power y distances de los bomberos en CFFIREBRIGADE son: " + maxWater + ", " + maxPower + ", " +  maxDistance );
 
 
-        //policePlan = new PolicePlan(this); //NOTE: este cambia por el FireBrigadePlan.
         leaderElectionPlan = new LeaderElectionPlan(this);
         fireBrigadePlan = new FireBrigadePlan(this);
 
@@ -53,20 +66,46 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
         removeBlockades.setDataBoolean(true);
 
         getBeliefs().addBelief(BeliefType.VOLUNTEER,removeBlockades);
-        //getBeliefs().addBelief(BeliefType.REPORTED_BLOCKADES,new EntityMapBelief());//NOTE: Según yo esto ya no va.
-
         getBeliefs().addBelief(BeliefType.REPORTED_FIRES,new EntityMapBelief());
+
+        Collection<StandardEntity> hyd = getWorldModel().getEntitiesOfType(StandardEntityURN.HYDRANT);
+        ArrayList<StandardEntity> hydrants = new ArrayList<>(hyd);
+
+        getBeliefs().addBelief(BeliefsName.HYDRANTS,hydrants);
+        getBeliefs().addBelief(BeliefsName.REQUIRED_WATER,10);
+        getBeliefs().addBelief(HAS_WATER,true);
+        beliefs.addBelief(FIRE_INY,0);
+
+        intentions.addIntention(RELOAD,false);
+        intentions.addIntention(CFFireBrigade.RETURN,false);
 
     }
 
     @Override
     protected void onFullHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
 
+        defaultBehaviour(time, changed, heard);
+
+    }
+
+
+    @Override
+    protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+        defaultBehaviour(time, changed, heard);
+    }
+
+    @Override
+    protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
+        defaultBehaviour(time, changed, heard);
+    }
+
+    private void defaultBehaviour(int time, ChangeSet changed, Collection<Command> heard){
+
         getBeliefs().addBelief(BeliefType.CHANGED_ENVIRONMENT,new EnvironmentBelief(changed));
 
         leaderElectionPlan.setTime(time);
 
-        Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires());
+        Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires(),intentions);
 
         //System.out.println("Bombero en onFullHealthBehavior");
 
@@ -77,26 +116,14 @@ public class CFFireBrigade extends CinvesAgent<PoliceForce> {
              */
 
             if(leaderElectionPlan.imLeader()) {
-                GeneralUtils.updateBuildingsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
+                GeneralUtils.updateRoadsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
             }
 
             fireBrigadePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
             fireBrigadePlan.setTime(time);
-            fireBrigadePlan.createPlan(getBeliefs(),getDesires());
+            fireBrigadePlan.createPlan(getBeliefs(),getDesires(),intentions);
         }
-    }
 
-
-    @Override
-    protected void onRegularHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
-        super.onRegularHealthBehaviour(time, changed, heard);
-        System.out.println("Regular...");
-    }
-
-    @Override
-    protected void onLowHealthBehaviour(int time, ChangeSet changed, Collection<Command> heard) {
-        super.onLowHealthBehaviour(time, changed, heard);
-        System.out.println("Low...");
     }
 
     @Override

@@ -11,7 +11,7 @@ public class DefaultHumanPlan extends AbstractPlan{
     }
 
     @Override
-    public Object createPlan(Beliefs beliefs, Desires desires) {
+    public Object createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
         return null;
     }
 }

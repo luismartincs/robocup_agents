@@ -30,7 +30,7 @@ public class GoToRefugePlan extends AbstractPlan {
     }
 
     @Override
-    public Object createPlan(Beliefs beliefs, Desires desires) {
+    public Object createPlan(Beliefs beliefs, Desires desires,Intentions intentions) {
 
         int distance = ((LocationBelief) beliefs.getBelief(BeliefType.REPAIR_DISTANCE)).getEntityID().getValue();
 

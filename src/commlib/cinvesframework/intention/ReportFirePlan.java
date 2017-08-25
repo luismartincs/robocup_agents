@@ -13,7 +13,7 @@ public class ReportFirePlan extends AbstractPlan{
     }
 
     @Override
-    public Object createPlan(Beliefs beliefs, Desires desires) {
+    public Object createPlan(Beliefs beliefs, Desires desires, Intentions intentions) {
 
         EntityListBelief buildings = (EntityListBelief)getAgent().getBeliefs().getBelief(BeliefType.BUILDINGS);
 

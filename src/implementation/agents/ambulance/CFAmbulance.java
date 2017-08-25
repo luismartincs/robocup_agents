@@ -69,7 +69,7 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
         leaderElectionPlan.setTime(time);
 
-        Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires());
+        Object leaderElected = leaderElectionPlan.createPlan(getBeliefs(),getDesires(),intentions);
 
 
         if(leaderElected != null){
@@ -80,11 +80,11 @@ public class CFAmbulance extends CinvesAgent<AmbulanceTeam>{
 
             ambulancePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
             ambulancePlan.setTime(time);
-            ambulancePlan.createPlan(getBeliefs(),getDesires());
+            ambulancePlan.createPlan(getBeliefs(),getDesires(),intentions);
         }else{
             GeneralUtils.updateBuildingsInQuadrant(getBeliefs(),getWorldModel(),quadrant);
             ambulancePlanNoLeader.setTime(time);
-            ambulancePlanNoLeader.createPlan(getBeliefs(),getDesires());
+            ambulancePlanNoLeader.createPlan(getBeliefs(),getDesires(),intentions);
         }
 
 
