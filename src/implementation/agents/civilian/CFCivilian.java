@@ -22,7 +22,7 @@ public class CFCivilian extends CinvesAgent<Civilian>{
     private GoToRefugePlan refugePlan;
 
     public CFCivilian(){
-        super(1,new int[]{1,2,3});
+        super(1,new int[]{1,2,3,5});
     }
 
     @Override

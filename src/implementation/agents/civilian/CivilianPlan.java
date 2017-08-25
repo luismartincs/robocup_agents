@@ -17,9 +17,11 @@ import rescuecore2.log.Logger;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
+import sample.DistanceSorter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class CivilianPlan extends AbstractPlan{
@@ -37,7 +39,6 @@ public class CivilianPlan extends AbstractPlan{
 
 
     private void sendRequest(int receiver){
-
         int conversationId = getAgent().nextConversationId();
 
         ACLMessage leaderCFP = new ACLMessage(time,
@@ -142,7 +143,7 @@ public class CivilianPlan extends AbstractPlan{
         for (Human human:humans) {
 
             if(onRoad(yoMerengues)){
-                if(human instanceof PoliceForce || human instanceof AmbulanceTeam){
+                if(human instanceof PoliceForce || human instanceof AmbulanceTeam || human instanceof FireBrigade){
                     sendRequest(human.getID().getValue());
                     return;
                 }
@@ -169,15 +170,17 @@ public class CivilianPlan extends AbstractPlan{
 
     private List<EntityID> randomDestination(Beliefs beliefs, Desires desires){
 
-
-        EntityListBelief buildings = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS);
+        StandardEntity myPosition = ((Human) getAgent().me()).getPosition(getAgent().getWorldModel());
+        EntityListBelief buildings = (EntityListBelief)beliefs.getBelief(BeliefType.ROADS);
         ArrayList<StandardEntity> buildingIDs = buildings.getEntities();
+
+        Collections.sort(buildingIDs, new DistanceSorter(myPosition, getAgent().getWorldModel()));
 
         Desire targetBuilding = desires.getDesire(DesireType.GOAL_LOCATION);
         EntityID target = null;
 
         if(targetBuilding == null){
-            target = buildingIDs.get((int)(Math.random()*buildingIDs.size())).getID();
+            target = buildingIDs.get(buildingIDs.size()-1).getID();//buildingIDs.get((int)(Math.random()*buildingIDs.size())).getID();
         }else{
             target = targetBuilding.getEntityID();
         }

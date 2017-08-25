@@ -136,19 +136,7 @@ public final class LaunchSampleRCRSCSAgents{
 		}
 
 
-		int civ = 200;
 
-		try{
-			while(civ-- != 0){
-				Logger.info("Connecting dummy agent...");
-				System.out.println("conectado civil"+civ);
-				launcher.connect(new CFCivilian());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			System.out.println(e.getMessage());
-			Logger.info("failed: " + e.getMessage());
-		}
 
 		int amb = 200;
 
@@ -165,6 +153,19 @@ public final class LaunchSampleRCRSCSAgents{
 		}
 		*/
 
+		int civ = 200;
+
+		try{
+			while(civ-- != 0){
+				Logger.info("Connecting dummy agent...");
+				System.out.println("conectado civil"+civ);
+				launcher.connect(new CFCivilian());
+				Logger.info("success");
+			}
+		}catch(ComponentConnectionException e){
+			System.out.println(e.getMessage());
+			Logger.info("failed: " + e.getMessage());
+		}
 
 		int fs = 1;
 

@@ -402,4 +402,6 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     public int getCurrentQuadrant(){
         return this.quadrant;
     }
+
+
 }

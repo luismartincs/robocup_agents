@@ -30,6 +30,7 @@ public class CFFireBrigade extends CinvesAgent<FireBrigade> {
     private LeaderElectionPlan leaderElectionPlan;
 
     private FireBrigadePlan fireBrigadePlan;
+    private FireBrigadePlanNoLeader fireBrigadePlanNoLeader;
 
     /**
      * Local keys
@@ -40,6 +41,7 @@ public class CFFireBrigade extends CinvesAgent<FireBrigade> {
     public static final String OLD_GOAL = "OLD_GOAL";
     public static final String RETURN = "RETURN";
     public static final String FIRE_INY = "FIRE_INY";
+    public static final String REPORTED_FIRE = "REPORTED_FIRE";
 
     public CFFireBrigade(){
         super(5,new int[]{1,5});
@@ -60,6 +62,7 @@ public class CFFireBrigade extends CinvesAgent<FireBrigade> {
 
         leaderElectionPlan = new LeaderElectionPlan(this);
         fireBrigadePlan = new FireBrigadePlan(this);
+        fireBrigadePlanNoLeader = new FireBrigadePlanNoLeader(this);
 
 
         Belief removeBlockades = new Belief();
@@ -75,6 +78,7 @@ public class CFFireBrigade extends CinvesAgent<FireBrigade> {
         getBeliefs().addBelief(BeliefsName.REQUIRED_WATER,10);
         getBeliefs().addBelief(HAS_WATER,true);
         beliefs.addBelief(FIRE_INY,0);
+        beliefs.addBelief(REPORTED_FIRE,new ArrayList<Integer>());
 
         intentions.addIntention(RELOAD,false);
         intentions.addIntention(CFFireBrigade.RETURN,false);
@@ -122,6 +126,9 @@ public class CFFireBrigade extends CinvesAgent<FireBrigade> {
             fireBrigadePlan.setNextQuadrantLeaders(leaderElectionPlan.getNextQuadrantLeaders()); //Pasar esto a beliefs, ahorita no pk urge
             fireBrigadePlan.setTime(time);
             fireBrigadePlan.createPlan(getBeliefs(),getDesires(),intentions);
+        }else {
+            fireBrigadePlanNoLeader.setTime(time);
+            fireBrigadePlanNoLeader.createPlan(beliefs,desires,intentions);
         }
 
     }
