@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
@@ -17,6 +18,7 @@ import org.jdom2.output.XMLOutputter;
 public class ScenarioGenerator {
     private JTextField policeBuilding;
     String pathSave;
+    int quadrants;
     private JTextField policeRoad;
     private JButton createButton;
     private JTextField ambulancesBuildings;
@@ -32,8 +34,8 @@ public class ScenarioGenerator {
     private JTextField fireCentrals;
     private JTextField ambCentrals;
     private JTextField Hydrants;
-    ArrayList<Integer> buildings;
-    ArrayList<Integer> roads;
+    ArrayList<Entity> buildings;
+    ArrayList<Entity> roads;
     ArrayList<Integer> civilians;
     ArrayList<Integer> polices;
     ArrayList<Integer> fireBrigades;
@@ -107,24 +109,21 @@ public class ScenarioGenerator {
         buildings.clear();
         roads.clear();
         SAXBuilder builder = new SAXBuilder();
-        File xmlFile = new File(pathSave+"map.gml");
+        File xmlFile = new File("beliefs.xml");
 
         try {
 
             Document document = builder.build(xmlFile);
             Element rootNode = document.getRootElement();
-            for(Element at:rootNode.getChildren()){
-                if(at.getName().equals("buildinglist")){
-                    for(Element e:at.getChildren()){
-                        buildings.add(e.getAttributes().get(0).getIntValue());
-                    }
-                }
-                if(at.getName().equals("roadlist")){
-                    for(Element e:at.getChildren()){
-                        roads.add(e.getAttributes().get(0).getIntValue());
-                    }
-                }
+            quadrants=rootNode.getAttribute("quadrants").getIntValue();
+            for(Element e:rootNode.getChild("buildings").getChildren()){
+                buildings.add(new Entity(e.getAttribute("id").getIntValue(),e.getAttribute("quadrant").getIntValue()));
             }
+            for(Element e:rootNode.getChild("roads").getChildren()){
+                roads.add(new Entity(e.getAttribute("id").getIntValue(),e.getAttribute("quadrant").getIntValue()));
+            }
+            System.out.println(quadrants+" "+buildings.size()+" "+roads.size());
+
         } catch (IOException io) {
             System.out.println(io.getMessage());
         } catch (JDOMException jdomex) {
@@ -134,65 +133,75 @@ public class ScenarioGenerator {
 
     public void generateLists(int policeForceB, int policeForceR, int ambulancesB, int ambulancesR, int firebB, int firebR, int civiliansB,
                                    int civiliansR, int pOffices, int refuges, int fires, int firecentrals, int ambulancecentrals, int hydrants){
-        for(int i=0;i<policeForceB;i++){
-            int rnd=(int)(Math.random()*buildings.size());
-            polices.add(buildings.get(rnd));
+        /*
+        CREATE N NUMBER OF ARRAYLIST WHERE N IS THE NUMBER OF THE QUADRANTS
+         */
+        ArrayList<Integer>[] buildingQuadrants=new ArrayList[quadrants];
+        ArrayList<Integer>[] roadQuadrants=new ArrayList[quadrants];
+        for(int i=0;i<quadrants;i++){
+            buildingQuadrants[i]=new ArrayList<>();
+            roadQuadrants[i]=new ArrayList<>();
         }
-        for(int i=0;i<policeForceR;i++){
-            int rnd=(int)(Math.random()*roads.size());
-            polices.add(roads.get(rnd));
+        for(Entity en:buildings){
+            buildingQuadrants[en.getQuadrant()].add(en.getId());
         }
-        for(int i=0;i<ambulancesB;i++){
-            int rnd=(int)(Math.random()*buildings.size());
-            ambulances.add(buildings.get(rnd));
+        for(Entity en:roads){
+            roadQuadrants[en.getQuadrant()].add(en.getId());
         }
-        for(int i=0;i<ambulancesR;i++){
-            int rnd=(int)(Math.random()*roads.size());
-            ambulances.add(roads.get(rnd));
-        }
-        for(int i=0;i<firebB;i++){
-            int rnd=(int)(Math.random()*buildings.size());
-            fireBrigades.add(buildings.get(rnd));
-        }
-        for(int i=0;i<firebR;i++){
-            int rnd=(int)(Math.random()*roads.size());
-            fireBrigades.add(roads.get(rnd));
-        }
-        for(int i=0;i<civiliansB;i++){
-            int rnd=(int)(Math.random()*buildings.size());
-            civilians.add(buildings.get(rnd));
-        }
-        for(int i=0;i<civiliansR;i++){
-            int rnd=(int)(Math.random()*roads.size());
-            civilians.add(roads.get(rnd));
-        }
+        /*
+        -------------------------------------------------------------------------------------------------
+         */
+        civilians=addEntities(buildingQuadrants, roadQuadrants, civiliansB, civiliansR);
+        polices=addEntities(buildingQuadrants, roadQuadrants, policeForceB  , policeForceR);
+        ambulances=addEntities(buildingQuadrants, roadQuadrants, ambulancesB  , ambulancesR);
+        fireBrigades=addEntities(buildingQuadrants, roadQuadrants, firebB  , firebR);
+        /*
+        -------------------------------------------------------------------------------------------------
+         */
         for(int i=0;i<pOffices;i++){
             int rnd=(int)(Math.random()*buildings.size());
-            pOfficesList.add(buildings.get(rnd));
+            pOfficesList.add(buildings.get(rnd).getId());
         }
         for(int i=0;i<refuges;i++){
             int rnd=(int)(Math.random()*buildings.size());
-            refugeList.add(buildings.get(rnd));
+            refugeList.add(buildings.get(rnd).getId());
         }
         for(int i=0;i<fires;i++){
             int rnd=(int)(Math.random()*buildings.size());
-            fireList.add(buildings.get(rnd));
+            fireList.add(buildings.get(rnd).getId());
         }
         for(int i=0;i<firecentrals;i++){
             int rnd=(int)(Math.random()*buildings.size());
-            fireCentralsList.add(buildings.get(rnd));
+            fireCentralsList.add(buildings.get(rnd).getId());
         }
         for(int i=0;i<ambulancecentrals;i++){
             int rnd=(int)(Math.random()*buildings.size());
-            ambCentralsList.add(buildings.get(rnd));
+            ambCentralsList.add(buildings.get(rnd).getId());
         }
         for(int i=0;i<hydrants;i++){
             int rnd=(int)(Math.random()*roads.size());
-            hydrantList.add(roads.get(rnd));
+            hydrantList.add(roads.get(rnd).getId());
         }
         doFile();
 
 
+    }
+
+    public ArrayList<Integer> addEntities(ArrayList<Integer>[] buildings, ArrayList<Integer>[] roads, int s1, int s2){
+        ArrayList<Integer> humans=new ArrayList<>();
+        for(int i=0;i<quadrants;i++){
+            int size=buildings[i].size();
+            for(int j=0;j<s1;j++){
+                int rnd=(int)(Math.random()*size);
+                humans.add(buildings[i].get(rnd));
+            }
+            int size2=roads[i].size();
+            for(int j=0;j<s2;j++){
+                int rnd=(int)(Math.random()*size2);
+                humans.add(roads[i].get(rnd));
+            }
+        }
+        return humans;
     }
 
     public void doFile(){
@@ -323,4 +332,30 @@ public class ScenarioGenerator {
         write("configScript",c,"txt");
     }
 
+}
+class Entity{
+    int id;
+    int quadrant;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Entity(int id, int quadrant) {
+        this.id = id;
+        this.quadrant = quadrant;
+    }
+
+    public int getQuadrant() {
+
+        return quadrant;
+    }
+
+    public void setQuadrant(int quadrant) {
+        this.quadrant = quadrant;
+    }
 }

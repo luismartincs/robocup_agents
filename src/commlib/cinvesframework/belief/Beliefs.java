@@ -21,6 +21,7 @@ public class Beliefs {
     private EntityListBelief areas;
     private EntityListBelief refuges;
     private EntityListBelief policeCentre;
+    private EntityListBelief roads;
 
     public Beliefs(CinvesAgent agent){
 
@@ -31,6 +32,7 @@ public class Beliefs {
         buildingsOnFire = new EntityMapBelief();
         areas = new EntityListBelief();
         policeCentre = new EntityListBelief();
+        roads = new EntityListBelief();
 
     }
 
@@ -41,7 +43,7 @@ public class Beliefs {
                 buildings.addEntity(next);
             }
             if(next instanceof Road){
-               // roadIDs.add(next.getID());
+                roads.addEntity(next);
             }
             if(next instanceof Refuge){
                 refuges.addEntity(next);
@@ -52,6 +54,7 @@ public class Beliefs {
             if(next instanceof PoliceOffice){
                 policeCentre.addEntity(next);
             }
+
         }
 
         beliefs.put(BeliefType.BUILDINGS,buildings);
@@ -59,6 +62,8 @@ public class Beliefs {
         beliefs.put(BeliefType.REFUGE,refuges);
         beliefs.put(BeliefType.BUILDINGS_ON_FIRE,buildingsOnFire);
         beliefs.put(BeliefType.POLICE_CENTRE,policeCentre);
+
+        SaveBeliefs.saveBeliefs(buildings,roads,agent.getWorldModel());
 
     }
 
