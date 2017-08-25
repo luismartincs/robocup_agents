@@ -26,171 +26,167 @@ import rescuecore2.standard.messages.StandardMessageFactory;
  * Launcher for sample agents. This will launch as many instances of each of the
  * sample agents as possible, all using one connection.
  */
-public final class LaunchSampleRCRSCSAgents{
-	
-	private static final String	FIRE_BRIGADE_FLAG		= "-fb";
-	
-	private static final String	POLICE_FORCE_FLAG		= "-pf";
-	
-	private static final String	AMBULANCE_TEAM_FLAG	= "-at";
-	
-	
-	private LaunchSampleRCRSCSAgents(){
-	}
-	
-	
-	/**
-	 * Launch 'em!
-	 * 
-	 * @param args
-	 *          The following arguments are understood: -p <port>, -h <hostname>,
-	 *          -fb <fire brigades>, -pf <police forces>, -at <ambulance teams>
-	 */
+public final class LaunchSampleRCRSCSAgents {
 
-	//ALT + SHIFT + F10 -> Edit configurations -> Program arguments
+    private static final String FIRE_BRIGADE_FLAG = "-fb";
 
-	public static void main(String[] args){
-		Logger.setLogContext("sample");
-		try{
-			Registry.SYSTEM_REGISTRY
-					.registerEntityFactory(StandardEntityFactory.INSTANCE);
-			Registry.SYSTEM_REGISTRY
-					.registerMessageFactory(StandardMessageFactory.INSTANCE);
-			Registry.SYSTEM_REGISTRY
-					.registerPropertyFactory(StandardPropertyFactory.INSTANCE);
-			Config config = new Config();
-			args = CommandLineOptions.processArgs(args, config);
-			int port = config.getIntValue(Constants.KERNEL_PORT_NUMBER_KEY,
-					Constants.DEFAULT_KERNEL_PORT_NUMBER);
-			String host = config.getValue(Constants.KERNEL_HOST_NAME_KEY,
-					Constants.DEFAULT_KERNEL_HOST_NAME);
-			int fb = -1;
-			int pf = -1;
-			int at = -1;
-			// CHECKSTYLE:OFF:ModifiedControlVariable
-			for(int i = 0; i < args.length; ++i){
-				if(args[i].equals(FIRE_BRIGADE_FLAG)){
-					fb = Integer.parseInt(args[++i]);
-				}else if(args[i].equals(POLICE_FORCE_FLAG)){
-					pf = Integer.parseInt(args[++i]);
-				}else if(args[i].equals(AMBULANCE_TEAM_FLAG)){
-					at = Integer.parseInt(args[++i]);
-				}else{
-					Logger.warn("Unrecognised option: " + args[i]);
-				}
-			}
-			// CHECKSTYLE:ON:ModifiedControlVariable
-			ComponentLauncher launcher = new TCPComponentLauncher(host, port, config);
-			connect(launcher, fb, pf, at, config);
-		}catch(IOException e){
-			Logger.error("Error connecting agents", e);
-		}catch(ConfigException e){
-			Logger.error("Configuration error", e);
-		}catch(ConnectionException e){
-			Logger.error("Error connecting agents", e);
-		}catch(InterruptedException e){
-			Logger.error("Error connecting agents", e);
-		}
-	}
-	
-	
-	private static void connect(ComponentLauncher launcher, int fb, int pf,
-			int at, Config config) throws InterruptedException, ConnectionException{
+    private static final String POLICE_FORCE_FLAG = "-pf";
 
-		/*
-		int ac = 1;
-
-		try{
-			while(ac-- != 0){
-				Logger.info("Connecting ambulance centre...");
-				launcher.connect(new CFAmbulanceCentre());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			Logger.info("failed: " + e.getMessage());
-		}
+    private static final String AMBULANCE_TEAM_FLAG = "-at";
 
 
-		int po = 1;
-
-		try{
-			while(po-- != 0){
-				Logger.info("Connecting police office ...");
-				launcher.connect(new CFPoliceOffice());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			Logger.info("failed: " + e.getMessage());
-		}
-
-		int pc = 200;
-
-		try{
-			while(pc-- != 0){
-				Logger.info("Connecting police...");
-				launcher.connect(new CFPoliceForce());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			Logger.info("failed: " + e.getMessage());
-		}
+    private LaunchSampleRCRSCSAgents() {
+    }
 
 
+    /**
+     * Launch 'em!
+     *
+     * @param args The following arguments are understood: -p <port>, -h <hostname>,
+     *             -fb <fire brigades>, -pf <police forces>, -at <ambulance teams>
+     */
+
+    //ALT + SHIFT + F10 -> Edit configurations -> Program arguments
+    public static void main(String[] args) {
+        Logger.setLogContext("sample");
+        try {
+            Registry.SYSTEM_REGISTRY
+                    .registerEntityFactory(StandardEntityFactory.INSTANCE);
+            Registry.SYSTEM_REGISTRY
+                    .registerMessageFactory(StandardMessageFactory.INSTANCE);
+            Registry.SYSTEM_REGISTRY
+                    .registerPropertyFactory(StandardPropertyFactory.INSTANCE);
+            Config config = new Config();
+            args = CommandLineOptions.processArgs(args, config);
+            int port = config.getIntValue(Constants.KERNEL_PORT_NUMBER_KEY,
+                    Constants.DEFAULT_KERNEL_PORT_NUMBER);
+            String host = config.getValue(Constants.KERNEL_HOST_NAME_KEY,
+                    Constants.DEFAULT_KERNEL_HOST_NAME);
+            int fb = -1;
+            int pf = -1;
+            int at = -1;
+            // CHECKSTYLE:OFF:ModifiedControlVariable
+            for (int i = 0; i < args.length; ++i) {
+                if (args[i].equals(FIRE_BRIGADE_FLAG)) {
+                    fb = Integer.parseInt(args[++i]);
+                } else if (args[i].equals(POLICE_FORCE_FLAG)) {
+                    pf = Integer.parseInt(args[++i]);
+                } else if (args[i].equals(AMBULANCE_TEAM_FLAG)) {
+                    at = Integer.parseInt(args[++i]);
+                } else {
+                    Logger.warn("Unrecognised option: " + args[i]);
+                }
+            }
+            // CHECKSTYLE:ON:ModifiedControlVariable
+            ComponentLauncher launcher = new TCPComponentLauncher(host, port, config);
+            connect(launcher, fb, pf, at, config);
+        } catch (IOException e) {
+            Logger.error("Error connecting agents", e);
+        } catch (ConfigException e) {
+            Logger.error("Configuration error", e);
+        } catch (ConnectionException e) {
+            Logger.error("Error connecting agents", e);
+        } catch (InterruptedException e) {
+            Logger.error("Error connecting agents", e);
+        }
+    }
 
 
-		int amb = 200;
+    private static void connect(ComponentLauncher launcher, int fb, int pf,
+                                int at, Config config) throws InterruptedException, ConnectionException {
 
-		try{
-			while(amb-- != 0){
-				Logger.info("Connecting dummy agent...");
-				System.out.println("conectado ambulancia"+amb);
-				launcher.connect(new CFAmbulance());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			System.out.println(e.getMessage());
-			Logger.info("failed: " + e.getMessage());
-		}
-		*/
 
-		int civ = 200;
+        int ac = 1;
 
-		try{
-			while(civ-- != 0){
-				Logger.info("Connecting dummy agent...");
-				System.out.println("conectado civil"+civ);
-				launcher.connect(new CFCivilian());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			System.out.println(e.getMessage());
-			Logger.info("failed: " + e.getMessage());
-		}
+        try {
+            while (ac-- != 0) {
+                Logger.info("Connecting ambulance centre...");
+                launcher.connect(new CFAmbulanceCentre());
+                Logger.info("success");
+            }
+        } catch (ComponentConnectionException e) {
+            Logger.info("failed: " + e.getMessage());
+        }
 
-		int fs = 1;
 
-		try{
-			while(fs-- != 0){
-				Logger.info("Connecting fire station...");
-				launcher.connect(new CFFireStation());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			Logger.info("failed: " + e.getMessage());
-		}
+        int po = 1;
 
-		int fireBgds = 200;
+        try {
+            while (po-- != 0) {
+                Logger.info("Connecting police office ...");
+                launcher.connect(new CFPoliceOffice());
+                Logger.info("success");
+            }
+        } catch (ComponentConnectionException e) {
+            Logger.info("failed: " + e.getMessage());
+        }
 
-		try{
-			while(fireBgds-- != 0){
-				Logger.info("Connecting fireBgds agent...");
-				System.out.println("conectado Bombero "+fireBgds);
-				launcher.connect(new CFFireBrigade());
-				Logger.info("success");
-			}
-		}catch(ComponentConnectionException e){
-			System.out.println(e.getMessage());
-			Logger.info("failed: " + e.getMessage());
-		}
-	}
+        int pc = 200;
+
+        try {
+            while (pc-- != 0) {
+                Logger.info("Connecting police...");
+                launcher.connect(new CFPoliceForce());
+                Logger.info("success");
+            }
+        } catch (ComponentConnectionException e) {
+            Logger.info("failed: " + e.getMessage());
+        }
+
+
+        int amb = 200;
+
+        try {
+            while (amb-- != 0) {
+                Logger.info("Connecting dummy agent...");
+                System.out.println("conectado ambulancia" + amb);
+                launcher.connect(new CFAmbulance());
+                Logger.info("success");
+            }
+        } catch (ComponentConnectionException e) {
+            System.out.println(e.getMessage());
+            Logger.info("failed: " + e.getMessage());
+        }
+
+
+        int civ = 200;
+
+        try {
+            while (civ-- != 0) {
+                Logger.info("Connecting dummy agent...");
+                System.out.println("conectado civil" + civ);
+                launcher.connect(new CFCivilian());
+                Logger.info("success");
+            }
+        } catch (ComponentConnectionException e) {
+            System.out.println(e.getMessage());
+            Logger.info("failed: " + e.getMessage());
+        }
+
+        int fs = 1;
+
+        try {
+            while (fs-- != 0) {
+                Logger.info("Connecting fire station...");
+                launcher.connect(new CFFireStation());
+                Logger.info("success");
+            }
+        } catch (ComponentConnectionException e) {
+            Logger.info("failed: " + e.getMessage());
+        }
+
+        int fireBgds = 200;
+
+        try {
+            while (fireBgds-- != 0) {
+                Logger.info("Connecting fireBgds agent...");
+                System.out.println("conectado Bombero " + fireBgds);
+                launcher.connect(new CFFireBrigade());
+                Logger.info("success");
+            }
+        } catch (ComponentConnectionException e) {
+            System.out.println(e.getMessage());
+            Logger.info("failed: " + e.getMessage());
+        }
+    }
 }

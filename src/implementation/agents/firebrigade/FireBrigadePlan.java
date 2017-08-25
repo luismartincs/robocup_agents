@@ -309,7 +309,7 @@ public class FireBrigadePlan extends AbstractPlan{
                 ArrayList<Integer> reportedBuildings = (ArrayList<Integer>) beliefs.getBelief(CFFireBrigade.REPORTED_FIRE);
 
                 if(!reportedBuildings.contains(building.getID().getValue())) {
-                    reportedBuildings.add(building.getID().getValue());
+                    //reportedBuildings.add(building.getID().getValue());
                     sendReportFire(myPosition.getID().getValue(), building.getFieryness());
                 }
 
@@ -466,7 +466,7 @@ public class FireBrigadePlan extends AbstractPlan{
                     ArrayList<Integer> reportedBuildings = (ArrayList<Integer>) beliefs.getBelief(CFFireBrigade.REPORTED_FIRE);
 
                     if(!reportedBuildings.contains(building.getID().getValue())) {
-                        reportedBuildings.add(building.getID().getValue());
+                        //reportedBuildings.add(building.getID().getValue());
                         sendReportFire(myPosition.getID().getValue(), building.getFieryness());
                     }
 

@@ -61,17 +61,6 @@ public class RequestReplyPlan extends AbstractPlan{
 
         EntityListBelief biq = (EntityListBelief)beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
 
-        /*
-        EntityID position = biq.getEntities().get(targetBuilding).getID();
-
-        targetBuilding++;
-
-        if(targetBuilding >= biq.getEntities().size()){
-            targetBuilding = 0;
-        }
-        */
-
-        //
 
         StandardEntity closestBuilding = getClosestBuilding(beliefs,desires,position);
         int value = 0;
@@ -79,6 +68,8 @@ public class RequestReplyPlan extends AbstractPlan{
         if(closestBuilding!=null) {
             biq.getEntities().remove(closestBuilding);
             value = closestBuilding.getID().getValue();
+        }else {
+            value = getClosestRefuge(beliefs,desires,position);
         }
 
         ACLMessage leaderCFP = new ACLMessage(time,
