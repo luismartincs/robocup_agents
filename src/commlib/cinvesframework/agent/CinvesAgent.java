@@ -17,6 +17,7 @@ import rescuecore2.standard.kernel.comms.ChannelCommunicationModel;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
 
+import java.io.PrintWriter;
 import java.util.*;
 
 
@@ -65,8 +66,23 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     private int canMoveStaminaRequired = (int)(0.70*MAX_STAMINA);
     private int canMoveDamageRequired = (int)(0.60*MAX_DAMAGE);
 
+    private static PrintWriter logFile;
+    private boolean logMessages = true;
+
 
     protected CinvesAgent(){
+
+        if(logMessages){
+            try {
+                if(logFile == null) {
+                    logFile = new PrintWriter("message_log.txt");
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        }
+
         targetRoads=new HashSet<>();
         informedCivilians=new HashSet<>();
         reportFirePlan = new ReportFirePlan(this);
@@ -88,6 +104,18 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     protected CinvesAgent(int channel,int listenChannels[]){
+
+        if(logMessages){
+            try {
+                if(logFile == null) {
+                    logFile = new PrintWriter("message_log.txt");
+                }
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
+        }
+
         targetRoads=new HashSet<>();
         informedCivilians=new HashSet<>();
         reportFirePlan = new ReportFirePlan(this);
@@ -176,6 +204,11 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     public void addACLMessageToQueue(int conversationId, ACLMessage message){
+
+        if(logMessages){
+            logFile.println(message.toString());
+        }
+
         getQueuedMessages().put(conversationId,message);
     }
 
@@ -259,7 +292,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         if(me() instanceof Human){
 
-            if(time > config.getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)) {
+            if(time >= config.getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)) {
 
                 if (canHelp()) {
                     onFullHealthBehaviour(time, changed, heard);
@@ -272,7 +305,7 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
 
         }else{
 
-            if(time > config.getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)) {
+            if(time >= config.getIntValue(kernel.KernelConstants.IGNORE_AGENT_COMMANDS_KEY)) {
                 doCentreAction(time, changed, heard);
             }
 

@@ -12,8 +12,19 @@ import java.util.List;
 
 public class ACLMessage extends WorldInformation{
 
+    private int sender;
+    private int receiver;
+    private ACLPerformative performative;
+    private int content;
+
+
     public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId,int... extra) {
         super(BaseMessageType.ACL_MESSAGE, time);
+
+        this.sender = sender.getValue();
+        this.receiver = receiver.getValue();
+        this.performative = performative;
+        this.content = contentId;
 
         this.setData(new ValueData(DataType.ALL_ENTITIES, sender.getValue()),0);
         this.setData(new ValueData(DataType.ALL_ENTITIES, receiver.getValue()),1);
@@ -49,6 +60,11 @@ public class ACLMessage extends WorldInformation{
 
     public ACLMessage(int time, EntityID sender, ACLPerformative performative,EntityID receiver,int conversationId,int contentId, int xPosition, int yPosition, int victims, int injured,EntityID blockade, int repairCost) {
         super(BaseMessageType.ACL_MESSAGE, time);
+
+        this.sender = sender.getValue();
+        this.receiver = receiver.getValue();
+        this.performative = performative;
+        this.content = contentId;
 
         this.setData(new ValueData(DataType.ALL_ENTITIES, sender.getValue()),0);
         this.setData(new ValueData(DataType.ALL_ENTITIES, receiver.getValue()),1);
@@ -135,5 +151,24 @@ public class ACLMessage extends WorldInformation{
             }
         }
         return ACLPerformative.createPerformative(res);
+    }
+
+
+    @Override
+    public String toString() {
+
+        String msg = "Message: time["+super.getSendTime()+"],";
+        msg += "from ["+this.sender+"],";
+        if(this.receiver == 0){
+            msg += "to [ALL],";
+        }else {
+            msg += "to ["+this.receiver+"],";
+        }
+
+        msg += "performative ["+this.performative+"],";
+
+        msg += "action ["+this.content+"]";
+
+        return msg;
     }
 }

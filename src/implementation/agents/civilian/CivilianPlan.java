@@ -149,10 +149,6 @@ public class CivilianPlan extends AbstractPlan{
                 }
             }
 
-            /*if(human instanceof PoliceForce){// || human instanceof AmbulanceTeam && (onRoad((Human) getAgent().me()))){
-                sendRequest(human.getID().getValue());
-                return;
-            }*/
         }
 
     }

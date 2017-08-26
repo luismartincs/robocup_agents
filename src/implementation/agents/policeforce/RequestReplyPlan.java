@@ -17,9 +17,11 @@ import implementation.agents.ActionConstants;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
+import sample.DistanceSorter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
@@ -29,6 +31,7 @@ public class RequestReplyPlan extends AbstractPlan{
     private int targetBuilding = 0;
 
     private ArrayList<Integer> nextGoals;
+    private boolean waitingResponse = true;
 
     public RequestReplyPlan(CinvesAgent agent){
         super(agent);
@@ -37,6 +40,8 @@ public class RequestReplyPlan extends AbstractPlan{
     }
 
     private void sendRequest(int leader){
+
+        waitingResponse = true;
 
         Human human = (Human) getAgent().me();
 
@@ -122,6 +127,14 @@ public class RequestReplyPlan extends AbstractPlan{
         int leaderId = lb.getDataInt();
 
         if(goalLocation == null){
+
+
+            if(waitingResponse){
+                StandardEntity random = getRandomDestination(beliefs,desires);
+                desires.addDesire(DesireType.GOAL_LOCATION, new Desire(random.getID()));
+                doMove(beliefs,desires);
+            }
+
             if(imLeader){
 
                 if(nextGoals.size()>0){
@@ -155,6 +168,7 @@ public class RequestReplyPlan extends AbstractPlan{
                     nextGoals.remove(0);
 
                 }else {
+
                     sendRequest(leaderId);
                 }
 
@@ -195,6 +209,7 @@ public class RequestReplyPlan extends AbstractPlan{
 
                 case INFORM:
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION){
+                        waitingResponse = false;
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
                     }else if(msg.getContent() == ActionConstants.INFORM_BLOCKADE){
 
@@ -220,6 +235,26 @@ public class RequestReplyPlan extends AbstractPlan{
         }
     }
 
+    //Mientras espera respuesta hace algo
+
+    private StandardEntity getRandomDestination(Beliefs beliefs,Desires desires){
+
+        GeneralUtils.updateRoadsInQuadrant(beliefs,getAgent().getWorldModel(),getAgent().getCurrentQuadrant());
+
+
+        StandardEntity myPosition = ((Human) getAgent().me()).getPosition(getAgent().getWorldModel());
+
+        EntityListBelief buildingList = (EntityListBelief) beliefs.getBelief(BeliefType.ROADS_IN_QUADRANT);
+        ArrayList<StandardEntity> buildings = buildingList.getEntities();
+
+        Collections.sort(buildings,new DistanceSorter(myPosition, getAgent().getWorldModel()));
+
+        StandardEntity closestBuilding = null;
+
+        closestBuilding = buildings.get((int)(buildings.size()*Math.random()));
+
+        return closestBuilding;
+    }
 
     private int getClosestRefuge(Beliefs beliefs, Desires desires, int target){
 

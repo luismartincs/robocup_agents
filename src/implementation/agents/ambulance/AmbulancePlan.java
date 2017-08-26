@@ -15,9 +15,11 @@ import implementation.agents.ActionConstants;
 import rescuecore2.standard.entities.*;
 import rescuecore2.worldmodel.ChangeSet;
 import rescuecore2.worldmodel.EntityID;
+import sample.DistanceSorter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @SuppressWarnings("Duplicates")
@@ -38,6 +40,8 @@ public class AmbulancePlan extends AbstractPlan{
 
     private int tiempoAtorado = 0;
 
+    private boolean waitingResponse = true;
+
     public AmbulancePlan(CinvesAgent agent){
         super(agent);
         searchPlan = new SearchPlan(agent);
@@ -49,6 +53,8 @@ public class AmbulancePlan extends AbstractPlan{
     }
 
     private void sendRequest(int leader){
+
+        waitingResponse = true;
 
         int conversationId = getAgent().nextConversationId();
 
@@ -157,6 +163,12 @@ public class AmbulancePlan extends AbstractPlan{
         int leaderId = lb.getDataInt();
 
         if(goalLocation == null){
+
+            if(waitingResponse){
+                StandardEntity random = getRandomDestination(beliefs,desires);
+                desires.addDesire(DesireType.GOAL_LOCATION, new Desire(random.getID()));
+                doMove(beliefs,desires);
+            }
 
             if(!doAction(beliefs,desires)){
 
@@ -317,6 +329,7 @@ public class AmbulancePlan extends AbstractPlan{
                 case INFORM:
 
                     if(msg.getContent() == ActionConstants.REQUEST_LOCATION){
+                        waitingResponse = false;
                         desires.addDesire(DesireType.GOAL_LOCATION, new Desire(new EntityID(msg.getExtra(0))));
                     }else if(msg.getContent() == ActionConstants.CHANGE_QUADRANT){
 
@@ -401,6 +414,24 @@ public class AmbulancePlan extends AbstractPlan{
         }
     }
 
+    private StandardEntity getRandomDestination(Beliefs beliefs,Desires desires){
+
+        GeneralUtils.updateBuildingsInQuadrant(beliefs,getAgent().getWorldModel(),getAgent().getCurrentQuadrant());
+
+
+        StandardEntity myPosition = ((Human) getAgent().me()).getPosition(getAgent().getWorldModel());
+
+        EntityListBelief buildingList = (EntityListBelief) beliefs.getBelief(BeliefType.BUILDINGS_IN_QUADRANT);
+        ArrayList<StandardEntity> buildings = buildingList.getEntities();
+
+        Collections.sort(buildings,new DistanceSorter(myPosition, getAgent().getWorldModel()));
+
+        StandardEntity closestBuilding = null;
+
+        closestBuilding = buildings.get((int)(buildings.size()*Math.random()));
+
+        return closestBuilding;
+    }
 
     /**
      *
