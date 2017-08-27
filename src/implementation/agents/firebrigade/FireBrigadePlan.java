@@ -131,7 +131,6 @@ public class FireBrigadePlan extends AbstractPlan{
     private void sendReportFire(int fireLocation,int fireIny){
 
         int conversationId = getAgent().nextConversationId();
-        System.out.println("Report fire");
         ACLMessage inform = new ACLMessage(time,
                 getAgent().getID(),
                 ACLPerformative.INFORM,

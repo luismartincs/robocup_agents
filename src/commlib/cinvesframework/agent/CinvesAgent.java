@@ -164,6 +164,11 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     public void addACLMessage(ACLMessage message){
+
+        if(logMessages){
+            logFile.println(message.toString());
+        }
+
         addMessage(message);
     }
 
@@ -204,11 +209,6 @@ public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCS
     }
 
     public void addACLMessageToQueue(int conversationId, ACLMessage message){
-
-        if(logMessages){
-            logFile.println(message.toString());
-        }
-
         getQueuedMessages().put(conversationId,message);
     }
 
