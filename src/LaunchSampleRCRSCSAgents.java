@@ -4,6 +4,7 @@ import java.io.IOException;
 import implementation.agents.ambulance.CFAmbulance;
 import implementation.agents.ambulancecentre.CFAmbulanceCentre;
 import implementation.agents.civilian.CFCivilian;
+import implementation.agents.custom.TestAgent1;
 import implementation.agents.firebrigade.CFFireBrigade;
 import implementation.agents.firestation.CFFireStation;
 import implementation.agents.policecentre.CFPoliceOffice;
@@ -126,7 +127,7 @@ public final class LaunchSampleRCRSCSAgents {
         try {
             while (pc-- != 0) {
                 Logger.info("Connecting police...");
-                launcher.connect(new CFPoliceForce());
+                launcher.connect(new TestAgent1());
                 Logger.info("success");
             }
         } catch (ComponentConnectionException e) {

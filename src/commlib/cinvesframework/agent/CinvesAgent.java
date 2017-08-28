@@ -21,7 +21,7 @@ import java.io.PrintWriter;
 import java.util.*;
 
 
-public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCSAgent<E>{
+public abstract class CinvesAgent <E extends StandardEntity>  extends AbstractCFAgent<E>{
     public HashSet<EntityID> targetRoads;
     public HashSet<EntityID> informedCivilians;
     private boolean usingChannel;
